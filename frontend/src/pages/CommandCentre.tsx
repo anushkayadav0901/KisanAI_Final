@@ -5,30 +5,17 @@
  * once they are anonymised and aggregated: a live crop-health surveillance
  * picture for a state agriculture department, and a registry through which
  * states hand working advisory models to each other.
- *
- * Deliberately styled as an operations console rather than a consumer page —
- * this is the screen an officer keeps open, not one a farmer visits.
  */
 
 import React from "react";
 import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
-import {
-  Activity,
-  Map as MapIcon,
-  Users,
-  Languages,
-  ShieldAlert,
-  Layers3,
-  Info,
-  Terminal,
-  Copy,
-  Check,
-} from "lucide-react";
+import { Map as MapIcon, Users, Activity, Info } from "lucide-react";
 import { HexIndiaMap } from "../components/command/HexIndiaMap";
 import { AlertFeed } from "../components/command/AlertFeed";
 import { DistrictPanel } from "../components/command/DistrictPanel";
 import { ModelExchange } from "../components/command/ModelExchange";
+import Footer from "../components/Footer";
 import {
   NATIONAL_TOTALS,
   METRIC_META,
@@ -39,312 +26,312 @@ import {
   type MetricKey,
 } from "../data/surveillanceEngine";
 
-// ── Header pieces ─────────────────────────────────────────────────────────────
-
-const LiveClock: React.FC = () => {
-  const [now, setNow] = React.useState(() => new Date());
-  React.useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(t);
-  }, []);
-  return (
-    <span className="font-mono text-[11px] text-white/50 tabular-nums">
-      {now.toLocaleTimeString("en-IN", { hour12: false })} IST
-    </span>
-  );
-};
-
-const ApiStrip: React.FC<{ endpoint: string }> = ({ endpoint }) => {
-  const [copied, setCopied] = React.useState(false);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(endpoint);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      /* clipboard unavailable — the endpoint is still readable on screen */
-    }
-  };
-  return (
-    <button
-      onClick={copy}
-      className="group flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-black/30 border border-white/8
-                 hover:border-white/18 transition-colors max-w-full"
-      title="This view reads the same open endpoint any state system can call"
-    >
-      <Terminal className="w-3 h-3 text-[#63A361] shrink-0" />
-      <code className="text-[10.5px] font-mono text-white/55 truncate">{endpoint}</code>
-      {copied ? (
-        <Check className="w-3 h-3 text-[#7FE3BE] shrink-0" />
-      ) : (
-        <Copy className="w-3 h-3 text-white/25 group-hover:text-white/50 shrink-0" />
-      )}
-    </button>
-  );
-};
-
-interface KpiProps {
-  icon: React.ReactNode;
-  value: string;
-  label: string;
-  sub?: string;
-  accent?: string;
-}
-
-const Kpi: React.FC<KpiProps> = ({ icon, value, label, sub, accent = "#63A361" }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 8 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="rounded-xl border border-white/8 bg-white/[0.025] px-3.5 py-3"
-  >
-    <div className="flex items-center gap-2">
-      <span style={{ color: accent }}>{icon}</span>
-      <span className="text-[9.5px] uppercase tracking-wider text-white/40 font-semibold">
-        {label}
-      </span>
-    </div>
-    <div className="mt-1.5 text-[21px] font-black text-white leading-none tabular-nums">
-      {value}
-    </div>
-    {sub && <div className="mt-1 text-[10px] text-white/40">{sub}</div>}
-  </motion.div>
-);
-
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 const CommandCentre: React.FC = () => {
   const [metric, setMetric] = React.useState<MetricKey>("outbreak");
   const [selected, setSelected] = React.useState<string | null>(null);
 
-  const selectedSignal = selected ? SIGNAL_BY_CODE[selected] : null;
+  const signal = selected ? SIGNAL_BY_CODE[selected] : null;
 
-  const endpoint = selected
-    ? `GET /v1/surveillance/districts?state=${selected}&metric=${metric}`
-    : `GET /v1/surveillance/states?metric=${metric}`;
+  const heroStats = [
+    { icon: MapIcon, value: String(NATIONAL_TOTALS.states), label: "States live" },
+    { icon: Users, value: compact(NATIONAL_TOTALS.farmersReached), label: "Farmers reached" },
+    { icon: Activity, value: inr(NATIONAL_TOTALS.districts), label: "Districts" },
+  ];
+
+  const bandStats = [
+    {
+      value: compact(NATIONAL_TOTALS.diagnoses),
+      label: "Diagnoses",
+      sublabel: "Farmer-submitted, last 30 days",
+    },
+    {
+      value: String(NATIONAL_TOTALS.districtsAtRisk),
+      label: "Above Threshold",
+      sublabel: "Districts needing action now",
+    },
+    {
+      value: compact(NATIONAL_TOTALS.advisories7d),
+      label: "Advisories Pushed",
+      sublabel: "Across all states this week",
+    },
+    {
+      value: String(NATIONAL_TOTALS.languages),
+      label: "Advisory Languages",
+      sublabel: `Across ${NATIONAL_TOTALS.agroZones} agro-climatic zones`,
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-[#0A120F] text-white">
-      {/* Ambient field texture — subtle, keeps the console from reading flat */}
-      <div
-        className="fixed inset-0 pointer-events-none opacity-[0.35]"
-        style={{
-          backgroundImage:
-            "radial-gradient(circle at 22% 18%, rgba(99,163,97,0.14), transparent 45%), radial-gradient(circle at 78% 72%, rgba(255,197,15,0.08), transparent 48%)",
-        }}
-      />
-
+    <div className="relative bg-white">
       <Toaster
         position="bottom-right"
         toastOptions={{
           style: {
-            background: "#132019",
-            color: "#E8F5EE",
-            border: "1px solid rgba(255,255,255,0.1)",
-            fontSize: "12.5px",
+            background: "#FFFFFF",
+            color: "#5B532C",
+            border: "1px solid rgba(91,83,44,0.12)",
+            borderRadius: "16px",
+            fontSize: "13px",
+            fontWeight: 500,
+            boxShadow: "0 10px 30px rgba(91,83,44,0.10)",
           },
+          success: { iconTheme: { primary: "#63A361", secondary: "#FFFFFF" } },
         }}
       />
 
-      <div className="relative max-w-[1500px] mx-auto px-4 sm:px-6 pt-28 pb-16">
-        {/* ── Header ─────────────────────────────────────────────────────── */}
-        <header className="flex flex-wrap items-end justify-between gap-4 mb-5">
-          <div>
-            <div className="flex items-center gap-2.5">
-              <span className="relative flex h-2.5 w-2.5">
+      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      <section className="relative pt-32 pb-16">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div
+            className="absolute inset-0 opacity-[0.18]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle, #5B532C 1.2px, transparent 1.2px)",
+              backgroundSize: "22px 22px",
+            }}
+          />
+          <div className="absolute top-10 left-1/4 w-96 h-96 bg-[#63A361]/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#FDE7B3]/20 rounded-full blur-3xl" />
+        </div>
+
+        <div className="relative px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl"
+          >
+            <span className="inline-flex items-center gap-2 text-xs font-semibold text-[#63A361] uppercase tracking-wider">
+              <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#63A361] opacity-60" />
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#63A361]" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#63A361]" />
               </span>
-              <h1 className="text-[22px] sm:text-[26px] font-black tracking-tight">
-                National Crop Surveillance
-              </h1>
-              <span className="text-[9.5px] font-bold uppercase tracking-wider px-2 py-1 rounded-md bg-[#63A361]/18 text-[#A8D9A6]">
-                Command Centre
+              For State &amp; Ministry Officers
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl font-bold text-[#5B532C] leading-[1.12] mt-4 mb-5">
+              National Crop{" "}
+              <span className="relative inline-block">
+                <span className="relative z-10 text-[#63A361] px-2">Surveillance</span>
+                <span className="absolute inset-0 bg-[#FDE7B3]/50 rounded-lg -rotate-1" />
               </span>
-            </div>
-            <p className="mt-1.5 text-[12px] text-white/45 max-w-2xl leading-relaxed">
-              Farmer diagnoses, anonymised and aggregated into a live district-level
-              picture — and the registry through which states hand working advisory
-              models to each other.
+            </h1>
+
+            <p className="text-base text-[#5B532C]/60 leading-relaxed mb-8 max-w-2xl">
+              Every diagnosis a farmer makes becomes one anonymised data point. Together
+              they form a live district-level picture of what is happening to India's
+              crops — and the registry through which states hand working advisory models
+              to each other.
             </p>
-          </div>
 
-          <div className="flex flex-col items-start sm:items-end gap-2">
-            <div className="flex items-center gap-3">
-              <LiveClock />
-              <span
-                className="flex items-center gap-1.5 text-[10px] px-2 py-1 rounded-md bg-[#FFC50F]/12 text-[#FFD95E]"
-                title="These figures are seeded reference data modelling the shape of the live feed. They are not observations from any government source."
+            <div className="flex items-center gap-8 sm:gap-12">
+              {heroStats.map((s) => (
+                <div key={s.label} className="flex items-center gap-2.5">
+                  <div className="w-10 h-10 rounded-full bg-[#63A361]/10 flex items-center justify-center">
+                    <s.icon className="w-5 h-5 text-[#63A361]" />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-xl font-bold text-[#5B532C]">{s.value}</div>
+                    <div className="text-xs text-[#5B532C]/50">{s.label}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── Signal band ───────────────────────────────────────────────────── */}
+      <section className="bg-[#FDFCF8] border-y border-[#5B532C]/10">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-12">
+            {bandStats.map((s, i) => (
+              <motion.div
+                key={s.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.06 }}
+                className="text-center lg:text-left"
               >
-                <Info className="w-3 h-3" />
-                Simulated network data
-              </span>
-            </div>
-            <ApiStrip endpoint={endpoint} />
+                <div className="text-4xl font-bold text-[#5B532C] mb-1">{s.value}</div>
+                <div className="text-sm font-medium text-[#5B532C]">{s.label}</div>
+                <div className="text-xs text-[#5B532C]/50 mt-0.5">{s.sublabel}</div>
+              </motion.div>
+            ))}
           </div>
-        </header>
-
-        {/* ── KPI strip ──────────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 mb-5">
-          <Kpi
-            icon={<MapIcon className="w-3.5 h-3.5" />}
-            value={String(NATIONAL_TOTALS.states)}
-            label="States live"
-            sub={`${NATIONAL_TOTALS.agroZones} agro-climatic zones`}
-          />
-          <Kpi
-            icon={<Layers3 className="w-3.5 h-3.5" />}
-            value={inr(NATIONAL_TOTALS.districts)}
-            label="Districts"
-            sub="continuously monitored"
-          />
-          <Kpi
-            icon={<Activity className="w-3.5 h-3.5" />}
-            value={compact(NATIONAL_TOTALS.diagnoses)}
-            label="Diagnoses 30d"
-            sub="farmer-submitted, anonymised"
-            accent="#FFC50F"
-          />
-          <Kpi
-            icon={<Users className="w-3.5 h-3.5" />}
-            value={compact(NATIONAL_TOTALS.farmersReached)}
-            label="Farmers reached"
-            sub={`${compact(NATIONAL_TOTALS.advisories7d)} advisories / 7d`}
-          />
-          <Kpi
-            icon={<ShieldAlert className="w-3.5 h-3.5" />}
-            value={String(NATIONAL_TOTALS.districtsAtRisk)}
-            label="Above threshold"
-            sub="districts needing action"
-            accent="#E4453A"
-          />
-          <Kpi
-            icon={<Languages className="w-3.5 h-3.5" />}
-            value={String(NATIONAL_TOTALS.languages)}
-            label="Advisory languages"
-            sub="state default routing"
-            accent="#FFC50F"
-          />
         </div>
+      </section>
 
-        {/* ── Map + alert queue ──────────────────────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_330px] gap-4 mb-4">
-          <section className="rounded-2xl border border-white/10 bg-white/[0.02] p-4">
-            <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-              <div>
-                <h2 className="text-[13px] font-bold text-white">
-                  {selectedSignal ? selectedSignal.node.name : "National signal"}
-                </h2>
-                <p className="text-[10.5px] text-white/40">
-                  {METRIC_META[metric].description}
-                </p>
+      {/* ── Map + escalation queue ────────────────────────────────────────── */}
+      <section className="py-20">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-8 items-end mb-10">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <span className="text-xs font-semibold text-[#63A361] uppercase tracking-wider">
+                Live Signal
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-bold text-[#5B532C] mt-3 leading-tight">
+                Where India's crops are{" "}
+                <span className="text-[#63A361]">under pressure</span>
+              </h2>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-[#5B532C]/60 leading-relaxed lg:text-right"
+            >
+              {METRIC_META[metric].description}. Each tile is one state — click to open
+              its districts.
+            </motion.p>
+          </div>
+
+          <div className="grid lg:grid-cols-[1fr_380px] gap-6">
+            {/* Map card */}
+            <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg shadow-[#5B532C]/5">
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-[#5B532C]">
+                    {signal ? signal.node.name : "All India"}
+                  </h3>
+                  <p className="text-sm text-[#5B532C]/50">
+                    {signal
+                      ? `${signal.node.zone} · ${signal.node.crops.slice(0, 3).join(", ")}`
+                      : `${NATIONAL_TOTALS.states} states · ${inr(NATIONAL_TOTALS.districts)} districts`}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-1 p-1 bg-[#FDE7B3]/30 rounded-full">
+                  {(Object.keys(METRIC_META) as MetricKey[]).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setMetric(m)}
+                      className={`px-4 py-2 text-xs font-semibold rounded-full transition-colors ${
+                        metric === m
+                          ? "bg-[#63A361] text-white"
+                          : "text-[#5B532C]/60 hover:text-[#5B532C]"
+                      }`}
+                    >
+                      {METRIC_META[m].short}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex items-center rounded-lg bg-white/5 p-0.5">
-                {(Object.keys(METRIC_META) as MetricKey[]).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => setMetric(m)}
-                    className={`px-2.5 py-1.5 text-[10.5px] font-semibold rounded-md transition-colors ${
-                      metric === m
-                        ? "bg-white/12 text-white"
-                        : "text-white/45 hover:text-white/75"
-                    }`}
-                  >
-                    {METRIC_META[m].short}
-                  </button>
-                ))}
-              </div>
+              <HexIndiaMap metric={metric} selected={selected} onSelect={setSelected} />
             </div>
 
-            <HexIndiaMap metric={metric} selected={selected} onSelect={setSelected} />
-          </section>
+            {/* Escalation queue */}
+            <div className="p-6 bg-[#FDFCF8] rounded-2xl border border-[#5B532C]/10 h-[620px]">
+              <AlertFeed filterState={selected} onSelectState={setSelected} />
+            </div>
+          </div>
 
-          <aside className="rounded-2xl border border-white/10 bg-white/[0.02] p-4 h-[520px] lg:h-auto lg:max-h-[620px]">
-            <AlertFeed filterState={selected} onSelectState={setSelected} />
-          </aside>
+          {/* Selected-state summary */}
+          {signal && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-2 lg:grid-cols-4 gap-5 mt-6"
+            >
+              {[
+                {
+                  value: String(signal.outbreakIndex),
+                  label: "Pressure index",
+                  sublabel: SEVERITY_META[signal.severity].label,
+                  color: SEVERITY_META[signal.severity].text,
+                },
+                {
+                  value: `${signal.districtsAtRisk}/${signal.districtsMonitored}`,
+                  label: "Districts at risk",
+                  sublabel: "Above escalation threshold",
+                  color: "#5B532C",
+                },
+                {
+                  value: signal.topThreat,
+                  label: "Dominant threat",
+                  sublabel: `${signal.node.crops.slice(0, 2).join(" & ")} belt`,
+                  color: "#5B532C",
+                  small: true,
+                },
+                {
+                  value: `${signal.node.farmHouseholdsLakh} L`,
+                  label: "Farm households",
+                  sublabel: `Advisories in ${signal.node.language}`,
+                  color: "#5B532C",
+                },
+              ].map((c) => (
+                <div
+                  key={c.label}
+                  className="p-5 bg-white rounded-2xl border border-[#5B532C]/10"
+                >
+                  <div
+                    className={`${c.small ? "text-lg" : "text-3xl"} font-bold mb-1 leading-tight`}
+                    style={{ color: c.color }}
+                  >
+                    {c.value}
+                  </div>
+                  <div className="text-sm font-medium text-[#5B532C]">{c.label}</div>
+                  <div className="text-xs text-[#5B532C]/50 mt-0.5">{c.sublabel}</div>
+                </div>
+              ))}
+            </motion.div>
+          )}
         </div>
+      </section>
 
-        {/* ── District drill-down ────────────────────────────────────────── */}
-        {selectedSignal ? (
-          <div className="mb-4">
+      {/* ── District drill-down ───────────────────────────────────────────── */}
+      {signal && (
+        <section className="pb-20">
+          <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <DistrictPanel
-              stateCode={selectedSignal.node.code}
+              stateCode={signal.node.code}
               metric={metric}
               onBack={() => setSelected(null)}
             />
           </div>
-        ) : (
-          <div className="mb-4 rounded-2xl border border-dashed border-white/12 bg-white/[0.015] px-4 py-5 text-center">
-            <p className="text-[12px] text-white/45">
-              Select a state on the map to drill into district-level pressure, dominant
-              threats and advisory reach.
-            </p>
+        </section>
+      )}
+
+      {/* ── Model exchange ────────────────────────────────────────────────── */}
+      <section className="py-20 bg-[#FDFCF8] border-t border-[#5B532C]/10">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <ModelExchange />
+        </div>
+      </section>
+
+      {/* ── Provenance ────────────────────────────────────────────────────── */}
+      <section className="py-12 bg-white">
+        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#FDE7B3]/25 border border-[#5B532C]/10">
+            <div className="w-10 h-10 rounded-xl bg-[#FFC50F]/20 flex items-center justify-center flex-shrink-0">
+              <Info className="w-5 h-5 text-[#B08800]" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-[#5B532C] mb-1">
+                About this data
+              </h4>
+              <p className="text-sm text-[#5B532C]/60 leading-relaxed">
+                District names and agro-climatic zones are real. Every metric shown is
+                seeded reference data that models the shape of the live feed — it is not
+                an observation from ICAR, ISRO or any government source. The exported
+                schema{" "}
+                <span className="font-semibold text-[#5B532C]/80">agri-signal/v1</span> is
+                the contract the production feed fills once diagnoses are written to
+                persistent storage.
+              </p>
+            </div>
           </div>
-        )}
+        </div>
+      </section>
 
-        {/* ── Watchlist ──────────────────────────────────────────────────── */}
-        {selectedSignal && (
-          <div className="mb-4 grid grid-cols-2 md:grid-cols-4 gap-2.5">
-            {[
-              {
-                label: "State pressure index",
-                value: String(selectedSignal.outbreakIndex),
-                sub: SEVERITY_META[selectedSignal.severity].label,
-                color: SEVERITY_META[selectedSignal.severity].color,
-              },
-              {
-                label: "Districts at risk",
-                value: `${selectedSignal.districtsAtRisk}/${selectedSignal.districtsMonitored}`,
-                sub: "above escalation threshold",
-                color: "#FFC50F",
-              },
-              {
-                label: "Dominant threat",
-                value: selectedSignal.topThreat,
-                sub: `${selectedSignal.node.crops.slice(0, 2).join(", ")} belt`,
-                color: "#A8D9A6",
-              },
-              {
-                label: "Farm households",
-                value: `${selectedSignal.node.farmHouseholdsLakh} L`,
-                sub: `advisories in ${selectedSignal.node.language}`,
-                color: "#63A361",
-              },
-            ].map((c) => (
-              <div
-                key={c.label}
-                className="rounded-xl border border-white/8 bg-white/[0.025] px-3.5 py-3"
-              >
-                <div className="text-[9.5px] uppercase tracking-wider text-white/40 font-semibold">
-                  {c.label}
-                </div>
-                <div
-                  className="mt-1.5 text-[15px] font-black leading-tight"
-                  style={{ color: c.color }}
-                >
-                  {c.value}
-                </div>
-                <div className="mt-0.5 text-[10px] text-white/40">{c.sub}</div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ── Model exchange ─────────────────────────────────────────────── */}
-        <ModelExchange />
-
-        {/* ── Provenance footer ──────────────────────────────────────────── */}
-        <footer className="mt-6 rounded-xl border border-white/8 bg-white/[0.015] px-4 py-3">
-          <p className="text-[10.5px] leading-relaxed text-white/40">
-            <span className="font-semibold text-white/60">Data provenance.</span>{" "}
-            District names and agro-climatic zones are real. Every metric on this page is
-            seeded reference data that models the shape of the live feed — it is not an
-            observation from ICAR, ISRO or any government source. The exported schema{" "}
-            <code className="text-white/55">agri-signal/v1</code> is the contract the
-            production feed fills once diagnoses are written to persistent storage.
-          </p>
-        </footer>
-      </div>
+      <Footer />
     </div>
   );
 };

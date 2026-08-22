@@ -139,15 +139,21 @@ export function severityOf(index: number): Severity {
   return "low";
 }
 
+/**
+ * Severity ramp, tuned for the light brand palette.
+ *  color — solid fill / marker
+ *  text  — darkened variant that stays readable on white
+ *  soft  — translucent tint for chip and row backgrounds
+ */
 export const SEVERITY_META: Record<
   Severity,
-  { label: string; color: string; ring: string; text: string }
+  { label: string; color: string; text: string; soft: string }
 > = {
-  low: { label: "Low", color: "#2E8B6B", ring: "rgba(46,139,107,0.35)", text: "#7FE3BE" },
-  guarded: { label: "Guarded", color: "#63A361", ring: "rgba(99,163,97,0.35)", text: "#A8D9A6" },
-  elevated: { label: "Elevated", color: "#FFC50F", ring: "rgba(255,197,15,0.35)", text: "#FFD95E" },
-  high: { label: "High", color: "#F0872A", ring: "rgba(240,135,42,0.4)", text: "#FFB877" },
-  severe: { label: "Severe", color: "#E4453A", ring: "rgba(228,69,58,0.45)", text: "#FF8B82" },
+  low: { label: "Low", color: "#63A361", text: "#4A8A4D", soft: "rgba(99,163,97,0.12)" },
+  guarded: { label: "Guarded", color: "#9CBF4F", text: "#6E8C2F", soft: "rgba(156,191,79,0.14)" },
+  elevated: { label: "Elevated", color: "#FFC50F", text: "#A57D00", soft: "rgba(255,197,15,0.16)" },
+  high: { label: "High", color: "#EF8A3C", text: "#C2661F", soft: "rgba(239,138,60,0.14)" },
+  severe: { label: "Severe", color: "#D64545", text: "#B3332E", soft: "rgba(214,69,69,0.12)" },
 };
 
 // ── Signal generation ─────────────────────────────────────────────────────────

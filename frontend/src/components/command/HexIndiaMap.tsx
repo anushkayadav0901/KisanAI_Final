@@ -3,8 +3,8 @@
  *
  * Each state is one tile, positioned to approximate its place in the country
  * without drawing a boundary. A cartogram is the honest choice here: it
- * carries the signal (which states are under pressure) without asserting
- * anything about borders, and it stays readable at any size.
+ * carries the signal without asserting anything about borders, and it stays
+ * readable at any size.
  */
 
 import React from "react";
@@ -35,15 +35,10 @@ function hexCenter(col: number, row: number) {
 function hexPath(cx: number, cy: number, r: number) {
   const pts: string[] = [];
   for (let i = 0; i < 6; i++) {
-    const angle = (Math.PI / 180) * (60 * i - 90);
-    pts.push(`${(cx + r * Math.cos(angle)).toFixed(2)},${(cy + r * Math.sin(angle)).toFixed(2)}`);
+    const a = (Math.PI / 180) * (60 * i - 90);
+    pts.push(`${(cx + r * Math.cos(a)).toFixed(2)},${(cy + r * Math.sin(a)).toFixed(2)}`);
   }
   return `M${pts.join("L")}Z`;
-}
-
-/** Blend the severity palette into a continuous ramp. */
-function rampColor(value: number): string {
-  return SEVERITY_META[severityOf(value)].color;
 }
 
 const bounds = NATIONAL_SIGNAL.reduce(
@@ -67,28 +62,18 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
   const [hovered, setHovered] = React.useState<StateSignal | null>(null);
 
   return (
-    <div className="relative">
+    <div>
       <svg
         viewBox={`0 0 ${VB_W} ${VB_H}`}
         className="w-full h-auto select-none"
         role="img"
         aria-label="Hex tile cartogram of Indian states by agricultural signal"
       >
-        <defs>
-          <filter id="tileGlow" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
         {NATIONAL_SIGNAL.map((signal, i) => {
-          const { col, row, code } = { ...signal.node };
+          const { col, row, code } = signal.node;
           const { cx, cy } = hexCenter(col, row);
           const value = metricValue(signal, metric);
-          const color = rampColor(value);
+          const meta = SEVERITY_META[severityOf(value)];
           const isSelected = selected === code;
           const isDimmed = selected !== null && !isSelected;
           const isCritical = value >= 60;
@@ -96,27 +81,27 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
           return (
             <motion.g
               key={code}
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: isDimmed ? 0.32 : 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: isDimmed ? 0.28 : 1, scale: 1 }}
               transition={{ delay: i * 0.012, duration: 0.35, ease: "easeOut" }}
               style={{ cursor: "pointer", transformOrigin: `${cx}px ${cy}px` }}
               onClick={() => onSelect(isSelected ? null : code)}
               onMouseEnter={() => setHovered(signal)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* Pulse ring on states above the escalation threshold */}
+              {/* Soft halo on states above the escalation threshold */}
               {isCritical && !isDimmed && (
                 <motion.path
                   d={hexPath(cx, cy, R - 1)}
                   fill="none"
-                  stroke={color}
-                  strokeWidth={1.5}
-                  initial={{ opacity: 0.7, scale: 1 }}
-                  animate={{ opacity: 0, scale: 1.5 }}
+                  stroke={meta.color}
+                  strokeWidth={2}
+                  initial={{ opacity: 0.5, scale: 1 }}
+                  animate={{ opacity: 0, scale: 1.42 }}
                   transition={{
-                    duration: 2.4,
+                    duration: 2.6,
                     repeat: Infinity,
-                    delay: (i % 5) * 0.45,
+                    delay: (i % 5) * 0.5,
                     ease: "easeOut",
                   }}
                   style={{ transformOrigin: `${cx}px ${cy}px` }}
@@ -125,12 +110,11 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
 
               <path
                 d={hexPath(cx, cy, R - 2.5)}
-                fill={color}
-                fillOpacity={0.16 + (value / 100) * 0.74}
-                stroke={isSelected ? "#FFFFFF" : color}
-                strokeWidth={isSelected ? 2.4 : 1.1}
-                strokeOpacity={isSelected ? 1 : 0.85}
-                filter={isSelected || isCritical ? "url(#tileGlow)" : undefined}
+                fill={meta.color}
+                fillOpacity={isSelected ? 1 : 0.2 + (value / 100) * 0.68}
+                stroke={isSelected ? "#5B532C" : meta.color}
+                strokeWidth={isSelected ? 2.5 : 1.2}
+                strokeOpacity={isSelected ? 0.85 : 0.55}
               />
 
               <text
@@ -139,23 +123,22 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
                 textAnchor="middle"
                 className="pointer-events-none"
                 style={{
-                  fontSize: 12,
-                  fontWeight: 800,
-                  fill: value >= 42 ? "#0B1A14" : "#E8F5EE",
-                  letterSpacing: "0.02em",
+                  fontSize: 12.5,
+                  fontWeight: 700,
+                  fill: value >= 50 ? "#FFFFFF" : "#5B532C",
                 }}
               >
                 {code}
               </text>
               <text
                 x={cx}
-                y={cy + 11}
+                y={cy + 11.5}
                 textAnchor="middle"
                 className="pointer-events-none"
                 style={{
-                  fontSize: 9.5,
-                  fontWeight: 700,
-                  fill: value >= 42 ? "rgba(11,26,20,0.7)" : "rgba(232,245,238,0.65)",
+                  fontSize: 10,
+                  fontWeight: 600,
+                  fill: value >= 50 ? "rgba(255,255,255,0.85)" : "rgba(91,83,44,0.55)",
                 }}
               >
                 {value}
@@ -165,8 +148,8 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
         })}
       </svg>
 
-      {/* Hover readout — fixed slot, so the layout never jumps */}
-      <div className="mt-1 h-[58px] px-3 flex items-center">
+      {/* Hover readout — fixed height so the layout never jumps */}
+      <div className="mt-2 h-[52px] flex items-center">
         {hovered ? (
           <motion.div
             initial={{ opacity: 0, y: 4 }}
@@ -174,46 +157,48 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
             className="flex items-center gap-3"
           >
             <span
-              className="w-2.5 h-2.5 rounded-full shrink-0"
-              style={{ background: SEVERITY_META[hovered.severity].color }}
-            />
+              className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0 text-xs font-bold"
+              style={{
+                background: SEVERITY_META[hovered.severity].soft,
+                color: SEVERITY_META[hovered.severity].text,
+              }}
+            >
+              {hovered.node.code}
+            </span>
             <div className="min-w-0">
-              <div className="text-sm font-bold text-white truncate">
+              <div className="text-sm font-bold text-[#5B532C] truncate">
                 {hovered.node.name}
-                <span className="ml-2 text-[11px] font-medium text-white/45">
+                <span className="ml-2 text-xs font-medium text-[#5B532C]/45">
                   {hovered.node.zone}
                 </span>
               </div>
-              <div className="text-[11px] text-white/55 truncate">
+              <div className="text-xs text-[#5B532C]/55 truncate">
                 {METRIC_META[metric].label} {metricValue(hovered, metric)} ·{" "}
-                {hovered.districtsMonitored} districts · dominant threat{" "}
-                <span className="text-white/80">{hovered.topThreat}</span>
+                {hovered.districtsMonitored} districts · {hovered.topThreat}
               </div>
             </div>
           </motion.div>
         ) : (
-          <span className="text-[11px] text-white/35">
-            Hover a state for detail · click to drill into districts
+          <span className="text-xs text-[#5B532C]/40">
+            Hover a state for detail · click to open its districts
           </span>
         )}
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 px-3 pt-2 border-t border-white/8">
-        <span className="text-[10px] uppercase tracking-wider text-white/40 font-semibold">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-4 border-t border-[#5B532C]/10">
+        <span className="text-xs font-semibold uppercase tracking-wider text-[#63A361]">
           {METRIC_META[metric].short}
         </span>
-        <div className="flex items-center gap-3">
-          {(["low", "guarded", "elevated", "high", "severe"] as const).map((s) => (
-            <div key={s} className="flex items-center gap-1.5">
-              <span
-                className="w-3 h-3 rounded-sm"
-                style={{ background: SEVERITY_META[s].color, opacity: 0.85 }}
-              />
-              <span className="text-[10px] text-white/50">{SEVERITY_META[s].label}</span>
-            </div>
-          ))}
-        </div>
+        {(["low", "guarded", "elevated", "high", "severe"] as const).map((s) => (
+          <div key={s} className="flex items-center gap-2">
+            <span
+              className="w-3.5 h-3.5 rounded-md"
+              style={{ background: SEVERITY_META[s].color }}
+            />
+            <span className="text-xs text-[#5B532C]/60">{SEVERITY_META[s].label}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
