@@ -10,6 +10,7 @@ const navItems = [
   { path: "/market", label: "Market" },
   { path: "/farming", label: "Farming" },
   { path: "/advisory", label: "Advisory" },
+  { path: "/consent", label: "My Data" },
   { path: "/command", label: "Command" },
 ];
 

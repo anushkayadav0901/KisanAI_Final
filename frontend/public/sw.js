@@ -140,6 +140,16 @@ self.addEventListener("fetch", (event) => {
   // a farmer to spray the wrong thing.
   if (url.pathname.startsWith("/api/ai")) return;
 
+  // Consent state is never cached either. Showing a farmer a stale copy of who
+  // can read their data, after they revoked it, would be worse than showing
+  // nothing at all.
+  if (
+    url.pathname.startsWith("/v1/consent") ||
+    url.pathname.startsWith("/v1/data")
+  ) {
+    return;
+  }
+
   // Open-data API: serve cached immediately, refresh behind it.
   if (url.pathname.startsWith("/v1/")) {
     event.respondWith(staleWhileRevalidate(request));

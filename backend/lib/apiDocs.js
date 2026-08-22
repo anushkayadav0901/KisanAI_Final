@@ -77,6 +77,39 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/v1/consent/vocabulary",
+    tag: "consent",
+    summary: "Consent vocabulary",
+    detail:
+      "The closed list of purposes a consumer may request, and every data type with its sensitivity grade. Purpose is not free text: a farmer agrees to something specific.",
+  },
+  {
+    method: "GET",
+    path: "/v1/consent",
+    tag: "consent",
+    summary: "A farmer's consent artefacts",
+    detail:
+      "DEPA-aligned artefacts: who may read, for what purpose, which data types, until when, and how many times it has actually been read.",
+  },
+  {
+    method: "POST",
+    path: "/v1/data/read",
+    tag: "consent",
+    summary: "Consent-gated data read",
+    detail:
+      "The endpoint that proves consent is enforced rather than recorded. Paste an active consent id to get data; revoke it on the My Data page and send again to get 403 with the reason. Purpose and data types are also binding.",
+    body: { consentId: "paste-an-id-from-/v1/consent" },
+  },
+  {
+    method: "GET",
+    path: "/v1/consent/audit",
+    tag: "consent",
+    summary: "Access trail",
+    detail:
+      "Every grant, read, withdrawal and blocked attempt, newest first. Denials are recorded as prominently as successful reads.",
+  },
+  {
+    method: "GET",
     path: "/v1/openapi.json",
     tag: "meta",
     summary: "OpenAPI 3.0 specification",

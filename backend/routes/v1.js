@@ -16,6 +16,12 @@
  *   GET /v1/knowledge                   corpus manifest and provenance
  *   GET /v1/knowledge/search            retrieval over the advisory corpus
  *   POST /v1/advisory                   retrieval-grounded advisory with citations
+ *   GET  /v1/consent/vocabulary         purposes and data types with sensitivity
+ *   GET  /v1/consent                    a farmer's consent artefacts
+ *   POST /v1/consent                    grant a consent
+ *   POST /v1/consent/:id/revoke         withdraw a consent
+ *   GET  /v1/consent/:id/audit          access trail for one consent
+ *   POST /v1/data/read                  consent-gated data read
  */
 
 import { Router } from "express";
@@ -36,17 +42,47 @@ import {
   CORPUS_STATS,
 } from "../lib/groundedAdvisory.js";
 import { CORPUS } from "../data/knowledge/corpus.js";
+import {
+  PURPOSES,
+  DATA_TYPES,
+  CONSENT_SCHEMA,
+  DEMO_PRINCIPAL,
+  createConsent,
+  getConsent,
+  listConsents,
+  revokeConsent,
+  authorise,
+  auditTrail,
+  seedDemo,
+  CONSENT_STATS,
+} from "../lib/consent.js";
 import { renderDocs } from "../lib/apiDocs.js";
 import { OPENAPI_SPEC } from "../lib/openapi.js";
 
 const router = Router();
 
-// Open data: explicitly cacheable and publicly readable.
+// Open, non-personal data is cacheable and publicly readable.
 router.use((_req, res, next) => {
   res.set("Cache-Control", "public, max-age=300");
   res.set("X-Data-Licence", "CC-BY-4.0");
   next();
 });
+
+/**
+ * Consent state must never be cached.
+ *
+ * The open-data cache header above is right for surveillance and model data,
+ * and wrong for anything personal: a farmer who revokes access and then sees a
+ * five-minute-old "still active" list has been told something false about their
+ * own rights. "public" would also permit an intermediary cache to hold personal
+ * consent records. Both are unacceptable here, so these routes opt out.
+ */
+function noStore(_req, res, next) {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  res.set("Pragma", "no-cache");
+  res.set("Expires", "0");
+  next();
+}
 
 // ── Discovery ─────────────────────────────────────────────────────────────────
 
@@ -71,6 +107,9 @@ router.get("/", (req, res) => {
       knowledge: `${base}/knowledge`,
       knowledgeSearch: `${base}/knowledge/search?q=yellow+rust+wheat`,
       advisory: `${base}/advisory  (POST {"question": "..."})`,
+      consentVocabulary: `${base}/consent/vocabulary`,
+      consent: `${base}/consent?principal=${DEMO_PRINCIPAL.id}`,
+      dataRead: `${base}/data/read  (POST {"consentId": "...", "dataTypes": [...]})`,
     },
   });
 });
@@ -197,6 +236,148 @@ router.post("/advisory", async (req, res) => {
       message: err.message,
     });
   }
+});
+
+// -- Consent and data rights --------------------------------------------------
+// Seeded on first use so the consent screen has a realistic history to show.
+
+seedDemo();
+
+router.get("/consent/vocabulary", noStore, (_req, res) => {
+  res.json({
+    schema: CONSENT_SCHEMA,
+    profile: "DEPA-aligned",
+    // Purposes are a closed list. Free-text purpose lets a consumer stay
+    // technically within a grant while doing something the farmer never agreed
+    // to, so the vocabulary is published and fixed.
+    purposes: Object.entries(PURPOSES).map(([code, p]) => ({ code, ...p })),
+    dataTypes: Object.entries(DATA_TYPES).map(([code, d]) => ({ code, ...d })),
+  });
+});
+
+router.get("/consent", noStore, (req, res) => {
+  const principal = String(req.query.principal ?? DEMO_PRINCIPAL.id);
+  res.json({
+    schema: CONSENT_SCHEMA,
+    principal,
+    stats: CONSENT_STATS(),
+    consents: listConsents(principal),
+  });
+});
+
+router.post("/consent", noStore, (req, res) => {
+  try {
+    const artefact = createConsent({
+      principal: req.body?.principal ?? DEMO_PRINCIPAL,
+      consumer: req.body?.consumer,
+      purposeCode: req.body?.purposeCode,
+      dataTypes: req.body?.dataTypes ?? [],
+      durationDays: Number(req.body?.durationDays) || 90,
+    });
+    res.status(201).json(artefact);
+  } catch (err) {
+    res.status(err.status || 400).json({
+      error: "consent_invalid",
+      message: err.message,
+    });
+  }
+});
+
+router.post("/consent/:id/revoke", noStore, (req, res) => {
+  const artefact = revokeConsent(
+    req.params.id,
+    req.body?.reason || "Revoked by the farmer",
+  );
+  if (!artefact) {
+    return res.status(404).json({
+      error: "unknown_consent",
+      message: `No consent artefact with id '${req.params.id}'`,
+    });
+  }
+  res.json(artefact);
+});
+
+router.get("/consent/:id/audit", noStore, (req, res) => {
+  if (!getConsent(req.params.id)) {
+    return res.status(404).json({
+      error: "unknown_consent",
+      message: `No consent artefact with id '${req.params.id}'`,
+    });
+  }
+  res.json({
+    schema: CONSENT_SCHEMA,
+    consentId: req.params.id,
+    entries: auditTrail(req.params.id),
+  });
+});
+
+router.get("/consent/audit", noStore, (_req, res) => {
+  res.json({ schema: CONSENT_SCHEMA, entries: auditTrail() });
+});
+
+// -- Consent-gated data read --------------------------------------------------
+
+/**
+ * The endpoint that proves consent is enforced rather than merely recorded.
+ * Revoke a consent, call this again with the same artefact, and it returns 403
+ * with the reason. Nothing else in the system can bypass this check.
+ */
+router.post("/data/read", noStore, (req, res) => {
+  const { consentId, consumerId, purposeCode, dataTypes } = req.body ?? {};
+
+  if (!consentId) {
+    return res.status(400).json({
+      error: "missing_parameter",
+      message: 'Body must contain {"consentId": "..."}',
+    });
+  }
+
+  const decision = authorise({ consentId, consumerId, purposeCode, dataTypes });
+
+  if (!decision.allowed) {
+    return res.status(403).json({
+      error: "consent_denied",
+      message: decision.reason,
+      consentId,
+      // The farmer's decision is the authority here, and the consumer is told
+      // exactly that rather than being left to guess at a generic 403.
+      authority: "data principal",
+    });
+  }
+
+  const artefact = decision.artefact;
+  const granted = dataTypes ?? artefact.dataTypes;
+
+  // Representative payload shaped by what the artefact actually permits.
+  const payload = {};
+  if (granted.includes("identity.anonymous_id")) payload.anonymous_id = "anon-7f3c91";
+  if (granted.includes("identity.name")) payload.name = artefact.dataPrincipal.name;
+  if (granted.includes("location.district")) payload.district = artefact.dataPrincipal.district;
+  if (granted.includes("location.precise")) payload.coordinates = { lat: 30.901, lon: 75.857 };
+  if (granted.includes("diagnosis.result")) {
+    payload.diagnoses = [
+      { date: "2026-08-14", crop: "Wheat", finding: "Yellow Rust", healthScore: 62 },
+      { date: "2026-07-29", crop: "Wheat", finding: "No issue detected", healthScore: 88 },
+    ];
+  }
+  if (granted.includes("farm.profile")) {
+    payload.farm = { sizeHectares: 2.4, crops: ["Wheat", "Rice"] };
+  }
+  if (granted.includes("diagnosis.image")) {
+    payload.images = ["(image payload withheld in this demo response)"];
+  }
+  if (granted.includes("advisory.history")) {
+    payload.advisories = [{ date: "2026-08-15", topic: "Yellow rust spray window" }];
+  }
+
+  res.json({
+    schema: CONSENT_SCHEMA,
+    consentId,
+    purpose: artefact.purpose.code,
+    dataTypes: granted,
+    accessCount: artefact.accessCount,
+    data: payload,
+  });
 });
 
 export default router;
