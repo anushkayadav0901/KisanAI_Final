@@ -22,6 +22,10 @@
  *   POST /v1/consent/:id/revoke         withdraw a consent
  *   GET  /v1/consent/:id/audit          access trail for one consent
  *   POST /v1/data/read                  consent-gated data read
+ *   GET  /v1/fields                     field boundaries (JSON or GeoJSON)
+ *   POST /v1/fields                     save a drawn boundary
+ *   GET  /v1/fields/:id/vegetation      NDVI series for one field
+ *   DELETE /v1/fields/:id               remove a field
  */
 
 import { Router } from "express";
@@ -42,6 +46,15 @@ import {
   CORPUS_STATS,
 } from "../lib/groundedAdvisory.js";
 import { CORPUS } from "../data/knowledge/corpus.js";
+import {
+  FIELD_SCHEMA,
+  createField,
+  listFields,
+  getField,
+  deleteField,
+  fieldVegetation,
+  asFeatureCollection,
+} from "../lib/fields.js";
 import {
   PURPOSES,
   DATA_TYPES,
@@ -110,6 +123,8 @@ router.get("/", (req, res) => {
       consentVocabulary: `${base}/consent/vocabulary`,
       consent: `${base}/consent?principal=${DEMO_PRINCIPAL.id}`,
       dataRead: `${base}/data/read  (POST {"consentId": "...", "dataTypes": [...]})`,
+      fields: `${base}/fields`,
+      fieldsGeoJson: `${base}/fields?format=geojson`,
     },
   });
 });
@@ -378,6 +393,68 @@ router.post("/data/read", noStore, (req, res) => {
     accessCount: artefact.accessCount,
     data: payload,
   });
+});
+
+// -- Field boundaries ---------------------------------------------------------
+
+router.get("/fields", noStore, (req, res) => {
+  const owner = req.query.owner ? String(req.query.owner) : undefined;
+
+  // GeoJSON on request: every GIS tool, Earth Engine included, reads it
+  // directly, with no conversion step on the consumer's side.
+  if (String(req.query.format).toLowerCase() === "geojson") {
+    return res.json(asFeatureCollection(owner));
+  }
+
+  const fields = listFields(owner);
+  res.json({
+    schema: FIELD_SCHEMA,
+    count: fields.length,
+    totalHectares: Number(
+      fields.reduce((a, f) => a + f.areaHectares, 0).toFixed(3),
+    ),
+    fields,
+  });
+});
+
+router.post("/fields", noStore, (req, res) => {
+  try {
+    const field = createField({
+      name: req.body?.name,
+      ring: req.body?.ring,
+      crop: req.body?.crop,
+      sownOn: req.body?.sownOn,
+      owner: req.body?.owner,
+    });
+    res.status(201).json(field);
+  } catch (err) {
+    res.status(err.status || 400).json({
+      error: "invalid_field",
+      message: err.message,
+    });
+  }
+});
+
+router.get("/fields/:id/vegetation", noStore, (req, res) => {
+  const data = fieldVegetation(req.params.id);
+  if (!data) {
+    return res.status(404).json({
+      error: "unknown_field",
+      message: `No field with id '${req.params.id}'`,
+    });
+  }
+  res.json(data);
+});
+
+router.delete("/fields/:id", noStore, (req, res) => {
+  if (!getField(req.params.id)) {
+    return res.status(404).json({
+      error: "unknown_field",
+      message: `No field with id '${req.params.id}'`,
+    });
+  }
+  deleteField(req.params.id);
+  res.json({ deleted: req.params.id });
 });
 
 export default router;

@@ -9,6 +9,7 @@ import Research from "./pages/Research";
 import CommandCentre from "./pages/CommandCentre";
 import Advisory from "./pages/Advisory";
 import Consent from "./pages/Consent";
+import Fields from "./pages/Fields";
 import Chatbot from "./components/Chatbot";
 import { ConnectionBar } from "./components/offline/ConnectionBar";
 
@@ -28,6 +29,7 @@ function App() {
             <Route path="/farming" element={<Water />} />
             <Route path="/research" element={<Research />} />
             <Route path="/advisory" element={<Advisory />} />
+            <Route path="/fields" element={<Fields />} />
             <Route path="/consent" element={<Consent />} />
             <Route path="/command" element={<CommandCentre />} />
           </Routes>
