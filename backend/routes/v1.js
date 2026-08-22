@@ -13,6 +13,9 @@
  *   GET /v1/surveillance/alerts         open escalations, national or by state
  *   GET /v1/models                      cross-state advisory model registry
  *   GET /v1/models/:id                  a single model card artefact
+ *   GET /v1/knowledge                   corpus manifest and provenance
+ *   GET /v1/knowledge/search            retrieval over the advisory corpus
+ *   POST /v1/advisory                   retrieval-grounded advisory with citations
  */
 
 import { Router } from "express";
@@ -27,6 +30,12 @@ import {
   ALERT_SCHEMA,
   MODEL_SCHEMA,
 } from "../lib/surveillance.js";
+import {
+  retrieve,
+  answerGrounded,
+  CORPUS_STATS,
+} from "../lib/groundedAdvisory.js";
+import { CORPUS } from "../data/knowledge/corpus.js";
 import { renderDocs } from "../lib/apiDocs.js";
 import { OPENAPI_SPEC } from "../lib/openapi.js";
 
@@ -59,6 +68,9 @@ router.get("/", (req, res) => {
       alerts: `${base}/surveillance/alerts`,
       models: `${base}/models`,
       model: `${base}/models/kai.pb.wheat-yellow-rust`,
+      knowledge: `${base}/knowledge`,
+      knowledgeSearch: `${base}/knowledge/search?q=yellow+rust+wheat`,
+      advisory: `${base}/advisory  (POST {"question": "..."})`,
     },
   });
 });
@@ -119,6 +131,72 @@ router.get("/models/:id", (req, res) => {
     });
   }
   res.json(serialiseModel(model));
+});
+
+// -- Knowledge corpus ---------------------------------------------------------
+
+router.get("/knowledge", (_req, res) => {
+  res.json({
+    schema: "agri-knowledge/v1",
+    generated: new Date().toISOString(),
+    retrieval: "BM25 (Okapi), lexical, deterministic",
+    ...CORPUS_STATS,
+    documents_list: CORPUS.map((d) => ({
+      id: d.id,
+      title: d.title,
+      crop: d.crop,
+      topic: d.topic,
+      sections: d.sections.length,
+      source: d.source,
+    })),
+  });
+});
+
+router.get("/knowledge/search", (req, res) => {
+  const q = String(req.query.q ?? "").trim();
+  if (!q) {
+    return res.status(400).json({
+      error: "missing_parameter",
+      message: "Query parameter 'q' is required, e.g. ?q=yellow rust wheat",
+    });
+  }
+
+  const limit = Math.min(Number(req.query.limit) || 5, 20);
+  const results = retrieve(q, { limit });
+
+  res.json({
+    schema: "agri-knowledge/v1",
+    query: q,
+    count: results.length,
+    // Surfacing the matched terms is the point: a consumer can see why a
+    // passage was retrieved rather than trusting an opaque similarity score.
+    results,
+  });
+});
+
+// -- Grounded advisory --------------------------------------------------------
+
+router.post("/advisory", async (req, res) => {
+  const question = String(req.body?.question ?? "").trim();
+  if (!question) {
+    return res.status(400).json({
+      error: "missing_parameter",
+      message: 'Body must contain {"question": "..."}',
+    });
+  }
+
+  try {
+    const result = await answerGrounded(question, {
+      limit: Math.min(Number(req.body?.limit) || 5, 10),
+    });
+    res.json({ schema: "agri-advisory/v1", ...result });
+  } catch (err) {
+    console.error("[v1/advisory]", err);
+    res.status(err.status || 500).json({
+      error: "advisory_failed",
+      message: err.message,
+    });
+  }
 });
 
 export default router;

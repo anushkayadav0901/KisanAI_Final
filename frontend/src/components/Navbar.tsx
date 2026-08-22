@@ -9,6 +9,7 @@ const navItems = [
   { path: "/consult", label: "Consult" },
   { path: "/market", label: "Market" },
   { path: "/farming", label: "Farming" },
+  { path: "/advisory", label: "Advisory" },
   { path: "/command", label: "Command" },
 ];
 

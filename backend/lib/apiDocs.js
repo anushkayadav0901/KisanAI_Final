@@ -52,6 +52,31 @@ const ENDPOINTS = [
   },
   {
     method: "GET",
+    path: "/v1/knowledge",
+    tag: "knowledge",
+    summary: "Advisory corpus manifest",
+    detail:
+      "What the advisory system is allowed to know, with the provenance of every document. Nothing outside this corpus can be used to answer.",
+  },
+  {
+    method: "GET",
+    path: "/v1/knowledge/search?q=yellow%20stripes%20on%20wheat%20leaves",
+    tag: "knowledge",
+    summary: "Retrieval over the corpus",
+    detail:
+      "BM25 lexical search. Each result carries the query terms that matched it, so relevance is inspectable rather than an opaque similarity score.",
+  },
+  {
+    method: "POST",
+    path: "/v1/advisory",
+    tag: "knowledge",
+    summary: "Grounded advisory with citations",
+    detail:
+      "Answers strictly from retrieved passages. If the corpus cannot support an answer the request is refused before any model call, and the gate that made that decision is returned with it. Try the refusal by asking something outside agriculture.",
+    body: { question: "My wheat has yellow stripes on the leaves" },
+  },
+  {
+    method: "GET",
     path: "/v1/openapi.json",
     tag: "meta",
     summary: "OpenAPI 3.0 specification",
@@ -68,14 +93,21 @@ export function renderDocs(origin) {
     (e, i) => `
     <article class="ep">
       <div class="ep-head">
-        <span class="method">${e.method}</span>
+        <span class="method" data-m="${e.method}">${e.method}</span>
         <code class="path">${esc(e.path)}</code>
         <span class="tag tag-${e.tag}">${e.tag}</span>
-        <button class="send" data-path="${esc(e.path)}" data-i="${i}">Send</button>
+        <button class="send" data-path="${esc(e.path)}" data-i="${i}" data-method="${e.method}">Send</button>
       </div>
       <h3>${esc(e.summary)}</h3>
       <p>${esc(e.detail)}</p>
-      <pre class="curl">curl ${origin}${esc(e.path)}</pre>
+      ${
+        e.body
+          ? `<textarea class="body-input" id="in-${i}" rows="3">${esc(JSON.stringify(e.body, null, 2))}</textarea>
+             <pre class="curl">curl -X POST ${origin}${esc(e.path)} \
+  -H "Content-Type: application/json" \
+  -d '${esc(JSON.stringify(e.body))}'</pre>`
+          : `<pre class="curl">curl ${origin}${esc(e.path)}</pre>`
+      }
       <div class="out" id="out-${i}" hidden><div class="out-bar"><span class="status"></span><span class="ms"></span></div><pre class="body"></pre></div>
     </article>`,
   ).join("");
@@ -109,10 +141,15 @@ export function renderDocs(origin) {
   .ep-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .method{font:600 11px/1 ui-monospace,monospace;letter-spacing:.06em;
           background:#63A361;color:#fff;padding:6px 9px;border-radius:6px}
+  .ep-head .method[data-m="POST"]{background:#EF8A3C}
   .path{font:13px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:#5B532C;
         background:rgba(253,231,179,.4);padding:7px 10px;border-radius:8px}
   .tag{font-size:11px;font-weight:600;padding:4px 9px;border-radius:999px;
        background:rgba(91,83,44,.08);color:rgba(91,83,44,.6)}
+  .body-input{width:100%;margin-top:14px;padding:11px 13px;border-radius:10px;
+              border:1px solid rgba(91,83,44,.15);background:#fff;resize:vertical;
+              font:12px/1.5 ui-monospace,monospace;color:rgba(91,83,44,.85)}
+  .body-input:focus{outline:none;border-color:rgba(99,163,97,.5)}
   .send{margin-left:auto;font:600 12px/1 inherit;color:#fff;background:#63A361;
         border:0;padding:9px 18px;border-radius:999px;cursor:pointer}
   .send:hover{background:#4a8a4d}
@@ -184,7 +221,15 @@ document.querySelectorAll(".send").forEach(function (btn) {
     btn.textContent = "…";
     var t0 = performance.now();
 
-    fetch(path, { headers: { Accept: "application/json" } })
+    var method = btn.dataset.method || "GET";
+    var input = document.getElementById("in-" + btn.dataset.i);
+    var init = { method: method, headers: { Accept: "application/json" } };
+    if (method === "POST") {
+      init.headers["Content-Type"] = "application/json";
+      init.body = input ? input.value : "{}";
+    }
+
+    fetch(path, init)
       .then(function (r) {
         return r.text().then(function (text) {
           var ms = Math.round(performance.now() - t0);
