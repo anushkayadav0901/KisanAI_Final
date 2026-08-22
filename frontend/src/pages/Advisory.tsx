@@ -11,6 +11,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Search, FileText, Ban } from "lucide-react";
 import { GroundedAdvisory } from "../components/advisory/GroundedAdvisory";
+import { ExplainPanel, type ExplainResult } from "../components/advisory/ExplainPanel";
 import Footer from "../components/Footer";
 
 interface CorpusInfo {
@@ -39,8 +40,42 @@ const HOW_IT_WORKS = [
   },
 ];
 
+/**
+ * A worked example for the explainability section. Real observations will come
+ * from the field record, weather feed and soil card; the panel does not care
+ * where they originate, so the scenario is adjustable here to show what the
+ * rules actually do.
+ */
+const SCENARIOS: Record<string, Record<string, string | number>> = {
+  "Dry spell, wheat at tillering": {
+    crop: "Wheat",
+    cropStage: "tillering",
+    soilMoisturePct: 18,
+    rainForecastMm3d: 2,
+    minTempC: 11,
+    humidityPct: 86,
+    zincStatus: "low",
+  },
+  "Heavy rain forecast": {
+    crop: "Wheat",
+    cropStage: "tillering",
+    soilMoisturePct: 28,
+    rainForecastMm3d: 32,
+  },
+  "Rice, planthopper after pyrethroid": {
+    crop: "Rice",
+    pest: "Brown planthopper",
+    lastSprayClass: "pyrethroid",
+    soilMoisturePct: 40,
+    rainForecastMm3d: 8,
+    cropStage: "panicle initiation",
+  },
+};
+
 const Advisory: React.FC = () => {
   const [corpus, setCorpus] = React.useState<CorpusInfo | null>(null);
+  const [scenario, setScenario] = React.useState<string>(Object.keys(SCENARIOS)[0]);
+  const [explain, setExplain] = React.useState<ExplainResult | null>(null);
 
   React.useEffect(() => {
     fetch("/v1/knowledge")
@@ -48,6 +83,21 @@ const Advisory: React.FC = () => {
       .then(setCorpus)
       .catch(() => setCorpus(null));
   }, []);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/v1/explain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ observations: SCENARIOS[scenario] }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => !cancelled && setExplain(d))
+      .catch(() => !cancelled && setExplain(null));
+    return () => {
+      cancelled = true;
+    };
+  }, [scenario]);
 
   return (
     <div className="relative bg-white">
@@ -156,6 +206,53 @@ const Advisory: React.FC = () => {
                   <div className="text-xs text-[#5B532C]/50 mt-0.5">{s.sub}</div>
                 </div>
               ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── Explainability ────────────────────────────────────────────────── */}
+      <section className="py-20">
+        <div className="px-4 mx-auto max-w-4xl sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <span className="text-xs font-semibold text-[#63A361] uppercase tracking-wider">
+              Why an advisory fires
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-[#5B532C] mt-3 leading-tight">
+              Every recommendation shows{" "}
+              <span className="text-[#63A361]">its working</span>
+            </h2>
+            <p className="text-[#5B532C]/60 leading-relaxed mt-3 max-w-2xl">
+              "Irrigate within 48 hours" is an instruction to be taken on trust. The
+              measurements behind it, and the threshold each one crossed, are something a
+              farmer can check against their own field — and disagree with when an input
+              is wrong.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-2 mb-6">
+            {Object.keys(SCENARIOS).map((k) => (
+              <button
+                key={k}
+                onClick={() => setScenario(k)}
+                className={`px-4 py-2 text-xs font-semibold rounded-full border transition-colors ${
+                  scenario === k
+                    ? "bg-[#63A361] text-white border-[#63A361]"
+                    : "bg-white text-[#5B532C]/70 border-[#5B532C]/12 hover:border-[#63A361]/40"
+                }`}
+              >
+                {k}
+              </button>
+            ))}
+          </div>
+
+          {explain ? (
+            <ExplainPanel result={explain} />
+          ) : (
+            <div className="h-40 rounded-2xl border border-dashed border-[#5B532C]/15 flex items-center justify-center">
+              <p className="text-sm text-[#5B532C]/45">
+                Loading the rule evaluation from /v1/explain…
+              </p>
             </div>
           )}
         </div>

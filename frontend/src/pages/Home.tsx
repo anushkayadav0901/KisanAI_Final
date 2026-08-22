@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Play, Leaf, TrendingUp, Users, Shield, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Play, Leaf, TrendingUp, Users, Shield, CheckCircle2, Mic } from 'lucide-react';
 import Market from '../components/Market';
 import About from '../components/About';
 import CTA from '../components/CTA';
@@ -24,7 +24,54 @@ const ScrollIndicator = () => {
   );
 };
 
+/**
+ * Live network scale, read from the same public API a state department would
+ * call. Hardcoded numbers on a landing page are marketing; these move when the
+ * network moves, and fall back to dashes rather than to invented figures if the
+ * API cannot be reached.
+ */
+function useNetworkScale() {
+  const [totals, setTotals] = React.useState<{
+    states: number;
+    districts: number;
+    farmersReached: number;
+    languages: number;
+  } | null>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    fetch("/v1/surveillance/states")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (cancelled || !d) return;
+        setTotals({
+          states: d.totals.states,
+          districts: d.totals.districts,
+          farmersReached: d.totals.farmers_reached,
+          languages: d.totals.advisory_languages,
+        });
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return totals;
+}
+
+const compact = (n: number) =>
+  n >= 10000000
+    ? `${(n / 10000000).toFixed(1)} Cr`
+    : n >= 100000
+      ? `${(n / 100000).toFixed(1)} L`
+      : n >= 1000
+        ? `${(n / 1000).toFixed(1)}K`
+        : String(n);
+
 export const Home: React.FC = () => {
+  const scale = useNetworkScale();
+
   return (
     <div className="relative bg-white">
       <ScrollIndicator />
@@ -65,56 +112,83 @@ export const Home: React.FC = () => {
               </span>
             </h1>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+            {/* Voice first.
+
+                Low literacy is the norm among the farmers this is built for, and
+                a page of English buttons excludes them by default. So the primary
+                action is a large microphone that starts a spoken conversation in
+                the farmer's own language, and the typed paths sit underneath it. */}
+            <div className="flex flex-col items-center gap-4 mb-10">
               <Link
-                to="/monitor"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-bold text-white bg-[#63A361] rounded-full hover:bg-[#4a8a4d] transition-colors shadow-lg shadow-[#63A361]/25"
+                to="/consult"
+                aria-label="Ask a question by voice, in your own language"
+                className="group relative inline-flex items-center gap-4 pl-6 pr-8 py-5 rounded-full
+                           bg-[#63A361] text-white shadow-xl shadow-[#63A361]/30
+                           hover:bg-[#4a8a4d] transition-colors"
               >
-                <Play className="w-4 h-4" />
-                Try Monitoring
-                <ArrowRight className="w-4 h-4" />
+                <span className="relative flex items-center justify-center w-14 h-14 rounded-full bg-white/20">
+                  <span className="absolute inline-flex w-full h-full rounded-full bg-white/30 animate-ping opacity-60" />
+                  <Mic className="relative w-7 h-7" />
+                </span>
+                <span className="text-left">
+                  <span className="block text-lg font-bold leading-tight">
+                    Bolkar poochhein
+                  </span>
+                  <span className="block text-sm text-white/80">
+                    Ask by voice — 20 Indian languages
+                  </span>
+                </span>
+                <ArrowRight className="w-5 h-5 opacity-70 group-hover:translate-x-0.5 transition-transform" />
               </Link>
 
-              <Link
-                to="/research"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-sm font-bold text-[#5B532C] bg-white border-2 border-[#5B532C]/15 rounded-full hover:border-[#63A361]/40 hover:bg-[#FDE7B3]/30 transition-colors"
-              >
-                View Architecture
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Link
+                  to="/monitor"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-bold text-[#5B532C] bg-white border-2 border-[#5B532C]/15 rounded-full hover:border-[#63A361]/40 hover:bg-[#FDE7B3]/30 transition-colors"
+                >
+                  <Play className="w-4 h-4" />
+                  Photo se jaanchein
+                </Link>
+
+                <Link
+                  to="/fields"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-bold text-[#5B532C] bg-white border-2 border-[#5B532C]/15 rounded-full hover:border-[#63A361]/40 hover:bg-[#FDE7B3]/30 transition-colors"
+                >
+                  Draw my field
+                </Link>
+
+                <Link
+                  to="/research"
+                  className="inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-bold text-[#5B532C] bg-white border-2 border-[#5B532C]/15 rounded-full hover:border-[#63A361]/40 hover:bg-[#FDE7B3]/30 transition-colors"
+                >
+                  View Architecture
+                </Link>
+              </div>
             </div>
 
-            {/* Stats Row */}
+            {/* Network scale, read live from /v1/surveillance/states */}
             <div className="flex items-center justify-center gap-8 sm:gap-12">
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#63A361]/10 flex items-center justify-center">
-                  <Shield className="w-5 h-5 text-[#63A361]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xl font-bold text-[#5B532C]">95%</div>
-                  <div className="text-xs text-[#5B532C]/50">Accuracy</div>
-                </div>
-              </div>
-              <div className="w-px h-10 bg-[#5B532C]/20"></div>
-              <div className="flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#63A361]/10 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-[#63A361]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xl font-bold text-[#5B532C]">50K+</div>
-                  <div className="text-xs text-[#5B532C]/50">Farmers</div>
-                </div>
-              </div>
-              <div className="w-px h-10 bg-[#5B532C]/20 hidden sm:block"></div>
-              <div className="hidden sm:flex items-center gap-2">
-                <div className="w-10 h-10 rounded-full bg-[#63A361]/10 flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5 text-[#63A361]" />
-                </div>
-                <div className="text-left">
-                  <div className="text-xl font-bold text-[#5B532C]">12</div>
-                  <div className="text-xs text-[#5B532C]/50">States</div>
-                </div>
-              </div>
+              {[
+                { icon: TrendingUp, value: scale ? String(scale.states) : "—", label: "States live" },
+                { icon: Shield, value: scale ? String(scale.districts) : "—", label: "Districts" },
+                { icon: Users, value: scale ? compact(scale.farmersReached) : "—", label: "Farmers reached" },
+                { icon: Leaf, value: scale ? String(scale.languages) : "—", label: "Languages", wide: true },
+              ].map((s, i) => (
+                <React.Fragment key={s.label}>
+                  {i > 0 && (
+                    <div className={`w-px h-10 bg-[#5B532C]/20 ${s.wide ? "hidden sm:block" : ""}`} />
+                  )}
+                  <div className={`items-center gap-2 ${s.wide ? "hidden sm:flex" : "flex"}`}>
+                    <div className="w-10 h-10 rounded-full bg-[#63A361]/10 flex items-center justify-center">
+                      <s.icon className="w-5 h-5 text-[#63A361]" />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-xl font-bold text-[#5B532C]">{s.value}</div>
+                      <div className="text-xs text-[#5B532C]/50">{s.label}</div>
+                    </div>
+                  </div>
+                </React.Fragment>
+              ))}
             </div>
           </motion.div>
 

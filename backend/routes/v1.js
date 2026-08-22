@@ -26,6 +26,8 @@
  *   POST /v1/fields                     save a drawn boundary
  *   GET  /v1/fields/:id/vegetation      NDVI series for one field
  *   DELETE /v1/fields/:id               remove a field
+ *   GET  /v1/explain/rules              the rule catalogue
+ *   POST /v1/explain                    advisories with their reasoning chain
  */
 
 import { Router } from "express";
@@ -46,6 +48,7 @@ import {
   CORPUS_STATS,
 } from "../lib/groundedAdvisory.js";
 import { CORPUS } from "../data/knowledge/corpus.js";
+import { explainAdvisories, ruleCatalogue } from "../lib/explainability.js";
 import {
   FIELD_SCHEMA,
   createField,
@@ -125,6 +128,8 @@ router.get("/", (req, res) => {
       dataRead: `${base}/data/read  (POST {"consentId": "...", "dataTypes": [...]})`,
       fields: `${base}/fields`,
       fieldsGeoJson: `${base}/fields?format=geojson`,
+      explainRules: `${base}/explain/rules`,
+      explain: `${base}/explain  (POST {observations})`,
     },
   });
 });
@@ -455,6 +460,17 @@ router.delete("/fields/:id", noStore, (req, res) => {
   }
   deleteField(req.params.id);
   res.json({ deleted: req.params.id });
+});
+
+// -- Explainability -----------------------------------------------------------
+
+router.get("/explain/rules", (_req, res) => {
+  res.json(ruleCatalogue());
+});
+
+router.post("/explain", (req, res) => {
+  const facts = req.body?.observations ?? req.body ?? {};
+  res.json(explainAdvisories(facts));
 });
 
 export default router;
