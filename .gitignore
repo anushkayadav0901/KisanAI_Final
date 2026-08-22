@@ -1,0 +1,96 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Kisan AI — repository ignore rules
+#
+# Rule of thumb: commit anything a teammate needs to run the project, ignore
+# anything a machine can regenerate or that is specific to one developer.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Secrets ──────────────────────────────────────────────────────────────────
+# Never commit real credentials. The .env.example templates ARE committed so a
+# new teammate knows which keys to supply.
+.env
+.env.*
+!.env.example
+!**/.env.example
+*.pem
+*.key
+service-account*.json
+gcp-credentials*.json
+firebase-adminsdk*.json
+
+# ── Dependencies ─────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+jspm_packages/
+
+# ── Build output ─────────────────────────────────────────────────────────────
+dist/
+dist-ssr/
+build/
+out/
+.vite/
+*.tsbuildinfo
+
+# ── Python (yolo/ and voice-service/) ────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── ML model weights ─────────────────────────────────────────────────────────
+# Ultralytics downloads these on first run — they are large and reproducible.
+*.pt
+*.pth
+*.onnx
+*.tflite
+*.h5
+!requirements.txt
+
+# ── Logs & diagnostics ───────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.eslintcache
+
+# ── Deployment platforms ─────────────────────────────────────────────────────
+.vercel
+.netlify
+.firebase/
+.firebaserc.local
+.gcloudignore
+
+# ── Editors & IDEs ───────────────────────────────────────────────────────────
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+
+# ── OS noise ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.local
+
+# ── Local scratch ────────────────────────────────────────────────────────────
+tmp/
+temp/
+scratch/
+*.bak

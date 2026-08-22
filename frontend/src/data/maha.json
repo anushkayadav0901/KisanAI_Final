@@ -1,0 +1,2500 @@
+{
+  "cities": [
+    {
+      "city": "Ahilyanagar",
+      "markets": [
+        {
+          "name": "Ahilyanagar APMC",
+          "cropPrices": {
+            "Wheat": "₹2484/quintal",
+            "Rice": "₹3375/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Shirdi Market",
+          "cropPrices": {
+            "Wheat": "₹2484/quintal",
+            "Rice": "₹3375/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹3,200",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+2%",
+          "price": "₹2484/quintal",
+          "time": "1 hour ago",
+          "reason": "Increased demand from local mills"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ahilyanagar Agro Pvt Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9012345678"
+        }
+      ]
+    },
+    {
+      "city": "Akola",
+      "markets": [
+        {
+          "name": "Akola APMC",
+          "cropPrices": {
+            "Cotton": "₹6457/quintal",
+            "Soybean": "₹5467/quintal",
+            "Red Gram": "₹6107/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Khamgaon Market",
+          "cropPrices": {
+            "Cotton": "₹6457/quintal",
+            "Soybean": "₹5467/quintal",
+            "Red Gram": "₹6107/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Akot Market",
+          "cropPrices": {
+            "Cotton": "₹6457/quintal",
+            "Soybean": "₹5467/quintal",
+            "Red Gram": "₹6107/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹4,800",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.5%",
+          "price": "₹6457/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from textile mills"
+        },
+        {
+          "crop": "Soybean",
+          "change": "-1.0%",
+          "price": "₹5467/quintal",
+          "time": "5 hours ago",
+          "reason": "New harvest arrivals"
+        },
+        {
+          "crop": "Red Gram",
+          "change": "+0.8%",
+          "price": "₹6107/quintal",
+          "time": "7 hours ago",
+          "reason": "Limited supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Akola Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Amravati",
+      "markets": [
+        {
+          "name": "Amravati APMC",
+          "cropPrices": {
+            "Wheat": "₹2802/quintal",
+            "Rice": "₹3900/quintal",
+            "Tur Dal": "₹6232/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Achalpur Market",
+          "cropPrices": {
+            "Wheat": "₹2802/quintal",
+            "Rice": "₹3900/quintal",
+            "Tur Dal": "₹6232/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹3,800",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+2%",
+          "price": "₹2802/quintal",
+          "time": "1 hour ago",
+          "reason": "Increased demand from local mills"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+5%",
+          "price": "₹6232/quintal",
+          "time": "5 hours ago",
+          "reason": "Less Productions"
+        },
+        {
+          "crop": "Rice",
+          "change": "-3%",
+          "price": "₹3900/quintal",
+          "time": "5 hours ago",
+          "reason": "Export decrease"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Amravati Agro Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": 12000,
+          "contact": 9123456789
+        }
+      ]
+    },
+    {
+      "city": "Aurangabad",
+      "markets": [
+        {
+          "name": "Aurangabad APMC",
+          "cropPrices": {
+            "Wheat": "₹2561/quintal",
+            "Rice": "₹3200/quintal",
+            "Tur Dal": "₹6232/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Paithan Market",
+          "cropPrices": {
+            "Wheat": "₹2561/quintal",
+            "Rice": "₹3200/quintal",
+            "Tur Dal": "₹6232/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹3,400",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+1.5%",
+          "price": "₹2561/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased demand from local mills"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Aurangabad Agro Pvt Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9012345678"
+        }
+      ]
+    },
+    {
+      "city": "Beed",
+      "markets": [
+        {
+          "name": "Beed APMC",
+          "cropPrices": {
+            "Wheat": "₹2327/quintal",
+            "Rice": "₹3600/quintal",
+            "Tur Dal": "₹5864/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Ashti Market",
+          "cropPrices": {
+            "Wheat": "₹2327/quintal",
+            "Rice": "₹3600/quintal",
+            "Tur Dal": "₹5864/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Shirur Market",
+          "cropPrices": {
+            "Wheat": "₹2327/quintal",
+            "Rice": "₹3600/quintal",
+            "Tur Dal": "₹5864/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": "350",
+        "averagePricePerQuintal": "₹3.300",
+        "monthlyTransactions": "1400",
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1%",
+          "price": "₹8.300/quintal",
+          "time": "1 hour ago",
+          "reason": "Export demands"
+        },
+        {
+          "crop": "Soybean",
+          "change": "-0.6%",
+          "price": "₹4.300/quintal",
+          "time": "7 hours ago",
+          "reason": "Rain fall"
+        },
+        {
+          "crop": "Bajara",
+          "change": "+0.5%",
+          "price": "₹6.150/quintal",
+          "time": "2 hours ago",
+          "reason": "Transportation charges"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Beed Agro Pvt Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10.000 quintals",
+          "contact": "9012345678"
+        }
+      ]
+    },
+    {
+      "city": "Bhandara",
+      "markets": [
+        {
+          "name": "Bhandara APMC",
+          "cropPrices": {
+            "Rice": "₹3878/quintal",
+            "Paddy": "₹2200/quintal",
+            "Lentils": "₹5800/quintal"
+          },
+          "marketTimings": "7 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tumsar",
+          "cropPrices": {
+            "Rice": "₹3878/quintal",
+            "Paddy": "₹2200/quintal",
+            "Lentils": "₹5800/quintal"
+          },
+          "marketTimings": "7 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.2 Cr",
+        "activeBuyers": 300,
+        "averagePricePerQuintal": "₹3,900",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "-1.2%",
+          "price": "₹3878/quintal",
+          "time": "9 hours ago",
+          "reason": "Low imports"
+        },
+        {
+          "crop": "Paddy",
+          "change": "-0.7%",
+          "price": "₹2200/quintal",
+          "time": "3 hours ago",
+          "reason": "High produce"
+        },
+        {
+          "crop": "Lentils",
+          "change": "-0.9%",
+          "price": "₹5800/quintal",
+          "time": "10 hours ago",
+          "reason": "Low demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bhandara Food Products",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,000 quintals",
+          "contact": "9678903456"
+        }
+      ]
+    },
+    {
+      "city": "Buldhana",
+      "markets": [
+        {
+          "name": "Buldhana APMC",
+          "cropPrices": {
+            "Cotton": "₹6307/quintal",
+            "Soybean": "₹5417/quintal",
+            "Green Gram": "₹6050/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Chikhli Market",
+          "cropPrices": {
+            "Cotton": "₹6307/quintal",
+            "Soybean": "₹5417/quintal",
+            "Green Gram": "₹6050/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Deulgaon Raja Market",
+          "cropPrices": {
+            "Cotton": "₹6307/quintal",
+            "Soybean": "₹5417/quintal",
+            "Green Gram": "₹6050/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹4,650",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.3%",
+          "price": "₹6307/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased demand from textile units"
+        },
+        {
+          "crop": "Soybean",
+          "change": "+0.8%",
+          "price": "₹5417/quintal",
+          "time": "4 hours ago",
+          "reason": "Demand from international"
+        },
+        {
+          "crop": "Green Gram",
+          "change": "-1.2%",
+          "price": "₹6050/quintal",
+          "time": "6 hours ago",
+          "reason": "High production"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Buldhana Cotton Corp",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Chandrapur",
+      "markets": [
+        {
+          "name": "Chandrapur APMC",
+          "cropPrices": {
+            "Cotton": "₹6382/quintal",
+            "Rice": "₹4188/quintal",
+            "Soybean": "₹5392/quintal"
+          },
+          "marketTimings": "7 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Warora",
+          "cropPrices": {
+            "Cotton": "₹6382/quintal",
+            "Rice": "₹4188/quintal",
+            "Soybean": "₹5392/quintal"
+          },
+          "marketTimings": "7 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhadravati",
+          "cropPrices": {
+            "Cotton": "₹6382/quintal",
+            "Rice": "₹4188/quintal",
+            "Soybean": "₹5392/quintal"
+          },
+          "marketTimings": "7 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.3 Cr",
+        "activeBuyers": 310,
+        "averagePricePerQuintal": "₹4,200",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.8%",
+          "price": "₹6382/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased export orders"
+        },
+        {
+          "crop": "Soybean",
+          "change": "-1.3%",
+          "price": "₹5392/quintal",
+          "time": "8 hours ago",
+          "reason": "Limited demand"
+        },
+        {
+          "crop": "Rice",
+          "change": "+3%",
+          "price": "₹4188/quintal",
+          "time": "5 hours ago",
+          "reason": "Limited Storage capacity"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Chandrapur Textile Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9890125678"
+        }
+      ]
+    },
+    {
+      "city": "Chhatrapati Sambhajinagar",
+      "markets": [
+        {
+          "name": "Kranti Chowk Market",
+          "cropPrices": {
+            "Wheat": "₹2,150/quintal",
+            "Rice": "₹3,400/quintal",
+            "Tur Dal": "₹5,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Paithan Road Market",
+          "cropPrices": {
+            "Wheat": "₹2,100/quintal",
+            "Rice": "₹3,300/quintal",
+            "Tur Dal": "₹5,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Gulmandi Market",
+          "cropPrices": {
+            "Wheat": "₹2,180/quintal",
+            "Rice": "₹3,450/quintal",
+            "Tur Dal": "₹6,000/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹3,200",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Tur Dal"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+3.5%",
+          "price": "₹2,250/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased demand from exporters"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+4.1%",
+          "price": "₹6,200/quintal",
+          "time": "4 hours ago",
+          "reason": "Supply shortage in local markets"
+        },
+        {
+          "crop": "Rice",
+          "change": "-2.2%",
+          "price": "₹3,300/quintal",
+          "time": "6 hours ago",
+          "reason": "Harvest season peak"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Samhbhajinagar Agro Pvt Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9098765432"
+        }
+      ]
+    },
+    {
+      "city": "Dharashiv",
+      "markets": [
+        {
+          "name": "Dharashiv APMC",
+          "cropPrices": {
+            "Soybean": "₹5392/quintal",
+            "Tur Dal": "₹5982/quintal",
+            "Wheat": "₹2277/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tuljapur Market",
+          "cropPrices": {
+            "Soybean": "₹5392/quintal",
+            "Tur Dal": "₹5982/quintal",
+            "Wheat": "₹2277/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Umarga Market",
+          "cropPrices": {
+            "Soybean": "₹5392/quintal",
+            "Tur Dal": "₹5982/quintal",
+            "Wheat": "₹2277/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3,450",
+        "monthlyTransactions": 1575,
+        "topCommodity": "Soybean"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+3.8%",
+          "price": "₹5392/quintal",
+          "time": "3 hours ago",
+          "reason": "High demand from oil mills"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+2.9%",
+          "price": "₹5982/quintal",
+          "time": "5 hours ago",
+          "reason": "Supply shortage in local markets"
+        },
+        {
+          "crop": "Wheat",
+          "change": "-1.4%",
+          "price": "₹2277/quintal",
+          "time": "7 hours ago",
+          "reason": "New harvest arrival"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Dharashiv Oil Industries",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,500 quintals",
+          "contact": "9789012345"
+        }
+      ]
+    },
+    {
+      "city": "Dhule",
+      "markets": [
+        {
+          "name": "Dhule APMC",
+          "cropPrices": {
+            "Wheat": "₹2652/quintal",
+            "Rice": "₹3800/quintal",
+            "Tur Dal": "₹6132/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3 Cr",
+        "activeBuyers": "370",
+        "averagePricePerQuintal": "₹3.600",
+        "monthlyTransactions": "1550",
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "-0.9%",
+          "price": "₹4.300/quintal",
+          "time": "1 hours ago",
+          "reason": "Storms"
+        },
+        {
+          "crop": "Pulses",
+          "change": "-3.6%",
+          "price": "₹6.300/quintal",
+          "time": "1 hour ago",
+          "reason": "High Production"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+2.5%",
+          "price": "₹2652/quintal",
+          "time": "13 hours ago",
+          "reason": "Transportation issues"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Dhule Agro Products",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12.000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Gadchiroli",
+      "markets": [
+        {
+          "name": "Gadchiroli APMC",
+          "cropPrices": {
+            "Rice": "₹3882/quintal",
+            "Paddy": "₹2100/quintal",
+            "Tur Dal": "₹5932/quintal"
+          },
+          "marketTimings": "8 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Aheri Market",
+          "cropPrices": {
+            "Rice": "₹3882/quintal",
+            "Paddy": "₹2100/quintal",
+            "Tur Dal": "₹5932/quintal"
+          },
+          "marketTimings": "8 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹1.8 Cr",
+        "activeBuyers": 250,
+        "averagePricePerQuintal": "₹3,800",
+        "monthlyTransactions": 1100,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1%",
+          "price": "₹3882/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased local demand"
+        },
+        {
+          "crop": "Paddy",
+          "change": "-5%",
+          "price": "₹2100/quintal",
+          "time": "3 hours ago",
+          "reason": "Floods"
+        },
+        {
+          "crop": "Bamboo",
+          "change": "-4%",
+          "price": "₹1,600/quintal",
+          "time": "3 hours ago",
+          "reason": "low demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gadchiroli Rice Millers",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "7,000 quintals",
+          "contact": "9567892345"
+        }
+      ]
+    },
+    {
+      "city": "Gondia",
+      "markets": [
+        {
+          "name": "Gondia APMC",
+          "cropPrices": {
+            "Rice": "₹4274/quintal",
+            "Paddy": "₹2300/quintal",
+            "Gram": "₹5700/quintal"
+          },
+          "marketTimings": "8 AM - 7 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tirora Market",
+          "cropPrices": {
+            "Rice": "₹4274/quintal",
+            "Paddy": "₹2300/quintal",
+            "Gram": "₹5700/quintal"
+          },
+          "marketTimings": "8 AM - 7 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Amgaon Market",
+          "cropPrices": {
+            "Rice": "₹4274/quintal",
+            "Paddy": "₹2300/quintal",
+            "Gram": "₹5700/quintal"
+          },
+          "marketTimings": "8 AM - 7 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 320,
+        "averagePricePerQuintal": "₹4,000",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1.2%",
+          "price": "₹4274/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from neighboring states"
+        },
+        {
+          "crop": "Paddy",
+          "change": "+1.9%",
+          "price": "₹2300/quintal",
+          "time": "9 hours ago",
+          "reason": "Export increase"
+        },
+        {
+          "crop": "Gram",
+          "change": "-1.2%",
+          "price": "₹5700/quintal",
+          "time": "7 hours ago",
+          "reason": "High production"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gondia Agro Industries",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9789014567"
+        }
+      ]
+    },
+    {
+      "city": "Hingoli",
+      "markets": [
+        {
+          "name": "Hingoli APMC",
+          "cropPrices": {
+            "Soybean": "₹5367/quintal",
+            "Jowar": "₹2452/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kalamnuri Market",
+          "cropPrices": {
+            "Soybean": "₹5367/quintal",
+            "Jowar": "₹2452/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.0 Cr",
+        "activeBuyers": 300,
+        "averagePricePerQuintal": "₹4,400",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Soybean"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+2.0%",
+          "price": "₹5367/quintal",
+          "time": "1 hour ago",
+          "reason": "Increased demand from oil processing units"
+        },
+        {
+          "crop": "Jowar",
+          "change": "-0.8%",
+          "price": "₹2452/quintal",
+          "time": "4 hours ago",
+          "reason": "Improved weather conditions"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+0.5%",
+          "price": "₹6007/quintal",
+          "time": "6 hours ago",
+          "reason": "Limited stock in local markets"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hingoli Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Jalgaon",
+      "markets": [
+        {
+          "name": "Jalgaon Krishi Market",
+          "cropPrices": {
+            "Wheat": "₹2577/quintal",
+            "Rice": "₹3500/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Mehrun Market",
+          "cropPrices": {
+            "Wheat": "₹2577/quintal",
+            "Rice": "₹3500/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Ajanta Road Market",
+          "cropPrices": {
+            "Wheat": "₹2577/quintal",
+            "Rice": "₹3500/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3,300",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+3%",
+          "price": "₹2577/quintal",
+          "time": "5 hours ago",
+          "reason": "Export demand increase"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+2.5%",
+          "price": "₹6032/quintal",
+          "time": "8 hours ago",
+          "reason": "Shortage in local supply"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1.5%",
+          "price": "₹3500/quintal",
+          "time": "2 days ago",
+          "reason": "Local harvest season"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jalgaon Agri Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9001234567"
+        }
+      ]
+    },
+    {
+      "city": "Jalna",
+      "markets": [
+        {
+          "name": "Jalna APMC",
+          "cropPrices": {
+            "Wheat": "₹2421/quintal",
+            "Rice": "₹3500/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhokardan Market",
+          "cropPrices": {
+            "Wheat": "₹2421/quintal",
+            "Rice": "₹3500/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": "360",
+        "averagePricePerQuintal": "₹3.400",
+        "monthlyTransactions": "1500",
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+1.3%",
+          "price": "₹9.800/quintal",
+          "time": "8 hours ago",
+          "reason": "Limited imports"
+        },
+        {
+          "crop": "Cotton",
+          "change": "+2.8%",
+          "price": "₹5.300/quintal",
+          "time": "5 hours ago",
+          "reason": "local Demands"
+        },
+        {
+          "crop": "Bajra",
+          "change": "-1.8%",
+          "price": "₹3.100/quintal",
+          "time": "6 hours ago",
+          "reason": "New harvest season"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jalna Agro Industries Ltd.",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11.000 quintals",
+          "contact": "9087654321"
+        }
+      ]
+    },
+    {
+      "city": "Kolhapur",
+      "markets": [
+        {
+          "name": "Kolhapur APMC",
+          "cropPrices": {
+            "Rice": "₹3956/quintal",
+            "Sugarcane": "₹4072/quintal",
+            "Milk": "₹31/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Gargoti Market",
+          "cropPrices": {
+            "Rice": "₹3956/quintal",
+            "Sugarcane": "₹4072/quintal",
+            "Milk": "₹31/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Ichalkaranji Market",
+          "cropPrices": {
+            "Rice": "₹3956/quintal",
+            "Sugarcane": "₹4072/quintal",
+            "Milk": "₹31/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹3,500",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sugarcane",
+          "change": "+4%",
+          "price": "₹4072/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from sugar factories"
+        },
+        {
+          "crop": "Rice",
+          "change": "+1.5%",
+          "price": "₹3956/quintal",
+          "time": "5 hours ago",
+          "reason": "High export inquiries"
+        },
+        {
+          "crop": "Milk",
+          "change": "+2%",
+          "price": "₹31/quintal",
+          "time": "7 hours ago",
+          "reason": "Festive demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kolhapur Sugar Co-op",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "16,000 tons",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Latur",
+      "markets": [
+        {
+          "name": "Latur APMC",
+          "cropPrices": {
+            "Tur Dal": "₹6032/quintal",
+            "Soybean": "₹5392/quintal",
+            "Groundnut": "₹5000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Ausa Market",
+          "cropPrices": {
+            "Tur Dal": "₹6032/quintal",
+            "Soybean": "₹5392/quintal",
+            "Groundnut": "₹5000/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Udgir Market",
+          "cropPrices": {
+            "Tur Dal": "₹6032/quintal",
+            "Soybean": "₹5392/quintal",
+            "Groundnut": "₹5000/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹3,500",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Tur Dal"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Tur Dal",
+          "change": "+4%",
+          "price": "₹6032/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand for exports"
+        },
+        {
+          "crop": "Soybean",
+          "change": "+3%",
+          "price": "₹5392/quintal",
+          "time": "5 hours ago",
+          "reason": "Lower supplies from producing regions"
+        },
+        {
+          "crop": "Groundnut",
+          "change": "-1.5%",
+          "price": "₹5000/quintal",
+          "time": "7 hours ago",
+          "reason": "Arrival of new crop"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Latur Pulses Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9890123456"
+        }
+      ]
+    },
+    {
+      "city": "Mumbai",
+      "markets": [
+        {
+          "name": "Crawford Market",
+          "cropPrices": {
+            "Wheat": "₹3411/quintal",
+            "Rice": "₹3700/quintal",
+            "Tur Dal": "₹6132/quintal"
+          },
+          "marketTimings": "11 AM - 8 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "APMC Market Vashi",
+          "cropPrices": {
+            "Wheat": "₹3411/quintal",
+            "Rice": "₹3700/quintal",
+            "Tur Dal": "₹6132/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Dadar Market",
+          "cropPrices": {
+            "Wheat": "₹3411/quintal",
+            "Rice": "₹3700/quintal",
+            "Tur Dal": "₹6132/quintal"
+          },
+          "marketTimings": "7 AM - 9 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹5 Cr",
+        "activeBuyers": 700,
+        "averagePricePerQuintal": "₹3,500",
+        "monthlyTransactions": 2500,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+2%",
+          "price": "₹3411/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from local bakeries"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+1.5%",
+          "price": "₹6132/quintal",
+          "time": "7 hours ago",
+          "reason": "Delayed imports"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1%",
+          "price": "₹3700/quintal",
+          "time": "1 day ago",
+          "reason": "Good harvest reports"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mumbai Foods Ltd",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "20,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Mumbai Suburban",
+      "markets": [
+        {
+          "name": "Vashi APMC",
+          "cropPrices": {
+            "Vegetables": "₹2,000/quintal",
+            "Fruits": "₹3,500/quintal",
+            "Flowers": "₹2300/quintal"
+          },
+          "marketTimings": "6 AM - 8 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Dadar Market",
+          "cropPrices": {
+            "Vegetables": "₹2,100/quintal",
+            "Fruits": "₹3,600/quintal",
+            "Flowers": "₹2187/quintal"
+          },
+          "marketTimings": "7 AM - 9 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹5.0 Cr",
+        "activeBuyers": 700,
+        "averagePricePerQuintal": "₹3,000",
+        "monthlyTransactions": 2500,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Vegetables",
+          "change": "+2.5%",
+          "price": "₹2,100/quintal",
+          "time": "1 hour ago",
+          "reason": "Increased demand due to festival"
+        },
+        {
+          "crop": "Fruits",
+          "change": "+1.0%",
+          "price": "₹3,600/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from retailers"
+        },
+        {
+          "crop": "Flowers",
+          "change": "-1.5%",
+          "price": "₹2300/quintal",
+          "time": "6 hours ago",
+          "reason": "Oversupply from local gardens"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mumbai Retailers Association",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "20,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Nagpur",
+      "markets": [
+        {
+          "name": " cotton Market",
+          "cropPrices": {
+            "Cotton": "₹6482/quintal",
+            "Wheat": "₹1984/quintal",
+            "Rice": "₹3450/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kalmana Market",
+          "cropPrices": {
+            "Cotton": "₹6482/quintal",
+            "Wheat": "₹1984/quintal",
+            "Rice": "₹3450/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Itwari Grain Market",
+          "cropPrices": {
+            "Cotton": "₹6482/quintal",
+            "Wheat": "₹1984/quintal",
+            "Rice": "₹3450/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹3,300",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+4%",
+          "price": "₹6482/quintal",
+          "time": "3 hours ago",
+          "reason": "High export demand"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+3%",
+          "price": "₹6,000/quintal",
+          "time": "5 hours ago",
+          "reason": "Supply shortage"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1.5%",
+          "price": "₹3450/quintal",
+          "time": "7 hours ago",
+          "reason": "New harvest arrival"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nagpur AgriCorp",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Nanded",
+      "markets": [
+        {
+          "name": "Nanded APMC",
+          "cropPrices": {
+            "Soybean": "₹5442/quintal",
+            "Jowar": "₹2477/quintal",
+            "Tur Dal": "₹6082/quintal"
+          },
+          "marketTimings": "8 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kinwat Market",
+          "cropPrices": {
+            "Soybean": "₹5442/quintal",
+            "Jowar": "₹2477/quintal",
+            "Tur Dal": "₹6082/quintal"
+          },
+          "marketTimings": "8 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 330,
+        "averagePricePerQuintal": "₹4,100",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Soybean"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Tur Dal",
+          "change": "+0.3%",
+          "price": "₹6082/quintal",
+          "time": "3 hours ago",
+          "reason": "high demand"
+        },
+        {
+          "crop": "Soybean",
+          "change": "+1.3%",
+          "price": "₹5442/quintal",
+          "time": "5 hours ago",
+          "reason": "Transport Issues"
+        },
+        {
+          "crop": "Jowar",
+          "change": "-2.1%",
+          "price": "₹2477/quintal",
+          "time": "4 hours ago",
+          "reason": "Heavy rainfall"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nanded Oil Industries",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9901236789"
+        }
+      ]
+    },
+    {
+      "city": "Nandurbar",
+      "markets": [
+        {
+          "name": "Nandurbar APMC",
+          "cropPrices": {
+            "Cotton": "₹6332/quintal",
+            "Jowar": "₹2702/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "7 AM - 7 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Taloda Market",
+          "cropPrices": {
+            "Cotton": "₹6332/quintal",
+            "Jowar": "₹2702/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "7 AM - 7 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.0 Cr",
+        "activeBuyers": 280,
+        "averagePricePerQuintal": "₹4,500",
+        "monthlyTransactions": 1200,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.5%",
+          "price": "₹6332/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from textile mills"
+        },
+        {
+          "crop": "Jowar",
+          "change": "-1.9%",
+          "price": "₹2702/quintal",
+          "time": "6 hours ago",
+          "reason": "Storms"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "-2%",
+          "price": "₹6032/quintal",
+          "time": "3 hours ago",
+          "reason": "High production"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nandurbar Cotton Industries",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "8,000 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Nashik",
+      "markets": [
+        {
+          "name": "Lasalgaon Market",
+          "cropPrices": {
+            "Onion": "₹2000/quintal",
+            "Tomato": "₹1200/quintal",
+            "Grapes": "₹4000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Pimpalgaon Market",
+          "cropPrices": {
+            "Onion": "₹2000/quintal",
+            "Tomato": "₹1200/quintal",
+            "Grapes": "₹4000/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Nashik APMC",
+          "cropPrices": {
+            "Onion": "₹2000/quintal",
+            "Tomato": "₹1200/quintal",
+            "Grapes": "₹4000/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹2,500",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Onion"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Onion",
+          "change": "+5%",
+          "price": "₹2000/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased export demand"
+        },
+        {
+          "crop": "Tomato",
+          "change": "-3%",
+          "price": "₹1200/quintal",
+          "time": "4 hours ago",
+          "reason": "Surplus supply"
+        },
+        {
+          "crop": "Grapes",
+          "change": "+2%",
+          "price": "₹4000/quintal",
+          "time": "6 hours ago",
+          "reason": "High demand for processing"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nashik Agri Exports",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Palghar",
+      "markets": [
+        {
+          "name": "Palghar APMC",
+          "cropPrices": {
+            "Wheat": "₹3423/quintal",
+            "Rice": "₹3825/quintal",
+            "Tur Dal": "₹6194/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Vasai Market",
+          "cropPrices": {
+            "Wheat": "₹3423/quintal",
+            "Rice": "₹3825/quintal",
+            "Tur Dal": "₹6194/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹3,500",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+2%",
+          "price": "₹3825/quintal",
+          "time": "1 hour ago",
+          "reason": "Increased demand from local markets"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+1%",
+          "price": "₹3423/quintal",
+          "time": "3 hours ago",
+          "reason": "Supply disruption"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "-0.5%",
+          "price": "₹6194/quintal",
+          "time": "6 hours ago",
+          "reason": "Arrival of imports"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Palghar Agro Pvt Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Parbhani",
+      "markets": [
+        {
+          "name": "Parbhani APMC",
+          "cropPrices": {
+            "Wheat": "₹2489/quintal",
+            "Rice": "₹3825/quintal",
+            "Tur Dal": "₹6194/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Jintur Market",
+          "cropPrices": {
+            "Wheat": "₹2489/quintal",
+            "Rice": "₹3825/quintal",
+            "Tur Dal": "₹6194/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 300,
+        "averagePricePerQuintal": "₹3,600",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1.5%",
+          "price": "₹3825/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased demand from local markets"
+        },
+        {
+          "crop": "Wheat",
+          "change": "-1%",
+          "price": "₹2489/quintal",
+          "time": "4 hours ago",
+          "reason": "High production"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+2%",
+          "price": "₹6194/quintal",
+          "time": "8 hours ago",
+          "reason": "Goverment Policies"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Parbhani Agro Products",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Pune",
+      "markets": [
+        {
+          "name": "Market Yard",
+          "cropPrices": {
+            "Wheat": "₹2602/quintal",
+            "Rice": "₹3600/quintal",
+            "Tur Dal": "₹6082/quintal"
+          },
+          "marketTimings": "6 AM - 7 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hadapsar Market",
+          "cropPrices": {
+            "Wheat": "₹2602/quintal",
+            "Rice": "₹3600/quintal",
+            "Tur Dal": "₹6082/quintal"
+          },
+          "marketTimings": "7 AM - 8 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Shivaji Market",
+          "cropPrices": {
+            "Wheat": "₹2602/quintal",
+            "Rice": "₹3600/quintal",
+            "Tur Dal": "₹6082/quintal"
+          },
+          "marketTimings": "9 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4 Cr",
+        "activeBuyers": 550,
+        "averagePricePerQuintal": "₹3,400",
+        "monthlyTransactions": 2000,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+2.5%",
+          "price": "₹2602/quintal",
+          "time": "4 hours ago",
+          "reason": "Increased demand from flour mills"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+2%",
+          "price": "₹6082/quintal",
+          "time": "6 hours ago",
+          "reason": "Lower supplies from producing regions"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1.8%",
+          "price": "₹3600/quintal",
+          "time": "12 hours ago",
+          "reason": "Arrival of new crop"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Pune Agro Processors",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9456781230"
+        }
+      ]
+    },
+    {
+      "city": "Raigad",
+      "markets": [
+        {
+          "name": "Raigad APMC",
+          "cropPrices": {
+            "Wheat": "₹3327/quintal",
+            "Rice": "₹3950/quintal",
+            "Tur Dal": "₹6257/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Mahad Market",
+          "cropPrices": {
+            "Wheat": "₹3327/quintal",
+            "Rice": "₹3950/quintal",
+            "Tur Dal": "₹6257/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Alibaug Market",
+          "cropPrices": {
+            "Wheat": "₹3327/quintal",
+            "Rice": "₹3950/quintal",
+            "Tur Dal": "₹6257/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3,600",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1.8%",
+          "price": "₹3950/quintal",
+          "time": "4 hours ago",
+          "reason": "High demand during festive season"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+0.7%",
+          "price": "₹3327/quintal",
+          "time": "7 hours ago",
+          "reason": "Limited Harvest"
+        },
+        {
+          "crop": "Coconut",
+          "change": "-1%",
+          "price": "₹6,900/quintal",
+          "time": "8 hours ago",
+          "reason": "High rainfall"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Raigad Agro Exports Ltd.",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9988776655"
+        }
+      ]
+    },
+    {
+      "city": "Ratnagiri",
+      "markets": [
+        {
+          "name": "Ratnagiri APMC Market",
+          "cropPrices": {
+            "Wheat": "₹3184/quintal",
+            "Rice": "₹4000/quintal",
+            "Tur Dal": "₹6282/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹3",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cashew",
+          "change": "+1.5%",
+          "price": "₹7,000/quintal",
+          "time": "1 hour ago",
+          "reason": "High demand during festive season"
+        },
+        {
+          "crop": "Rice",
+          "change": "-0.5%",
+          "price": "₹4000/quintal",
+          "time": "3 hour ago",
+          "reason": "New harvest season"
+        },
+        {
+          "crop": "Jackfruit",
+          "change": "+1%",
+          "price": "₹7,600/quintal",
+          "time": "6 hours ago",
+          "reason": "High local demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ratnagiri Agro Products",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Sangli",
+      "markets": [
+        {
+          "name": "Sangli APMC",
+          "cropPrices": {
+            "Grapes": "₹4200/quintal",
+            "Turmeric": "₹7000/quintal",
+            "Flowers": "₹1134/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Miraj Market",
+          "cropPrices": {
+            "Grapes": "₹4200/quintal",
+            "Turmeric": "₹7000/quintal",
+            "Flowers": "₹1134/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Vita Market",
+          "cropPrices": {
+            "Grapes": "₹4200/quintal",
+            "Turmeric": "₹7000/quintal",
+            "Flowers": "₹1134/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.3 Cr",
+        "activeBuyers": 465,
+        "averagePricePerQuintal": "₹3,600",
+        "monthlyTransactions": 1675,
+        "topCommodity": "Grapes"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Grapes",
+          "change": "+4.5%",
+          "price": "₹4200/quintal",
+          "time": "3 hours ago",
+          "reason": "High export orders"
+        },
+        {
+          "crop": "Turmeric",
+          "change": "+3.2%",
+          "price": "₹7000/quintal",
+          "time": "5 hours ago",
+          "reason": "Increased demand for processing"
+        },
+        {
+          "crop": "Flowers",
+          "change": "-1.7%",
+          "price": "₹1134/quintal",
+          "time": "7 hours ago",
+          "reason": "Seasonal surplus"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sangli Grape Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "14,500 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Satara",
+      "markets": [
+        {
+          "name": "Satara APMC",
+          "cropPrices": {
+            "Strawberry": "₹6100/quintal",
+            "Potato": "₹1900/quintal",
+            "Ginger": "₹4500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Wai Market",
+          "cropPrices": {
+            "Strawberry": "₹6100/quintal",
+            "Potato": "₹1900/quintal",
+            "Ginger": "₹4500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Koregaon Market",
+          "cropPrices": {
+            "Strawberry": "₹6100/quintal",
+            "Potato": "₹1900/quintal",
+            "Ginger": "₹4500/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 455,
+        "averagePricePerQuintal": "₹3,550",
+        "monthlyTransactions": 1625,
+        "topCommodity": "Strawberry"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Strawberry",
+          "change": "+5%",
+          "price": "₹6100/quintal",
+          "time": "3 hours ago",
+          "reason": "High seasonal demand"
+        },
+        {
+          "crop": "Potato",
+          "change": "+2.5%",
+          "price": "₹1900/quintal",
+          "time": "5 hours ago",
+          "reason": "Cold storage shortage"
+        },
+        {
+          "crop": "Ginger",
+          "change": "-1.9%",
+          "price": "₹4500/quintal",
+          "time": "7 hours ago",
+          "reason": "Increased supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Satara Strawberry Farms",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Sindhudurg",
+      "markets": [
+        {
+          "name": "Sindhudurg APMC",
+          "cropPrices": {
+            "Wheat": "₹2,500/quintal",
+            "Rice": "₹4,100/quintal",
+            "Tur Dal": "₹6,700/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kudal Market",
+          "cropPrices": {
+            "Wheat": "₹2,400/quintal",
+            "Rice": "₹4,300/quintal",
+            "Tur Dal": "₹6,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3.9",
+        "monthlyTransactions": "1600",
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Fish",
+          "change": "+0.7%",
+          "price": "₹8,900/quintal",
+          "time": "7 hours ago",
+          "reason": "Transportation issues"
+        },
+        {
+          "crop": "Rice",
+          "change": "+1.7%",
+          "price": "₹4.100/quintal",
+          "time": "4 hours ago",
+          "reason": "High local demand"
+        },
+        {
+          "crop": "Coconut",
+          "change": "-2%",
+          "price": "₹1.100/quintal",
+          "time": "5 hours ago",
+          "reason": "Improved weather conditions"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sindhudurg Agro Exports",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10.000 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Solapur",
+      "markets": [
+        {
+          "name": "Solapur APMC",
+          "cropPrices": {
+            "Wheat": "₹2498/quintal",
+            "Rice": "₹3550/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Akkalkot Market",
+          "cropPrices": {
+            "Wheat": "₹2498/quintal",
+            "Rice": "₹3550/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Barshi Market",
+          "cropPrices": {
+            "Wheat": "₹2498/quintal",
+            "Rice": "₹3550/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "8 AM - 4 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹3,400",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sugarcane",
+          "change": "+3.5%",
+          "price": "₹3,600/ton",
+          "time": "3 hours ago",
+          "reason": "High demand from sugar mills"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "+2.8%",
+          "price": "₹6007/quintal",
+          "time": "5 hours ago",
+          "reason": "Supply constraints"
+        },
+        {
+          "crop": "Wheat",
+          "change": "-1.2%",
+          "price": "₹2498/quintal",
+          "time": "7 hours ago",
+          "reason": "Increased supply from local farms"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Solapur Sugar Industries",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,000 tons",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Thane",
+      "markets": [
+        {
+          "name": "Thane APMC Market",
+          "cropPrices": {
+            "Wheat": "₹3398/quintal",
+            "Rice": "₹3875/quintal",
+            "Tur Dal": "₹6107/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Dombivli Market",
+          "cropPrices": {
+            "Wheat": "₹3398/quintal",
+            "Rice": "₹3875/quintal",
+            "Tur Dal": "₹6107/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹3,400",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1.5%",
+          "price": "₹3875/quintal",
+          "time": "2 hours ago",
+          "reason": "High demand for local consumption"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Thane Agro Exports",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Wardha",
+      "markets": [
+        {
+          "name": "Wardha APMC",
+          "cropPrices": {
+            "Cotton": "₹6407/quintal",
+            "Soybean": "₹5467/quintal",
+            "Gram": "₹5850/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hinganghat Market",
+          "cropPrices": {
+            "Cotton": "₹6407/quintal",
+            "Soybean": "₹5467/quintal",
+            "Gram": "₹5850/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        },
+        {
+          "name": "Deoli Market",
+          "cropPrices": {
+            "Cotton": "₹6407/quintal",
+            "Soybean": "₹5467/quintal",
+            "Gram": "₹5850/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹4,700",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.2%",
+          "price": "₹6407/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from textile industries"
+        },
+        {
+          "crop": "Soybean",
+          "change": "+0.8%",
+          "price": "₹5467/quintal",
+          "time": "5 hours ago",
+          "reason": "Limited Production"
+        },
+        {
+          "crop": "Gram",
+          "change": "-1%",
+          "price": "₹5850/quintal",
+          "time": "7 hours ago",
+          "reason": "High Production"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Wardha Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Washim",
+      "markets": [
+        {
+          "name": "Washim APMC",
+          "cropPrices": {
+            "Soybean": "₹5392/quintal",
+            "Cotton": "₹6307/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Karanja Market",
+          "cropPrices": {
+            "Soybean": "₹5392/quintal",
+            "Cotton": "₹6307/quintal",
+            "Tur Dal": "₹6007/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.4 Cr",
+        "activeBuyers": 330,
+        "averagePricePerQuintal": "₹4,500",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Soybean"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+1.5%",
+          "price": "₹5392/quintal",
+          "time": "3 hours ago",
+          "reason": "Increased demand from oil processing units"
+        },
+        {
+          "crop": "Cotton",
+          "change": "+1.0%",
+          "price": "₹6307/quintal",
+          "time": "5 hours ago",
+          "reason": "Export demand"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "-0.5%",
+          "price": "₹6007/quintal",
+          "time": "7 hours ago",
+          "reason": "Improved supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Washim Agro Industries",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,000 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Yavatmal",
+      "markets": [
+        {
+          "name": "Yavatmal APMC",
+          "cropPrices": {
+            "Cotton": "₹6407/quintal",
+            "Soybean": "₹5417/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Wani Market",
+          "cropPrices": {
+            "Cotton": "₹6407/quintal",
+            "Soybean": "₹5417/quintal",
+            "Tur Dal": "₹6032/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 360,
+        "averagePricePerQuintal": "₹4,733",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.8%",
+          "price": "₹6407/quintal",
+          "time": "2 hours ago",
+          "reason": "Increased export orders"
+        },
+        {
+          "crop": "Soybean",
+          "change": "+1.2%",
+          "price": "₹5417/quintal",
+          "time": "4 hours ago",
+          "reason": "Increased demand from oil mills"
+        },
+        {
+          "crop": "Tur Dal",
+          "change": "-0.5%",
+          "price": "₹6032/quintal",
+          "time": "6 hours ago",
+          "reason": "Improved supply from other states"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Yavatmal Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9911223344"
+        }
+      ]
+    }
+  ]
+}

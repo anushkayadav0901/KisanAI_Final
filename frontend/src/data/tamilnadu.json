@@ -1,0 +1,1744 @@
+{
+  "cities": [
+    {
+      "city": "Salem",
+      "markets": [
+        {
+          "name": "Salem APMC",
+          "cropPrices": {
+            "Rice": "₹2,010/quintal",
+            "Cotton": "₹6,250/quintal",
+            "Tapioca": "₹950/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Attur Market",
+          "cropPrices": {
+            "Rice": "₹2,010/quintal",
+            "Cotton": "₹6,250/quintal",
+            "Tapioca": "₹950/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹3,050",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.5%",
+          "price": "₹6,250/quintal",
+          "time": "2 hours ago",
+          "reason": "Textile mills demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Salem Starch Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,500 quintals",
+          "contact": "9654321098"
+        }
+      ]
+    },
+    {
+      "city": "Namakkal",
+      "markets": [
+        {
+          "name": "Namakkal APMC",
+          "cropPrices": {
+            "Egg": "₹525/quintal",
+            "Maize": "₹1,950/quintal",
+            "Vegetables": "₹2,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Paramathi Market",
+          "cropPrices": {
+            "Egg": "₹525/quintal",
+            "Maize": "₹1,950/quintal",
+            "Vegetables": "₹2,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹1,550",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Egg"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+2.8%",
+          "price": "₹1,950/quintal",
+          "time": "4 hours ago",
+          "reason": "Poultry feed demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Namakkal Poultry Integrators",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9543216789"
+        }
+      ]
+    },
+    {
+      "city": "Karur",
+      "markets": [
+        {
+          "name": "Karur APMC",
+          "cropPrices": {
+            "Cotton": "₹6,300/quintal",
+            "Banana": "₹1,300/quintal",
+            "Rice": "₹2,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kulithalai Market",
+          "cropPrices": {
+            "Cotton": "₹6,300/quintal",
+            "Banana": "₹1,300/quintal",
+            "Rice": "₹2,000/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹3,200",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.5%",
+          "price": "₹6,300/quintal",
+          "time": "3 hours ago",
+          "reason": "Textile unit buying"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Karur Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Trichy",
+      "markets": [
+        {
+          "name": "Trichy APMC",
+          "cropPrices": {
+            "Rice": "₹2,020/quintal",
+            "Banana": "₹1,320/quintal",
+            "Vegetables": "₹2,350/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Srirangam Market",
+          "cropPrices": {
+            "Rice": "₹2,020/quintal",
+            "Banana": "₹1,320/quintal",
+            "Vegetables": "₹2,350/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹1,900",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1.9%",
+          "price": "₹2,020/quintal",
+          "time": "6 hours ago",
+          "reason": "Export inquiry"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Trichy Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Thanjavur",
+      "markets": [
+        {
+          "name": "Thanjavur APMC",
+          "cropPrices": {
+            "Rice": "₹2,040/quintal",
+            "Banana": "₹1,280/quintal",
+            "Pulses": "₹6,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kumbakonam Market",
+          "cropPrices": {
+            "Rice": "₹2,040/quintal",
+            "Banana": "₹1,280/quintal",
+            "Pulses": "₹6,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 500,
+        "averagePricePerQuintal": "₹2,800",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pulses",
+          "change": "+3.3%",
+          "price": "₹6,200/quintal",
+          "time": "2 hours ago",
+          "reason": "Festive dal demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Thanjavur Agro Foods",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "16,000 quintals",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Tiruvarur",
+      "markets": [
+        {
+          "name": "Tiruvarur APMC",
+          "cropPrices": {
+            "Rice": "₹2,000/quintal",
+            "Pulses": "₹6,150/quintal",
+            "Sesame": "₹9,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Mannargudi Market",
+          "cropPrices": {
+            "Rice": "₹2,000/quintal",
+            "Pulses": "₹6,150/quintal",
+            "Sesame": "₹9,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹3,900",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sesame",
+          "change": "+4.1%",
+          "price": "₹9,800/quintal",
+          "time": "5 hours ago",
+          "reason": "Export orders"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tiruvarur Oil Mill",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Dharmapuri",
+      "markets": [
+        {
+          "name": "Dharmapuri APMC",
+          "cropPrices": {
+            "Mango": "₹4,500/quintal",
+            "Tomato": "₹1,800/quintal",
+            "Tamarind": "₹7,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Palacode Market",
+          "cropPrices": {
+            "Mango": "₹4,500/quintal",
+            "Tomato": "₹1,800/quintal",
+            "Tamarind": "₹7,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹4,500",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Mango"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Mango",
+          "change": "+5.5%",
+          "price": "₹4,500/quintal",
+          "time": "3 hours ago",
+          "reason": "Early Alphonso arrival"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Dharmapuri Mango Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Dindigul",
+      "markets": [
+        {
+          "name": "Dindigul APMC",
+          "cropPrices": {
+            "Banana": "₹1,420/quintal",
+            "Tomato": "₹1,750/quintal",
+            "Onion": "₹2,050/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Oddanchatram Market",
+          "cropPrices": {
+            "Banana": "₹1,420/quintal",
+            "Tomato": "₹1,750/quintal",
+            "Onion": "₹2,050/quintal"
+          },
+          "marketTimings": "5 AM - 1 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹1,700",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Onion"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Onion",
+          "change": "+6.2%",
+          "price": "₹2,050/quintal",
+          "time": "1 hour ago",
+          "reason": "Supply crunch from north"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Dindigul Vegetable Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9789012345"
+        }
+      ]
+    },
+    {
+      "city": "Kanchipuram",
+      "markets": [
+        {
+          "name": "Kanchipuram APMC",
+          "cropPrices": {
+            "Rice": "₹2,060/quintal",
+            "Mango": "₹4,200/quintal",
+            "Flowers": "₹2,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Chengalpattu Market",
+          "cropPrices": {
+            "Rice": "₹2,060/quintal",
+            "Mango": "₹4,200/quintal",
+            "Flowers": "₹2,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹2,900",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Flowers",
+          "change": "+3.8%",
+          "price": "₹2,500/quintal",
+          "time": "4 hours ago",
+          "reason": "Temple festival demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kanchi Flower Auction",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Kanyakumari",
+      "markets": [
+        {
+          "name": "Nagercoil Market",
+          "cropPrices": {
+            "Rubber": "₹16,500/quintal",
+            "Coconut": "₹2,650/quintal",
+            "Banana": "₹1,380/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Marthandam Market",
+          "cropPrices": {
+            "Rubber": "₹16,500/quintal",
+            "Coconut": "₹2,650/quintal",
+            "Banana": "₹1,380/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.4 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹6,800",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Rubber"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rubber",
+          "change": "+2.3%",
+          "price": "₹16,500/quintal",
+          "time": "6 hours ago",
+          "reason": "Global price rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "KKR Latex Products",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Krishnagiri",
+      "markets": [
+        {
+          "name": "Krishnagiri APMC",
+          "cropPrices": {
+            "Mango": "₹4,350/quintal",
+            "Tomato": "₹1,650/quintal",
+            "Ragi": "₹2,350/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hosur Market",
+          "cropPrices": {
+            "Mango": "₹4,350/quintal",
+            "Tomato": "₹1,650/quintal",
+            "Ragi": "₹2,350/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹2,800",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Mango"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Ragi",
+          "change": "-2.8%",
+          "price": "₹2,350/quintal",
+          "time": "3 hours ago",
+          "reason": "Karnataka supply surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Krishnagiri Mango Packers",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Madurai",
+      "markets": [
+        {
+          "name": "Madurai APMC",
+          "cropPrices": {
+            "Rice": "₹2,030/quintal",
+            "Cotton": "₹6,320/quintal",
+            "Banana": "₹1,340/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Usilampatti Market",
+          "cropPrices": {
+            "Rice": "₹2,030/quintal",
+            "Cotton": "₹6,320/quintal",
+            "Banana": "₹1,340/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹3,200",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.7%",
+          "price": "₹6,320/quintal",
+          "time": "4 hours ago",
+          "reason": "Spinning mills lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Madurai Cotton Association",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "14,500 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Vellore",
+      "markets": [
+        {
+          "name": "Vellore APMC",
+          "cropPrices": {
+            "Groundnut": "₹5,800/quintal",
+            "Mango": "₹4,100/quintal",
+            "Cotton": "₹6,280/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Gudiyattam Market",
+          "cropPrices": {
+            "Groundnut": "₹5,800/quintal",
+            "Mango": "₹4,100/quintal",
+            "Cotton": "₹6,280/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹5,400",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Groundnut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "+3.0%",
+          "price": "₹5,800/quintal",
+          "time": "2 hours ago",
+          "reason": "Oil millers active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Vellore Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Tiruvannamalai",
+      "markets": [
+        {
+          "name": "Tiruvannamalai APMC",
+          "cropPrices": {
+            "Groundnut": "₹5,750/quintal",
+            "Cotton": "₹6,260/quintal",
+            "Pulses": "₹6,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Cheyyar Market",
+          "cropPrices": {
+            "Groundnut": "₹5,750/quintal",
+            "Cotton": "₹6,260/quintal",
+            "Pulses": "₹6,100/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹6,050",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Groundnut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pulses",
+          "change": "+2.4%",
+          "price": "₹6,100/quintal",
+          "time": "5 hours ago",
+          "reason": "Festive retail lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Cheyyar Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Cuddalore",
+      "markets": [
+        {
+          "name": "Cuddalore APMC",
+          "cropPrices": {
+            "Rice": "₹2,040/quintal",
+            "Sugarcane": "₹3,350/quintal",
+            "Cotton": "₹6,290/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Chidambaram Market",
+          "cropPrices": {
+            "Rice": "₹2,040/quintal",
+            "Sugarcane": "₹3,350/quintal",
+            "Cotton": "₹6,290/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹3,900",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sugarcane",
+          "change": "+2.1%",
+          "price": "₹3,350/quintal",
+          "time": "4 hours ago",
+          "reason": "Mills cane price revision"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Cuddalore Sugar Co-op",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,000 tons",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Ariyalur",
+      "markets": [
+        {
+          "name": "Ariyalur APMC",
+          "cropPrices": {
+            "Rice": "₹2,000/quintal",
+            "Cotton": "₹6,270/quintal",
+            "Tapioca": "₹920/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Jayankondam Market",
+          "cropPrices": {
+            "Rice": "₹2,000/quintal",
+            "Cotton": "₹6,270/quintal",
+            "Tapioca": "₹920/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.4 Cr",
+        "activeBuyers": 370,
+        "averagePricePerQuintal": "₹3,050",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Tapioca",
+          "change": "-3.5%",
+          "price": "₹920/quintal",
+          "time": "6 hours ago",
+          "reason": "Kerala supply rush"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jayankondam Starch Units",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Perambalur",
+      "markets": [
+        {
+          "name": "Perambalur APMC",
+          "cropPrices": {
+            "Rice": "₹2,010/quintal",
+            "Cotton": "₹6,280/quintal",
+            "Sugarcane": "₹3,300/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Veppanthattai Market",
+          "cropPrices": {
+            "Rice": "₹2,010/quintal",
+            "Cotton": "₹6,280/quintal",
+            "Sugarcane": "₹3,300/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹3,850",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.9%",
+          "price": "₹6,280/quintal",
+          "time": "1 hour ago",
+          "reason": "Ginners advance purchase"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Perambalur Cotton Gin",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Pudukkottai",
+      "markets": [
+        {
+          "name": "Pudukkottai APMC",
+          "cropPrices": {
+            "Rice": "₹2,020/quintal",
+            "Cotton": "₹6,290/quintal",
+            "Pulses": "₹6,050/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Aranthangi Market",
+          "cropPrices": {
+            "Rice": "₹2,020/quintal",
+            "Cotton": "₹6,290/quintal",
+            "Pulses": "₹6,050/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹4,700",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pulses",
+          "change": "+2.7%",
+          "price": "₹6,050/quintal",
+          "time": "4 hours ago",
+          "reason": "Local festival stocking"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Aranthangi Dal Mill",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Theni",
+      "markets": [
+        {
+          "name": "Theni APMC",
+          "cropPrices": {
+            "Cardamom": "₹12,000/quintal",
+            "Banana": "₹1,450/quintal",
+            "Vegetables": "₹2,600/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Cumbum Market",
+          "cropPrices": {
+            "Cardamom": "₹12,000/quintal",
+            "Banana": "₹1,450/quintal",
+            "Vegetables": "₹2,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹5,500",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cardamom"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cardamom",
+          "change": "+3.5%",
+          "price": "₹12,000/quintal",
+          "time": "5 hours ago",
+          "reason": "Gulf export demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Theni Cardamom Packers",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "8,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Tuticorin",
+      "markets": [
+        {
+          "name": "Tuticorin APMC",
+          "cropPrices": {
+            "Rice": "₹2,080/quintal",
+            "Cotton": "₹6,310/quintal",
+            "Banana": "₹1,360/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kovilpatti Market",
+          "cropPrices": {
+            "Rice": "₹2,080/quintal",
+            "Cotton": "₹6,310/quintal",
+            "Banana": "₹1,360/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹3,200",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.0%",
+          "price": "₹6,310/quintal",
+          "time": "3 hours ago",
+          "reason": "Tuticorin port exports"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kovilpatti Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tirunelveli",
+      "markets": [
+        {
+          "name": "Tirunelveli APMC",
+          "cropPrices": {
+            "Rice": "₹2,090/quintal",
+            "Cotton": "₹6,300/quintal",
+            "Banana": "₹1,370/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Valliyur Market",
+          "cropPrices": {
+            "Rice": "₹2,090/quintal",
+            "Cotton": "₹6,300/quintal",
+            "Banana": "₹1,370/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹3,250",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Banana",
+          "change": "+3.1%",
+          "price": "₹1,370/quintal",
+          "time": "2 hours ago",
+          "reason": "Kerala truck demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tirunelveli Banana Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "13,500 quintals",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Virudhunagar",
+      "markets": [
+        {
+          "name": "Virudhunagar APMC",
+          "cropPrices": {
+            "Cotton": "₹6,320/quintal",
+            "Chili": "₹19,000/quintal",
+            "Rice": "₹2,070/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sattur Market",
+          "cropPrices": {
+            "Cotton": "₹6,320/quintal",
+            "Chili": "₹19,000/quintal",
+            "Rice": "₹2,070/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.3 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹9,150",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Chili"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chili",
+          "change": "+7.5%",
+          "price": "₹19,000/quintal",
+          "time": "6 hours ago",
+          "reason": "Export quality short supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sattur Chili Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Sivaganga",
+      "markets": [
+        {
+          "name": "Sivaganga APMC",
+          "cropPrices": {
+            "Rice": "₹2,050/quintal",
+            "Cotton": "₹6,290/quintal",
+            "Pulses": "₹6,080/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Karaikudi Market",
+          "cropPrices": {
+            "Rice": "₹2,050/quintal",
+            "Cotton": "₹6,290/quintal",
+            "Pulses": "₹6,080/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹4,700",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pulses",
+          "change": "+1.9%",
+          "price": "₹6,080/quintal",
+          "time": "3 hours ago",
+          "reason": "Festival season demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Karaikudi Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Ramanathapuram",
+      "markets": [
+        {
+          "name": "Ramanathapuram APMC",
+          "cropPrices": {
+            "Rice": "₹2,060/quintal",
+            "Cotton": "₹6,280/quintal",
+            "Pulses": "₹6,070/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Paramakudi Market",
+          "cropPrices": {
+            "Rice": "₹2,060/quintal",
+            "Cotton": "₹6,280/quintal",
+            "Pulses": "₹6,070/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹4,700",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.2%",
+          "price": "₹6,280/quintal",
+          "time": "5 hours ago",
+          "reason": "Ginning units restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Paramakudi Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Mayiladuthurai",
+      "markets": [
+        {
+          "name": "Mayiladuthurai APMC",
+          "cropPrices": {
+            "Rice": "₹2,040/quintal",
+            "Pulses": "₹6,090/quintal",
+            "Sesame": "₹9,750/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sirkazhi Market",
+          "cropPrices": {
+            "Rice": "₹2,040/quintal",
+            "Pulses": "₹6,090/quintal",
+            "Sesame": "₹9,750/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.4 Cr",
+        "activeBuyers": 370,
+        "averagePricePerQuintal": "₹5,950",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sesame",
+          "change": "+4.7%",
+          "price": "₹9,750/quintal",
+          "time": "7 hours ago",
+          "reason": "Export orders from Japan"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sirkazhi Oil Mill",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Nagapattinam",
+      "markets": [
+        {
+          "name": "Nagapattinam APMC",
+          "cropPrices": {
+            "Rice": "₹2,050/quintal",
+            "Pulses": "₹6,060/quintal",
+            "Coconut": "₹2,600/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Vedaranyam Market",
+          "cropPrices": {
+            "Rice": "₹2,050/quintal",
+            "Pulses": "₹6,060/quintal",
+            "Coconut": "₹2,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹3,600",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Coconut",
+          "change": "+2.0%",
+          "price": "₹2,600/quintal",
+          "time": "4 hours ago",
+          "reason": "Copra buying active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Vedaranyam Coconut Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Chennai",
+      "markets": [
+        {
+          "name": "Koyambedu Wholesale Market",
+          "cropPrices": {
+            "Vegetables": "₹2,650/quintal",
+            "Flowers": "₹2,400/quintal",
+            "Fruits": "₹4,100/quintal"
+          },
+          "marketTimings": "4 AM - 8 PM",
+          "tradingDays": "Monday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹8.2 Cr",
+        "activeBuyers": 1100,
+        "averagePricePerQuintal": "₹3,050",
+        "monthlyTransactions": 3500,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Vegetables",
+          "change": "+3.5%",
+          "price": "₹2,650/quintal",
+          "time": "1 hour ago",
+          "reason": "Weekend retail surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Chennai Retail Veg Consortium",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "28,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Coimbatore",
+      "markets": [
+        {
+          "name": "Coimbatore APMC",
+          "cropPrices": {
+            "Coconut": "₹2,800/quintal",
+            "Vegetables": "₹2,400/quintal",
+            "Cotton": "₹6,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Pollachi Market",
+          "cropPrices": {
+            "Coconut": "₹2,800/quintal",
+            "Vegetables": "₹2,400/quintal",
+            "Cotton": "₹6,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 550,
+        "averagePricePerQuintal": "₹3,900",
+        "monthlyTransactions": 1900,
+        "topCommodity": "Coconut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.1%",
+          "price": "₹6,500/quintal",
+          "time": "3 hours ago",
+          "reason": "Spinning mills lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Coimbatore Cotton Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "16,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Erode",
+      "markets": [
+        {
+          "name": "Erode APMC",
+          "cropPrices": {
+            "Turmeric": "₹8,200/quintal",
+            "Banana": "₹1,420/quintal",
+            "Rice": "₹2,120/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhavani Market",
+          "cropPrices": {
+            "Turmeric": "₹8,200/quintal",
+            "Banana": "₹1,420/quintal",
+            "Rice": "₹2,120/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.0 Cr",
+        "activeBuyers": 580,
+        "averagePricePerQuintal": "₹3,900",
+        "monthlyTransactions": 2000,
+        "topCommodity": "Turmeric"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Turmeric",
+          "change": "+5.5%",
+          "price": "₹8,200/quintal",
+          "time": "5 hours ago",
+          "reason": "Export curry orders"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Erode Turmeric Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9789012345"
+        }
+      ]
+    },
+    {
+      "city": "Tiruchirappalli",
+      "markets": [
+        {
+          "name": "Trichy APMC",
+          "cropPrices": {
+            "Rice": "₹2,080/quintal",
+            "Banana": "₹1,380/quintal",
+            "Vegetables": "₹2,450/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Srirangam Market",
+          "cropPrices": {
+            "Rice": "₹2,080/quintal",
+            "Banana": "₹1,380/quintal",
+            "Vegetables": "₹2,450/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 510,
+        "averagePricePerQuintal": "₹1,970",
+        "monthlyTransactions": 1750,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+2.0%",
+          "price": "₹2,080/quintal",
+          "time": "4 hours ago",
+          "reason": "Telangana mill inquiry"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Trichy Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tiruppur",
+      "markets": [
+        {
+          "name": "Tiruppur APMC",
+          "cropPrices": {
+            "Cotton": "₹6,600/quintal",
+            "Banana": "₹1,460/quintal",
+            "Vegetables": "₹2,600/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Avinashi Market",
+          "cropPrices": {
+            "Cotton": "₹6,600/quintal",
+            "Banana": "₹1,460/quintal",
+            "Vegetables": "₹2,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.6 Cr",
+        "activeBuyers": 530,
+        "averagePricePerQuintal": "₹3,550",
+        "monthlyTransactions": 1850,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.2%",
+          "price": "₹6,600/quintal",
+          "time": "2 hours ago",
+          "reason": "Export yarn orders"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tiruppur Cotton Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "17,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Ranipet",
+      "markets": [
+        {
+          "name": "Ranipet APMC",
+          "cropPrices": {
+            "Rice": "₹2,100/quintal",
+            "Groundnut": "₹6,000/quintal",
+            "Flowers": "₹2,750/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Arakkonam Market",
+          "cropPrices": {
+            "Rice": "₹2,100/quintal",
+            "Groundnut": "₹6,000/quintal",
+            "Flowers": "₹2,750/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3,617",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "+3.1%",
+          "price": "₹6,000/quintal",
+          "time": "3 hours ago",
+          "reason": "Oil mills restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ranipet Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tirupattur",
+      "markets": [
+        {
+          "name": "Tirupattur APMC",
+          "cropPrices": {
+            "Mango": "₹4,800/quintal",
+            "Tomato": "₹1,950/quintal",
+            "Tamarind": "₹7,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Vaniyambadi Market",
+          "cropPrices": {
+            "Mango": "₹4,800/quintal",
+            "Tomato": "₹1,950/quintal",
+            "Tamarind": "₹7,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹4,750",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Mango"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Mango",
+          "change": "+6.0%",
+          "price": "₹4,800/quintal",
+          "time": "5 hours ago",
+          "reason": "Early Banganapalli arrival"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tirupattur Mango Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "13,500 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Chengalpattu",
+      "markets": [
+        {
+          "name": "Chengalpattu APMC",
+          "cropPrices": {
+            "Rice": "₹2,120/quintal",
+            "Flowers": "₹2,850/quintal",
+            "Vegetables": "₹2,550/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tambaram Market",
+          "cropPrices": {
+            "Rice": "₹2,120/quintal",
+            "Flowers": "₹2,850/quintal",
+            "Vegetables": "₹2,550/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹2,520",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Flowers",
+          "change": "+4.2%",
+          "price": "₹2,850/quintal",
+          "time": "4 hours ago",
+          "reason": "Marriage season demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Chengalpattu Flower Auction",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tenkasi",
+      "markets": [
+        {
+          "name": "Tenkasi APMC",
+          "cropPrices": {
+            "Rice": "₹2,140/quintal",
+            "Banana": "₹1,500/quintal",
+            "Chili": "₹19,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sengottai Market",
+          "cropPrices": {
+            "Rice": "₹2,140/quintal",
+            "Banana": "₹1,500/quintal",
+            "Chili": "₹19,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹7,847",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Chili"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chili",
+          "change": "+7.0%",
+          "price": "₹19,800/quintal",
+          "time": "6 hours ago",
+          "reason": "Export quality short supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tenkasi Chili Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    }
+  ]
+}

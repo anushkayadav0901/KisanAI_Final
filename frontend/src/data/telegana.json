@@ -1,0 +1,2004 @@
+{
+  "cities": [
+    {
+      "city": "Adilabad",
+      "markets": [
+        {
+          "name": "Adilabad APMC",
+          "cropPrices": {
+            "Cotton": "₹6,550/quintal",
+            "Soybean": "₹5,400/quintal",
+            "Paddy": "₹2,120/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Mancherial Market",
+          "cropPrices": {
+            "Cotton": "₹6,550/quintal",
+            "Soybean": "₹5,400/quintal",
+            "Paddy": "₹2,120/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹4,690",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.3%",
+          "price": "₹6,550/quintal",
+          "time": "4 hours ago",
+          "reason": "Ginners restock for new season"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Adilabad Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Bhadradri Kothagudem",
+      "markets": [
+        {
+          "name": "Kothagudem APMC",
+          "cropPrices": {
+            "Paddy": "₹2,140/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Chillies": "₹19,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhadrachalam Market",
+          "cropPrices": {
+            "Paddy": "₹2,140/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Chillies": "₹19,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 500,
+        "averagePricePerQuintal": "₹9,287",
+        "monthlyTransactions": 1750,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+6.5%",
+          "price": "₹19,200/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour value surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kothagudem Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Hanamkonda",
+      "markets": [
+        {
+          "name": "Warangal APMC",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,580/quintal",
+            "Maize": "₹2,080/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hanamkonda Market",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,580/quintal",
+            "Maize": "₹2,080/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.6 Cr",
+        "activeBuyers": 520,
+        "averagePricePerQuintal": "₹3,607",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+3.1%",
+          "price": "₹2,080/quintal",
+          "time": "3 hours ago",
+          "reason": "Poultry feed demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Warangal Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Hyderabad",
+      "markets": [
+        {
+          "name": "Gaddiannaram APMC",
+          "cropPrices": {
+            "Vegetables": "₹2,700/quintal",
+            "Flowers": "₹2,500/quintal",
+            "Fruits": "₹4,300/quintal"
+          },
+          "marketTimings": "4 AM - 8 PM",
+          "tradingDays": "Monday to Sunday"
+        },
+        {
+          "name": "Shamsabad Market",
+          "cropPrices": {
+            "Vegetables": "₹2,700/quintal",
+            "Flowers": "₹2,500/quintal",
+            "Fruits": "₹4,300/quintal"
+          },
+          "marketTimings": "5 AM - 7 PM",
+          "tradingDays": "Monday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹8.5 Cr",
+        "activeBuyers": 1200,
+        "averagePricePerQuintal": "₹3,170",
+        "monthlyTransactions": 3600,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Vegetables",
+          "change": "+3.8%",
+          "price": "₹2,700/quintal",
+          "time": "1 hour ago",
+          "reason": "Weekend retail surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hyderabad Retail Veg Consortium",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "30,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Jagtial",
+      "markets": [
+        {
+          "name": "Jagtial APMC",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Korutla Market",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹3,613",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Paddy",
+          "change": "+2.5%",
+          "price": "₹2,180/quintal",
+          "time": "5 hours ago",
+          "reason": "Rabi arrival quality premium"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jagtial Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Jangaon",
+      "markets": [
+        {
+          "name": "Jangaon APMC",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Red-gram": "₹6,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Station Ghanpur Market",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Red-gram": "₹6,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹5,180",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Red-gram",
+          "change": "+3.2%",
+          "price": "₹6,800/quintal",
+          "time": "4 hours ago",
+          "reason": "Maharashtra dal mills active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jangaon Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Jayashankar Bhupalpally",
+      "markets": [
+        {
+          "name": "Bhupalpally APMC",
+          "cropPrices": {
+            "Paddy": "₹2,120/quintal",
+            "Cotton": "₹6,510/quintal",
+            "Chillies": "₹18,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Chityal Market",
+          "cropPrices": {
+            "Paddy": "₹2,120/quintal",
+            "Cotton": "₹6,510/quintal",
+            "Chillies": "₹18,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹9,143",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+5.8%",
+          "price": "₹18,800/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour premium"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bhupalpally Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Jogulamba Gadwal",
+      "markets": [
+        {
+          "name": "Gadwal APMC",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Sunflower": "₹5,950/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Alampur Market",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Sunflower": "₹5,950/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹4,880",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+4.1%",
+          "price": "₹5,950/quintal",
+          "time": "3 hours ago",
+          "reason": "Lower kharif arrivals"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gadwal Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Kamareddy",
+      "markets": [
+        {
+          "name": "Kamareddy APMC",
+          "cropPrices": {
+            "Paddy": "₹2,140/quintal",
+            "Cotton": "₹6,570/quintal",
+            "Soybean": "₹5,420/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Yellareddy Market",
+          "cropPrices": {
+            "Paddy": "₹2,140/quintal",
+            "Cotton": "₹6,570/quintal",
+            "Soybean": "₹5,420/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹4,710",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+2.7%",
+          "price": "₹5,420/quintal",
+          "time": "5 hours ago",
+          "reason": "Poultry feed demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kamareddy Soybean Crushers",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Karimnagar",
+      "markets": [
+        {
+          "name": "Karimnagar APMC",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,590/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Huzurabad Market",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,590/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.7 Cr",
+        "activeBuyers": 540,
+        "averagePricePerQuintal": "₹3,617",
+        "monthlyTransactions": 1850,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Paddy",
+          "change": "+2.0%",
+          "price": "₹2,170/quintal",
+          "time": "4 hours ago",
+          "reason": "Rabi quality premium"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Karimnagar Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "16,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Khammam",
+      "markets": [
+        {
+          "name": "Khammam APMC",
+          "cropPrices": {
+            "Paddy": "₹2,190/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Chillies": "₹18,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sathupalli Market",
+          "cropPrices": {
+            "Paddy": "₹2,190/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Chillies": "₹18,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 510,
+        "averagePricePerQuintal": "₹9,083",
+        "monthlyTransactions": 1750,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+5.2%",
+          "price": "₹18,500/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour value rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Khammam Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Komaram Bheem Asifabad",
+      "markets": [
+        {
+          "name": "Asifabad APMC",
+          "cropPrices": {
+            "Cotton": "₹6,530/quintal",
+            "Soybean": "₹5,380/quintal",
+            "Paddy": "₹2,110/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kagaznagar Market",
+          "cropPrices": {
+            "Cotton": "₹6,530/quintal",
+            "Soybean": "₹5,380/quintal",
+            "Paddy": "₹2,110/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹4,673",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+3.0%",
+          "price": "₹5,380/quintal",
+          "time": "4 hours ago",
+          "reason": "Poultry feed restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Asifabad Soybean Crushers",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Mahabubabad",
+      "markets": [
+        {
+          "name": "Mahabubabad APMC",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,550/quintal",
+            "Maize": "₹2,120/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Thorrur Market",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,550/quintal",
+            "Maize": "₹2,120/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹3,617",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Paddy",
+          "change": "+2.3%",
+          "price": "₹2,180/quintal",
+          "time": "5 hours ago",
+          "reason": "Rabi premium arrival"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mahabubabad Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Mahabubnagar",
+      "markets": [
+        {
+          "name": "Mahabubnagar APMC",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sunflower": "₹5,920/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Wanaparthy Market",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sunflower": "₹5,920/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.3 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹4,880",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+4.5%",
+          "price": "₹5,920/quintal",
+          "time": "3 hours ago",
+          "reason": "Lower kharif arrivals"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mahabubnagar Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Mancherial",
+      "markets": [
+        {
+          "name": "Mancherial APMC",
+          "cropPrices": {
+            "Cotton": "₹6,540/quintal",
+            "Paddy": "₹2,150/quintal",
+            "Soybean": "₹5,420/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bellampalli Market",
+          "cropPrices": {
+            "Cotton": "₹6,540/quintal",
+            "Paddy": "₹2,150/quintal",
+            "Soybean": "₹5,420/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹4,703",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.0%",
+          "price": "₹6,540/quintal",
+          "time": "4 hours ago",
+          "reason": "Ginners restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mancherial Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Medak",
+      "markets": [
+        {
+          "name": "Medak APMC",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sangareddy Market",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹3,597",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+2.8%",
+          "price": "₹2,090/quintal",
+          "time": "3 hours ago",
+          "reason": "Poultry feed lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Medak Maize Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Medchal Malkajgiri",
+      "markets": [
+        {
+          "name": "Medchal APMC",
+          "cropPrices": {
+            "Vegetables": "₹2,650/quintal",
+            "Flowers": "₹2,550/quintal",
+            "Fruits": "₹4,200/quintal"
+          },
+          "marketTimings": "5 AM - 8 PM",
+          "tradingDays": "Monday to Sunday"
+        },
+        {
+          "name": "Shamirpet Market",
+          "cropPrices": {
+            "Vegetables": "₹2,650/quintal",
+            "Flowers": "₹2,550/quintal",
+            "Fruits": "₹4,200/quintal"
+          },
+          "marketTimings": "6 AM - 7 PM",
+          "tradingDays": "Monday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.5 Cr",
+        "activeBuyers": 650,
+        "averagePricePerQuintal": "₹3,133",
+        "monthlyTransactions": 2100,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Vegetables",
+          "change": "+3.5%",
+          "price": "₹2,650/quintal",
+          "time": "2 hours ago",
+          "reason": "City weekend surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Medchal Veg Consortium",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "20,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Mulugu",
+      "markets": [
+        {
+          "name": "Mulugu APMC",
+          "cropPrices": {
+            "Paddy": "₹2,130/quintal",
+            "Cotton": "₹6,510/quintal",
+            "Chillies": "₹18,700/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Eturunagaram Market",
+          "cropPrices": {
+            "Paddy": "₹2,130/quintal",
+            "Cotton": "₹6,510/quintal",
+            "Chillies": "₹18,700/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 370,
+        "averagePricePerQuintal": "₹9,113",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+6.0%",
+          "price": "₹18,700/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour value rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mulugu Chilli Traders",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Nagarkurnool",
+      "markets": [
+        {
+          "name": "Nagarkurnool APMC",
+          "cropPrices": {
+            "Paddy": "₹2,190/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Sunflower": "₹5,900/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Achampet Market",
+          "cropPrices": {
+            "Paddy": "₹2,190/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Sunflower": "₹5,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹4,877",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+4.8%",
+          "price": "₹5,900/quintal",
+          "time": "3 hours ago",
+          "reason": "Limited kharif supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nagarkurnool Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Nalgonda",
+      "markets": [
+        {
+          "name": "Nalgonda APMC",
+          "cropPrices": {
+            "Paddy": "₹2,210/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Chillies": "₹18,900/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Miryalaguda Market",
+          "cropPrices": {
+            "Paddy": "₹2,210/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Chillies": "₹18,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 490,
+        "averagePricePerQuintal": "₹9,213",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+5.5%",
+          "price": "₹18,900/quintal",
+          "time": "5 hours ago",
+          "reason": "Export colour value surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Miryalaguda Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Nirmal",
+      "markets": [
+        {
+          "name": "Nirmal APMC",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Soybean": "₹5,450/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhainsa Market",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Soybean": "₹5,450/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹4,723",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Soybean",
+          "change": "+2.9%",
+          "price": "₹5,450/quintal",
+          "time": "4 hours ago",
+          "reason": "Poultry feed lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nirmal Soybean Crushers",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Peddapalli",
+      "markets": [
+        {
+          "name": "Peddapalli APMC",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sultanabad Market",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹3,600",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+3.2%",
+          "price": "₹2,100/quintal",
+          "time": "3 hours ago",
+          "reason": "Poultry feed demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Peddapalli Maize Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Rajanna Sircilla",
+      "markets": [
+        {
+          "name": "Sircilla APMC",
+          "cropPrices": {
+            "Paddy": "₹2,150/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Maize": "₹2,080/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Vemulawada Market",
+          "cropPrices": {
+            "Paddy": "₹2,150/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Maize": "₹2,080/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹3,597",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.1%",
+          "price": "₹6,560/quintal",
+          "time": "4 hours ago",
+          "reason": "Ginning units active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sircilla Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Rangareddy",
+      "markets": [
+        {
+          "name": "Shamshabad APMC",
+          "cropPrices": {
+            "Vegetables": "₹2,600/quintal",
+            "Flowers": "₹2,450/quintal",
+            "Fruits": "₹4,100/quintal"
+          },
+          "marketTimings": "5 AM - 8 PM",
+          "tradingDays": "Monday to Sunday"
+        },
+        {
+          "name": "Ibrahimpatnam Market",
+          "cropPrices": {
+            "Vegetables": "₹2,600/quintal",
+            "Flowers": "₹2,450/quintal",
+            "Fruits": "₹4,100/quintal"
+          },
+          "marketTimings": "6 AM - 7 PM",
+          "tradingDays": "Monday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹5.2 Cr",
+        "activeBuyers": 750,
+        "averagePricePerQuintal": "₹3,050",
+        "monthlyTransactions": 2400,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Vegetables",
+          "change": "+3.3%",
+          "price": "₹2,600/quintal",
+          "time": "2 hours ago",
+          "reason": "City weekend surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Rangareddy Veg Consortium",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "22,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Sangareddy",
+      "markets": [
+        {
+          "name": "Sangareddy APMC",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Patancheru Market",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 510,
+        "averagePricePerQuintal": "₹3,600",
+        "monthlyTransactions": 1750,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+2.9%",
+          "price": "₹2,090/quintal",
+          "time": "3 hours ago",
+          "reason": "Poultry feed lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sangareddy Maize Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Siddipet",
+      "markets": [
+        {
+          "name": "Siddipet APMC",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,550/quintal",
+            "Maize": "₹2,110/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Dubbak Market",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,550/quintal",
+            "Maize": "₹2,110/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 490,
+        "averagePricePerQuintal": "₹3,620",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Paddy",
+          "change": "+2.2%",
+          "price": "₹2,200/quintal",
+          "time": "5 hours ago",
+          "reason": "Rabi premium arrival"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Siddipet Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Suryapet",
+      "markets": [
+        {
+          "name": "Suryapet APMC",
+          "cropPrices": {
+            "Paddy": "₹2,190/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Chillies": "₹18,600/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Huzurnagar Market",
+          "cropPrices": {
+            "Paddy": "₹2,190/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Chillies": "₹18,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹9,107",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+5.8%",
+          "price": "₹18,600/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour value rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Suryapet Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Vikarabad",
+      "markets": [
+        {
+          "name": "Vikarabad APMC",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sunflower": "₹5,880/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tandur Market",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sunflower": "₹5,880/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹4,857",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+4.2%",
+          "price": "₹5,880/quintal",
+          "time": "3 hours ago",
+          "reason": "Limited kharif supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Vikarabad Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Wanaparthy",
+      "markets": [
+        {
+          "name": "Wanaparthy APMC",
+          "cropPrices": {
+            "Paddy": "₹2,210/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Groundnut": "₹6,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Pebbair Market",
+          "cropPrices": {
+            "Paddy": "₹2,210/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Groundnut": "₹6,100/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹4,947",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "+3.5%",
+          "price": "₹6,100/quintal",
+          "time": "4 hours ago",
+          "reason": "Oil mills restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Wanaparthy Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Warangal",
+      "markets": [
+        {
+          "name": "Warangal APMC",
+          "cropPrices": {
+            "Paddy": "₹2,230/quintal",
+            "Cotton": "₹6,580/quintal",
+            "Chillies": "₹19,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hanamkonda Market",
+          "cropPrices": {
+            "Paddy": "₹2,230/quintal",
+            "Cotton": "₹6,580/quintal",
+            "Chillies": "₹19,000/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 550,
+        "averagePricePerQuintal": "₹9,270",
+        "monthlyTransactions": 1900,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+6.2%",
+          "price": "₹19,000/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour value surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Warangal Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Yadadri Bhuvanagiri",
+      "markets": [
+        {
+          "name": "Bhongir APMC",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Groundnut": "₹6,050/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Choutuppal Market",
+          "cropPrices": {
+            "Paddy": "₹2,180/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Groundnut": "₹6,050/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹4,917",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "+3.2%",
+          "price": "₹6,050/quintal",
+          "time": "4 hours ago",
+          "reason": "Oil mills restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bhongir Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Narayanpet",
+      "markets": [
+        {
+          "name": "Narayanpet APMC",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sunflower": "₹5,920/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Makthal Market",
+          "cropPrices": {
+            "Paddy": "₹2,200/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sunflower": "₹5,920/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹4,880",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+4.5%",
+          "price": "₹5,920/quintal",
+          "time": "3 hours ago",
+          "reason": "Lower kharif arrivals"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Narayanpet Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Pochampally",
+      "markets": [
+        {
+          "name": "Pochampally APMC",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Onion": "₹2,150/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhoodan Pochampally Market",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Onion": "₹2,150/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3,617",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Onion",
+          "change": "-4.2%",
+          "price": "₹2,150/quintal",
+          "time": "2 hours ago",
+          "reason": "Late kharif surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Pochampally Onion Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Sircilla",
+      "markets": [
+        {
+          "name": "Sircilla APMC",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Vemulawada Market",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,560/quintal",
+            "Maize": "₹2,090/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹3,603",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+3.1%",
+          "price": "₹2,090/quintal",
+          "time": "3 hours ago",
+          "reason": "Poultry feed demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sircilla Maize Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tekulapally",
+      "markets": [
+        {
+          "name": "Tekulapally APMC",
+          "cropPrices": {
+            "Paddy": "₹2,140/quintal",
+            "Cotton": "₹6,510/quintal",
+            "Chillies": "₹18,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Aswapuram Market",
+          "cropPrices": {
+            "Paddy": "₹2,140/quintal",
+            "Cotton": "₹6,510/quintal",
+            "Chillies": "₹18,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹9,150",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+6.0%",
+          "price": "₹18,800/quintal",
+          "time": "6 hours ago",
+          "reason": "Export colour value rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tekulapally Chilli Traders",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Thungathurthi",
+      "markets": [
+        {
+          "name": "Thungathurthi APMC",
+          "cropPrices": {
+            "Paddy": "₹2,150/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Red-gram": "₹6,750/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Thirumalagiri Market",
+          "cropPrices": {
+            "Paddy": "₹2,150/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Red-gram": "₹6,750/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹5,140",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Red-gram",
+          "change": "+3.3%",
+          "price": "₹6,750/quintal",
+          "time": "4 hours ago",
+          "reason": "Maharashtra dal mills active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Thungathurthi Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tirmalgiri",
+      "markets": [
+        {
+          "name": "Tirmalgiri APMC",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Onion": "₹2,180/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Ganneruvaram Market",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Onion": "₹2,180/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹3,623",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Onion",
+          "change": "-3.5%",
+          "price": "₹2,180/quintal",
+          "time": "2 hours ago",
+          "reason": "Late kharif arrival surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tirmalgiri Onion Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Vemulawada",
+      "markets": [
+        {
+          "name": "Vemulawada APMC",
+          "cropPrices": {
+            "Paddy": "₹2,150/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Maize": "₹2,080/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Boinpally Market",
+          "cropPrices": {
+            "Paddy": "₹2,150/quintal",
+            "Cotton": "₹6,540/quintal",
+            "Maize": "₹2,080/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹3,590",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Maize",
+          "change": "+3.0%",
+          "price": "₹2,080/quintal",
+          "time": "3 hours ago",
+          "reason": "Poultry feed demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Vemulawada Maize Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Wardhannapet",
+      "markets": [
+        {
+          "name": "Wardhannapet APMC",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Red-gram": "₹6,700/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Parvathagiri Market",
+          "cropPrices": {
+            "Paddy": "₹2,160/quintal",
+            "Cotton": "₹6,530/quintal",
+            "Red-gram": "₹6,700/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹5,130",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Red-gram",
+          "change": "+3.1%",
+          "price": "₹6,700/quintal",
+          "time": "4 hours ago",
+          "reason": "Maharashtra dal mills active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Wardhannapet Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Zahirabad",
+      "markets": [
+        {
+          "name": "Zahirabad APMC",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sugarcane": "₹3,420/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Nyalkal Market",
+          "cropPrices": {
+            "Paddy": "₹2,170/quintal",
+            "Cotton": "₹6,520/quintal",
+            "Sugarcane": "₹3,420/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹4,037",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sugarcane",
+          "change": "+2.3%",
+          "price": "₹3,420/quintal",
+          "time": "5 hours ago",
+          "reason": "Early crushing start"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Zahirabad Sugar Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 tons",
+          "contact": "9345678901"
+        }
+      ]
+    }
+  ]
+}

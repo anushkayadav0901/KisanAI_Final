@@ -1,0 +1,802 @@
+{
+  "cities": [
+    {
+      "city": "Thiruvananthapuram",
+      "markets": [
+        {
+          "name": "Thiruvananthapuram APMC",
+          "cropPrices": {
+            "Rubber": "₹16,200/quintal",
+            "Coconut": "₹2,100/quintal",
+            "Tapioca": "₹2,650/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Vattiyoorkavu Mandi",
+          "cropPrices": {
+            "Rubber": "₹16,250/quintal",
+            "Coconut": "₹2,120/quintal",
+            "Tapioca": "₹2,680/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.1 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹6,850",
+        "monthlyTransactions": 1950,
+        "topCommodity": "Rubber"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rubber",
+          "change": "+2.3%",
+          "price": "₹16,200/quintal",
+          "time": "2 hours ago",
+          "reason": "Firm global cues, tyre makers lift"
+        },
+        {
+          "crop": "Coconut",
+          "change": "-1.5%",
+          "price": "₹2,100/quintal",
+          "time": "5 hours ago",
+          "reason": "Bulk coastal arrivals"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Trivandrum Rubber Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Kollam",
+      "markets": [
+        {
+          "name": "Kollam APMC",
+          "cropPrices": {
+            "Cashew": "₹9,800/quintal",
+            "Rubber": "₹16,150/quintal",
+            "Pepper": "₹68,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Chandanathope Mandi",
+          "cropPrices": {
+            "Cashew": "₹9,850/quintal",
+            "Rubber": "₹16,200/quintal",
+            "Pepper": "₹68,700/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹31,500",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Pepper"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pepper",
+          "change": "+3.1%",
+          "price": "₹68,500/quintal",
+          "time": "1 hour ago",
+          "reason": "Vietnam crop worries lift export bids"
+        },
+        {
+          "crop": "Cashew",
+          "change": "-2.0%",
+          "price": "₹9,800/quintal",
+          "time": "4 hours ago",
+          "reason": "Import pressure from Ivory Coast"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kollam Spice Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Pathanamthitta",
+      "markets": [
+        {
+          "name": "Pathanamthitta APMC",
+          "cropPrices": {
+            "Rubber": "₹16,100/quintal",
+            "Cardamom": "₹12,300/quintal",
+            "Banana": "₹2,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Ranny Mandi",
+          "cropPrices": {
+            "Rubber": "₹16,150/quintal",
+            "Cardamom": "₹12,400/quintal",
+            "Banana": "₹2,130/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹10,200",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Cardamom"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cardamom",
+          "change": "+4.5%",
+          "price": "₹12,300/quintal",
+          "time": "3 hours ago",
+          "reason": "Gujarat spice blenders stock-up"
+        },
+        {
+          "crop": "Rubber",
+          "change": "+1.2%",
+          "price": "₹16,100/quintal",
+          "time": "7 hours ago",
+          "reason": "Tyre companies advance purchase"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ranny Cardamom Processors",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "8,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Alappuzha",
+      "markets": [
+        {
+          "name": "Alappuzha APMC",
+          "cropPrices": {
+            "Rice": "₹2,750/quintal",
+            "Coconut": "₹2,050/quintal",
+            "Black Pepper": "₹68,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Cherthala Mandi",
+          "cropPrices": {
+            "Rice": "₹2,770/quintal",
+            "Coconut": "₹2,070/quintal",
+            "Black Pepper": "₹68,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹24,300",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Black Pepper"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Black Pepper",
+          "change": "+2.8%",
+          "price": "₹68,000/quintal",
+          "time": "2 hours ago",
+          "reason": "Export enquiries from Europe"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1.3%",
+          "price": "₹2,750/quintal",
+          "time": "5 hours ago",
+          "reason": "New 'Pokkali' harvest pressure"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Alappuzha Pepper Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Kottayam",
+      "markets": [
+        {
+          "name": "Kottayam APMC",
+          "cropPrices": {
+            "Rubber": "₹16,050/quintal",
+            "Cardamom": "₹12,500/quintal",
+            "Coconut Oil": "₹19,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Pala Mandi",
+          "cropPrices": {
+            "Rubber": "₹16,100/quintal",
+            "Cardamom": "₹12,600/quintal",
+            "Coconut Oil": "₹19,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹16,200",
+        "monthlyTransactions": 1680,
+        "topCommodity": "Rubber"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rubber",
+          "change": "+1.9%",
+          "price": "₹16,050/quintal",
+          "time": "2 hours ago",
+          "reason": "Tokyo rubber futures firm"
+        },
+        {
+          "crop": "Coconut Oil",
+          "change": "-1.2%",
+          "price": "₹19,800/quintal",
+          "time": "5 hours ago",
+          "reason": "Bulk mill releases in Kerala"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kottayam Rubber Dealers",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Idukki",
+      "markets": [
+        {
+          "name": "Idukki APMC",
+          "cropPrices": {
+            "Cardamom": "₹12,800/quintal",
+            "Black Pepper": "₹67,500/quintal",
+            "Coffee": "₹12,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kattappana Mandi",
+          "cropPrices": {
+            "Cardamom": "₹12,900/quintal",
+            "Black Pepper": "₹67,700/quintal",
+            "Coffee": "₹12,300/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.5 Cr",
+        "activeBuyers": 510,
+        "averagePricePerQuintal": "₹30,700",
+        "monthlyTransactions": 2100,
+        "topCommodity": "Black Pepper"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cardamom",
+          "change": "+5.1%",
+          "price": "₹12,800/quintal",
+          "time": "1 hour ago",
+          "reason": "Gujarat & UP festival demand"
+        },
+        {
+          "crop": "Coffee",
+          "change": "+2.3%",
+          "price": "₹12,200/quintal",
+          "time": "4 hours ago",
+          "reason": "Global arabica cues rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kattappana Spice Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "16,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Ernakulam",
+      "markets": [
+        {
+          "name": "Ernakulam APMC",
+          "cropPrices": {
+            "Coconut Oil": "₹19,750/quintal",
+            "Nutmeg": "₹34,500/quintal",
+            "Turmeric": "₹7,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kochi Mandi",
+          "cropPrices": {
+            "Coconut Oil": "₹19,800/quintal",
+            "Nutmeg": "₹34,700/quintal",
+            "Turmeric": "₹7,850/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹5.2 Cr",
+        "activeBuyers": 620,
+        "averagePricePerQuintal": "₹20,700",
+        "monthlyTransactions": 2400,
+        "topCommodity": "Nutmeg"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Nutmeg",
+          "change": "+3.7%",
+          "price": "₹34,500/quintal",
+          "time": "2 hours ago",
+          "reason": "Export demand from Gulf spice firms"
+        },
+        {
+          "crop": "Coconut Oil",
+          "change": "-1.0%",
+          "price": "₹19,750/quintal",
+          "time": "6 hours ago",
+          "reason": "Bulk port arrivals ease supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kochi Nutmeg Traders",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9789012345"
+        }
+      ]
+    },
+    {
+      "city": "Thrissur",
+      "markets": [
+        {
+          "name": "Thrissur APMC",
+          "cropPrices": {
+            "Coconut Oil": "₹19,700/quintal",
+            "Banana": "₹2,200/quintal",
+            "Vegetable Ghee": "₹17,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Wadakkanchery Mandi",
+          "cropPrices": {
+            "Coconut Oil": "₹19,750/quintal",
+            "Banana": "₹2,230/quintal",
+            "Vegetable Ghee": "₹17,250/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.9 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹19,700",
+        "monthlyTransactions": 1850,
+        "topCommodity": "Coconut Oil"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Coconut Oil",
+          "change": "+1.8%",
+          "price": "₹19,700/quintal",
+          "time": "1 hour ago",
+          "reason": "Festival season retail lift"
+        },
+        {
+          "crop": "Banana",
+          "change": "-2.0%",
+          "price": "₹2,200/quintal",
+          "time": "5 hours ago",
+          "reason": "Surplus arrival from Palakkad"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Thrissur Oil Millers",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,500 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Palakkad",
+      "markets": [
+        {
+          "name": "Palakkad APMC",
+          "cropPrices": {
+            "Paddy": "₹2,850/quintal",
+            "Coconut": "₹2,200/quintal",
+            "Turmeric": "₹12,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Ottapalam Mandi",
+          "cropPrices": {
+            "Paddy": "₹2,900/quintal",
+            "Coconut": "₹2,250/quintal",
+            "Turmeric": "₹12,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹5.2 Cr",
+        "activeBuyers": 520,
+        "averagePricePerQuintal": "₹5,850",
+        "monthlyTransactions": 2100,
+        "topCommodity": "Paddy"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Paddy",
+          "change": "+1.8%",
+          "price": "₹2,850/quintal",
+          "time": "1 hour ago",
+          "reason": "Good monsoon harvest, steady demand"
+        },
+        {
+          "crop": "Turmeric",
+          "change": "+4.2%",
+          "price": "₹12,500/quintal",
+          "time": "4 hours ago",
+          "reason": "Export demand from Tamil Nadu"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Palakkad Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Malappuram",
+      "markets": [
+        {
+          "name": "Malappuram APMC",
+          "cropPrices": {
+            "Coconut": "₹2,150/quintal",
+            "Arecanut": "₹42,000/quintal",
+            "Pepper": "₹72,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tirur Mandi",
+          "cropPrices": {
+            "Coconut": "₹2,200/quintal",
+            "Arecanut": "₹42,500/quintal",
+            "Pepper": "₹73,000/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹6.8 Cr",
+        "activeBuyers": 650,
+        "averagePricePerQuintal": "₹38,900",
+        "monthlyTransactions": 2400,
+        "topCommodity": "Arecanut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Arecanut",
+          "change": "+5.2%",
+          "price": "₹42,000/quintal",
+          "time": "2 hours ago",
+          "reason": "Karnataka supply shortage"
+        },
+        {
+          "crop": "Pepper",
+          "change": "+3.8%",
+          "price": "₹72,500/quintal",
+          "time": "3 hours ago",
+          "reason": "Export demand from Europe"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Malappuram Spice Traders",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "22,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Kozhikode",
+      "markets": [
+        {
+          "name": "Kozhikode APMC",
+          "cropPrices": {
+            "Coconut": "₹2,180/quintal",
+            "Ginger": "₹18,500/quintal",
+            "Turmeric": "₹13,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Feroke Mandi",
+          "cropPrices": {
+            "Coconut": "₹2,220/quintal",
+            "Ginger": "₹18,800/quintal",
+            "Turmeric": "₹13,400/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.5 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹11,300",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Ginger"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Ginger",
+          "change": "+6.5%",
+          "price": "₹18,500/quintal",
+          "time": "1 hour ago",
+          "reason": "Processing demand from North India"
+        },
+        {
+          "crop": "Coconut",
+          "change": "+1.2%",
+          "price": "₹2,180/quintal",
+          "time": "4 hours ago",
+          "reason": "Oil extraction demand steady"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kozhikode Spice Hub",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "16,500 quintals",
+          "contact": "9456789012"
+        }
+      ]
+    },
+    {
+      "city": "Wayanad",
+      "markets": [
+        {
+          "name": "Kalpetta APMC",
+          "cropPrices": {
+            "Coffee": "₹8,200/quintal",
+            "Cardamom": "₹1,250/kg",
+            "Pepper": "₹71,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Mananthavady Mandi",
+          "cropPrices": {
+            "Coffee": "₹8,400/quintal",
+            "Cardamom": "₹1,280/kg",
+            "Pepper": "₹71,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 280,
+        "averagePricePerQuintal": "₹26,900",
+        "monthlyTransactions": 1200,
+        "topCommodity": "Coffee"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Coffee",
+          "change": "+4.1%",
+          "price": "₹8,200/quintal",
+          "time": "2 hours ago",
+          "reason": "Global coffee prices firm, export demand"
+        },
+        {
+          "crop": "Cardamom",
+          "change": "+7.2%",
+          "price": "₹1,250/kg",
+          "time": "3 hours ago",
+          "reason": "Festival season demand from North India"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Wayanad Coffee Growers",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Kannur",
+      "markets": [
+        {
+          "name": "Kannur APMC",
+          "cropPrices": {
+            "Coconut": "₹2,100/quintal",
+            "Cashew": "₹9,500/quintal",
+            "Pepper": "₹70,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Thalassery Mandi",
+          "cropPrices": {
+            "Coconut": "₹2,150/quintal",
+            "Cashew": "₹9,750/quintal",
+            "Pepper": "₹70,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹27,200",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Pepper"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pepper",
+          "change": "+2.8%",
+          "price": "₹70,000/quintal",
+          "time": "1 hour ago",
+          "reason": "Thalassery pepper premium, export orders"
+        },
+        {
+          "crop": "Cashew",
+          "change": "+1.5%",
+          "price": "₹9,500/quintal",
+          "time": "5 hours ago",
+          "reason": "Processing season begins"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kannur Cashew Corporation",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Kasaragod",
+      "markets": [
+        {
+          "name": "Kasaragod APMC",
+          "cropPrices": {
+            "Rubber": "₹15,950/quintal",
+            "Coconut": "₹1,950/quintal",
+            "Arecanut": "₹38,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Uppala Mandi",
+          "cropPrices": {
+            "Rubber": "₹16,000/quintal",
+            "Coconut": "₹1,970/quintal",
+            "Arecanut": "₹38,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹25,300",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Arecanut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Arecanut",
+          "change": "+3.8%",
+          "price": "₹38,000/quintal",
+          "time": "3 hours ago",
+          "reason": "Karnataka supply tight, local demand up"
+        },
+        {
+          "crop": "Rubber",
+          "change": "-0.5%",
+          "price": "₹15,950/quintal",
+          "time": "6 hours ago",
+          "reason": "Bulk coastal arrivals ease price"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kasaragod Areca Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    }
+  ]
+}

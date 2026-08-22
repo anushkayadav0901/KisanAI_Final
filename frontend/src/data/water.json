@@ -1,0 +1,938 @@
+{
+  "cityData": [
+    {
+      "city": "Mumbai",
+      "state": "Maharashtra",
+      "waterLevel": 72.3,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Normal",
+        "message": "Water levels are optimal for regular usage",
+        "conservation": "Standard conservation practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Banana"
+        ]
+      }
+    },
+    {
+      "city": "Pune",
+      "state": "Maharashtra",
+      "waterLevel": 45.6,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Monitor water usage carefully",
+        "conservation": "Implement moderate water conservation measures"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Cotton",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Sugarcane",
+          "Paddy"
+        ]
+      }
+    },
+    {
+      "city": "Nashik",
+      "state": "Maharashtra",
+      "waterLevel": 20.1,
+      "idealWaterLevel": "no",
+      "waterQuality": "Poor",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Critical",
+        "message": "Water levels critically low",
+        "conservation": "Strict water conservation required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Cotton"
+        ],
+        "highWaterRequirement": []
+      }
+    },
+    {
+      "city": "Nagpur",
+      "state": "Maharashtra",
+      "waterLevel": 85.2,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Excellent",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water reserves at excellent levels",
+        "conservation": "Regular conservation practices advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Soybean",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Aurangabad",
+      "state": "Maharashtra",
+      "waterLevel": 100.0,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Excellent",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Surplus",
+        "message": "Water levels above optimal",
+        "conservation": "Standard conservation practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Banana",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Solapur",
+      "state": "Maharashtra",
+      "waterLevel": 50.4,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Maintain careful water usage",
+        "conservation": "Moderate conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Cotton"
+        ],
+        "highWaterRequirement": [
+          "Sugarcane",
+          "Paddy",
+          "Banana"
+        ]
+      }
+    },
+    {
+      "city": "Kolhapur",
+      "state": "Maharashtra",
+      "waterLevel": 70.7,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Normal",
+        "message": "Water resources are stable",
+        "conservation": "Standard practices suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Tur",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Amravati",
+      "state": "Maharashtra",
+      "waterLevel": 40.2,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Alert",
+        "message": "Water levels are lower than usual",
+        "conservation": "Strict conservation required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Bajra"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Thane",
+      "state": "Maharashtra",
+      "waterLevel": 55.3,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Normal",
+        "message": "Water levels are manageable",
+        "conservation": "Moderate conservation suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Banana"
+        ]
+      }
+    },
+    {
+      "city": "Satara",
+      "state": "Maharashtra",
+      "waterLevel": 60.5,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Stable",
+        "message": "Water resources are sufficient",
+        "conservation": "Standard practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Latur",
+      "state": "Maharashtra",
+      "waterLevel": 25.1,
+      "idealWaterLevel": "low",
+      "waterQuality": "Poor",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Critical",
+        "message": "Water levels critically low",
+        "conservation": "Strict water conservation required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Cotton"
+        ],
+        "highWaterRequirement": []
+      }
+    },
+    {
+      "city": "Jalgaon",
+      "state": "Maharashtra",
+      "waterLevel": 75.8,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are healthy",
+        "conservation": "Regular conservation practices advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Tur",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Banana",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Sangli",
+      "state": "Maharashtra",
+      "waterLevel": 68.4,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Normal",
+        "message": "Water levels are stable",
+        "conservation": "Standard conservation practices suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Akola",
+      "state": "Maharashtra",
+      "waterLevel": 45.7,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Monitor water usage carefully",
+        "conservation": "Moderate conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Cotton"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Osmanabad",
+      "state": "Maharashtra",
+      "waterLevel": 30.2,
+      "idealWaterLevel": "low",
+      "waterQuality": "Poor",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Critical",
+        "message": "Severe water shortage",
+        "conservation": "Strict water conservation measures required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Cotton"
+        ],
+        "highWaterRequirement": []
+      }
+    },
+    {
+      "city": "Beed",
+      "state": "Maharashtra",
+      "waterLevel": 35.3,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Alert",
+        "message": "Water levels below optimal",
+        "conservation": "Strict conservation required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Tur",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Nanded",
+      "state": "Maharashtra",
+      "waterLevel": 50.5,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Stable",
+        "message": "Water levels are manageable",
+        "conservation": "Moderate conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Tur",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Chandrapur",
+      "state": "Maharashtra",
+      "waterLevel": 70.1,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Normal",
+        "message": "Water levels are sufficient",
+        "conservation": "Regular conservation practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Cotton",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Buldhana",
+      "state": "Maharashtra",
+      "waterLevel": 40.3,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Monitor water usage carefully",
+        "conservation": "Moderate conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Tur",
+          "Cotton"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Wheat",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Parbhani",
+      "state": "Maharashtra",
+      "waterLevel": 65.2,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Stable",
+        "message": "Water reserves are sufficient",
+        "conservation": "Standard conservation practices suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Dhule",
+      "state": "Maharashtra",
+      "waterLevel": 50.7,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Water levels are manageable but require monitoring",
+        "conservation": "Moderate conservation recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Bajra",
+          "Cotton"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Ratnagiri",
+      "state": "Maharashtra",
+      "waterLevel": 80.9,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are at healthy levels",
+        "conservation": "Standard conservation practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Tur",
+          "Soybean",
+          "Groundnut"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Banana",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Wardha",
+      "state": "Maharashtra",
+      "waterLevel": 35.6,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Alert",
+        "message": "Water levels are below normal",
+        "conservation": "Strict water conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Bajra"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Wheat",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Baramati",
+      "state": "Maharashtra",
+      "waterLevel": 60.8,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Stable",
+        "message": "Water levels are healthy",
+        "conservation": "Standard conservation practices advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Bhandara",
+      "state": "Maharashtra",
+      "waterLevel": 70.4,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are sufficient for agricultural needs",
+        "conservation": "Regular conservation practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Groundnut",
+          "Soybean",
+          "Jowar"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Wheat",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Chiplun",
+      "state": "Maharashtra",
+      "waterLevel": 85.1,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Excellent",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are optimal for all purposes",
+        "conservation": "Minimal conservation required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Tur",
+          "Groundnut",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Banana",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Dapoli",
+      "state": "Maharashtra",
+      "waterLevel": 75.3,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Normal",
+        "message": "Water reserves are at healthy levels",
+        "conservation": "Standard conservation practices advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Tur",
+          "Groundnut",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Banana",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Deolali",
+      "state": "Maharashtra",
+      "waterLevel": 40.5,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Alert",
+        "message": "Water levels below normal",
+        "conservation": "Strict water conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Faizpur",
+      "state": "Maharashtra",
+      "waterLevel": 45.9,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Monitor water usage carefully",
+        "conservation": "Moderate conservation suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Cotton",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Wheat",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Navi Mumbai",
+      "state": "Maharashtra",
+      "waterLevel": 90.2,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Excellent",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are more than adequate",
+        "conservation": "Regular conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Tur",
+          "Soybean",
+          "Groundnut"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Banana",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Hingoli",
+      "state": "Maharashtra",
+      "waterLevel": 55.7,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Stable",
+        "message": "Water reserves are manageable",
+        "conservation": "Moderate conservation suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Cotton",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Wheat",
+          "Paddy",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Junnar",
+      "state": "Maharashtra",
+      "waterLevel": 50.3,
+      "idealWaterLevel": "mediocre",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Caution",
+        "message": "Water levels are not optimal",
+        "conservation": "Moderate conservation practices recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Wheat",
+          "Sugarcane"
+        ]
+      }
+    },
+    {
+      "city": "Karad",
+      "state": "Maharashtra",
+      "waterLevel": 80.6,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are sufficient",
+        "conservation": "Regular conservation practices advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Groundnut",
+          "Soybean",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Mahad",
+      "state": "Maharashtra",
+      "waterLevel": 70.2,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Good",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are healthy",
+        "conservation": "Minimal conservation recommended"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Matheran",
+      "state": "Maharashtra",
+      "waterLevel": 85.4,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Excellent",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Surplus",
+        "message": "Water levels are well above normal",
+        "conservation": "Standard conservation practices suggested"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Groundnut",
+          "Soybean",
+          "Tur"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Nandurbar",
+      "state": "Maharashtra",
+      "waterLevel": 45.1,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Alert",
+        "message": "Water levels are lower than usual",
+        "conservation": "Strict conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Jowar",
+          "Cotton",
+          "Soybean"
+        ],
+        "highWaterRequirement": [
+          "Paddy",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Pimpri Chinchwad",
+      "state": "Maharashtra",
+      "waterLevel": 90.3,
+      "idealWaterLevel": "yes",
+      "waterQuality": "Excellent",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Optimal",
+        "message": "Water levels are more than adequate",
+        "conservation": "Regular conservation advised"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Soybean",
+          "Cotton",
+          "Jowar"
+        ],
+        "highWaterRequirement": [
+          "Rice",
+          "Sugarcane",
+          "Wheat"
+        ]
+      }
+    },
+    {
+      "city": "Washim",
+      "state": "Maharashtra",
+      "waterLevel": 35.1,
+      "idealWaterLevel": "low",
+      "waterQuality": "Moderate",
+      "lastUpdated": "2024-03-15",
+      "waterAdvisory": {
+        "status": "Alert",
+        "message": "Water levels are critically low",
+        "conservation": "Strict water conservation required"
+      },
+      "recommendedPlants": {
+        "lowWaterRequirement": [
+          "Cotton",
+          "Jowar",
+          "Soybean"
+        ],
+        "highWaterRequirement": []
+      }
+    }
+  ]
+}

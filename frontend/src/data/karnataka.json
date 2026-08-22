@@ -1,0 +1,1554 @@
+{
+  "cities": [
+    {
+      "city": "Bagalkote",
+      "markets": [
+        {
+          "name": "Bagalkote APMC",
+          "cropPrices": {
+            "Sugarcane": "₹3,450/quintal",
+            "Cotton": "₹6,420/quintal",
+            "Maize": "₹2,050/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Jamkhandi Market",
+          "cropPrices": {
+            "Sugarcane": "₹3,450/quintal",
+            "Cotton": "₹6,420/quintal",
+            "Maize": "₹2,050/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹3,970",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Sugarcane"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sugarcane",
+          "change": "+2.1%",
+          "price": "₹3,450/quintal",
+          "time": "3 hours ago",
+          "reason": "Mills early crushing start"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jamkhandi Sugar Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,000 tons",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Ballari",
+      "markets": [
+        {
+          "name": "Ballari APMC",
+          "cropPrices": {
+            "Rice": "₹2,180/quintal",
+            "Cotton": "₹6,380/quintal",
+            "Sunflower": "₹5,850/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hospet Market",
+          "cropPrices": {
+            "Rice": "₹2,180/quintal",
+            "Cotton": "₹6,380/quintal",
+            "Sunflower": "₹5,850/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹4,800",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+4.2%",
+          "price": "₹5,850/quintal",
+          "time": "5 hours ago",
+          "reason": "Lower kharif arrivals"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ballari Cotton Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Belagavi",
+      "markets": [
+        {
+          "name": "Belagavi APMC",
+          "cropPrices": {
+            "Sugarcane": "₹3,400/quintal",
+            "Cotton": "₹6,400/quintal",
+            "Groundnut": "₹5,900/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Gokak Market",
+          "cropPrices": {
+            "Sugarcane": "₹3,400/quintal",
+            "Cotton": "₹6,400/quintal",
+            "Groundnut": "₹5,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 510,
+        "averagePricePerQuintal": "₹5,230",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Sugarcane"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "+2.8%",
+          "price": "₹5,900/quintal",
+          "time": "2 hours ago",
+          "reason": "Oil mills advance purchase"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gokak Oil Industries",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Bengaluru",
+      "markets": [
+        {
+          "name": "Yeshwanthpur APMC",
+          "cropPrices": {
+            "Vegetables": "₹2,600/quintal",
+            "Flowers": "₹2,400/quintal",
+            "Fruits": "₹4,200/quintal"
+          },
+          "marketTimings": "4 AM - 8 PM",
+          "tradingDays": "Monday to Sunday"
+        },
+        {
+          "name": "K.R. Market",
+          "cropPrices": {
+            "Vegetables": "₹2,600/quintal",
+            "Flowers": "₹2,400/quintal",
+            "Fruits": "₹4,200/quintal"
+          },
+          "marketTimings": "3 AM - 9 PM",
+          "tradingDays": "Monday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹7.5 Cr",
+        "activeBuyers": 950,
+        "averagePricePerQuintal": "₹3,100",
+        "monthlyTransactions": 3200,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Vegetables",
+          "change": "+3.5%",
+          "price": "₹2,600/quintal",
+          "time": "1 hour ago",
+          "reason": "Weekend retail surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bengaluru Retail Veg Consortium",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "25,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Bidar",
+      "markets": [
+        {
+          "name": "Bidar APMC",
+          "cropPrices": {
+            "Pigeon-pea": "₹6,800/quintal",
+            "Green-gram": "₹6,300/quintal",
+            "Sugarcane": "₹3,350/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Basavakalyan Market",
+          "cropPrices": {
+            "Pigeon-pea": "₹6,800/quintal",
+            "Green-gram": "₹6,300/quintal",
+            "Sugarcane": "₹3,350/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 430,
+        "averagePricePerQuintal": "₹5,480",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Pigeon-pea"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pigeon-pea",
+          "change": "+4.0%",
+          "price": "₹6,800/quintal",
+          "time": "6 hours ago",
+          "reason": "Maharashtra demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bidar Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Bijapur",
+      "markets": [
+        {
+          "name": "Vijayapura APMC",
+          "cropPrices": {
+            "Sugarcane": "₹3,420/quintal",
+            "Grapes": "₹4,800/quintal",
+            "Maize": "₹2,030/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Indi Market",
+          "cropPrices": {
+            "Sugarcane": "₹3,420/quintal",
+            "Grapes": "₹4,800/quintal",
+            "Maize": "₹2,030/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹3,420",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Sugarcane"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Grapes",
+          "change": "+5.2%",
+          "price": "₹4,800/quintal",
+          "time": "4 hours ago",
+          "reason": "Pune export orders"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Vijayapura Grape Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Chamarajanagar",
+      "markets": [
+        {
+          "name": "Chamarajanagar APMC",
+          "cropPrices": {
+            "Rice": "₹2,200/quintal",
+            "Sugarcane": "₹3,380/quintal",
+            "Cotton": "₹6,360/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kollegal Market",
+          "cropPrices": {
+            "Rice": "₹2,200/quintal",
+            "Sugarcane": "₹3,380/quintal",
+            "Cotton": "₹6,360/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹3,980",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+2.5%",
+          "price": "₹2,200/quintal",
+          "time": "3 hours ago",
+          "reason": "Telangana mill buying"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kollegal Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Chikkaballapur",
+      "markets": [
+        {
+          "name": "Chikkaballapur APMC",
+          "cropPrices": {
+            "Mango": "₹4,600/quintal",
+            "Tomato": "₹1,900/quintal",
+            "Flowers": "₹2,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bagepalli Market",
+          "cropPrices": {
+            "Mango": "₹4,600/quintal",
+            "Tomato": "₹1,900/quintal",
+            "Flowers": "₹2,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.5 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹3,100",
+        "monthlyTransactions": 1400,
+        "topCommodity": "Mango"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Tomato",
+          "change": "-4.1%",
+          "price": "₹1,900/quintal",
+          "time": "2 hours ago",
+          "reason": "Supply glut from AP"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Chikkaballapur Mango Traders",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Chikkamagaluru",
+      "markets": [
+        {
+          "name": "Chikkamagaluru APMC",
+          "cropPrices": {
+            "Coffee": "₹11,500/quintal",
+            "Pepper": "₹7,200/quintal",
+            "Rice": "₹2,150/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kadur Market",
+          "cropPrices": {
+            "Coffee": "₹11,500/quintal",
+            "Pepper": "₹7,200/quintal",
+            "Rice": "₹2,150/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 450,
+        "averagePricePerQuintal": "₹6,950",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Coffee"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Coffee",
+          "change": "+3.8%",
+          "price": "₹11,500/quintal",
+          "time": "7 hours ago",
+          "reason": "Global NY arabica rally"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kadur Coffee Curing",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "9,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Chitradurga",
+      "markets": [
+        {
+          "name": "Chitradurga APMC",
+          "cropPrices": {
+            "Ragi": "₹2,850/quintal",
+            "Cotton": "₹6,340/quintal",
+            "Groundnut": "₹5,920/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hiriyur Market",
+          "cropPrices": {
+            "Ragi": "₹2,850/quintal",
+            "Cotton": "₹6,340/quintal",
+            "Groundnut": "₹5,920/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹5,030",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Ragi",
+          "change": "+4.5%",
+          "price": "₹2,850/quintal",
+          "time": "4 hours ago",
+          "reason": "Ragi malt processors active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hiriyur Ragi Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Dakshina Kannada",
+      "markets": [
+        {
+          "name": "Mangaluru APMC",
+          "cropPrices": {
+            "Rubber": "₹16,800/quintal",
+            "Coconut": "₹2,750/quintal",
+            "Arecanut": "₹38,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bantwal Market",
+          "cropPrices": {
+            "Rubber": "₹16,800/quintal",
+            "Coconut": "₹2,750/quintal",
+            "Arecanut": "₹38,500/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 520,
+        "averagePricePerQuintal": "₹19,350",
+        "monthlyTransactions": 1850,
+        "topCommodity": "Arecanut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Arecanut",
+          "change": "+4.2%",
+          "price": "₹38,500/quintal",
+          "time": "5 hours ago",
+          "reason": "Festival season demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bantwal Arecanut Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "8,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Davanagere",
+      "markets": [
+        {
+          "name": "Davanagere APMC",
+          "cropPrices": {
+            "Cotton": "₹6,450/quintal",
+            "Maize": "₹2,080/quintal",
+            "Onion": "₹2,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Harihar Market",
+          "cropPrices": {
+            "Cotton": "₹6,450/quintal",
+            "Maize": "₹2,080/quintal",
+            "Onion": "₹2,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 500,
+        "averagePricePerQuintal": "₹3,575",
+        "monthlyTransactions": 1750,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Onion",
+          "change": "-5.1%",
+          "price": "₹2,200/quintal",
+          "time": "2 hours ago",
+          "reason": "Late kharif arrival surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Davanagere Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Dharwad",
+      "markets": [
+        {
+          "name": "Dharwad APMC",
+          "cropPrices": {
+            "Cotton": "₹6,420/quintal",
+            "Onion": "₹2,250/quintal",
+            "Maize": "₹2,060/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hubballi Market",
+          "cropPrices": {
+            "Cotton": "₹6,420/quintal",
+            "Onion": "₹2,250/quintal",
+            "Maize": "₹2,060/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.6 Cr",
+        "activeBuyers": 530,
+        "averagePricePerQuintal": "₹3,575",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.9%",
+          "price": "₹6,420/quintal",
+          "time": "4 hours ago",
+          "reason": "Ginners restocking"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hubballi Cotton Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Gadag",
+      "markets": [
+        {
+          "name": "Gadag APMC",
+          "cropPrices": {
+            "Cotton": "₹6,440/quintal",
+            "Pulses": "₹6,500/quintal",
+            "Chillies": "₹18,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Ron Market",
+          "cropPrices": {
+            "Cotton": "₹6,440/quintal",
+            "Pulses": "₹6,500/quintal",
+            "Chillies": "₹18,200/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹10,380",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Chillies"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chillies",
+          "change": "+6.0%",
+          "price": "₹18,200/quintal",
+          "time": "6 hours ago",
+          "reason": "Export quality shortage"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gadag Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Hassan",
+      "markets": [
+        {
+          "name": "Hassan APMC",
+          "cropPrices": {
+            "Potato": "₹2,400/quintal",
+            "Coffee": "₹11,800/quintal",
+            "Coconut": "₹2,700/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Arsikere Market",
+          "cropPrices": {
+            "Potato": "₹2,400/quintal",
+            "Coffee": "₹11,800/quintal",
+            "Coconut": "₹2,700/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹5,630",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Coffee"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Potato",
+          "change": "-3.2%",
+          "price": "₹2,400/quintal",
+          "time": "3 hours ago",
+          "reason": "Hassan early harvest pressure"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hassan Coffee Curing Works",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Haveri",
+      "markets": [
+        {
+          "name": "Haveri APMC",
+          "cropPrices": {
+            "Cotton": "₹6,460/quintal",
+            "Byadgi Chilli": "₹19,500/quintal",
+            "Maize": "₹2,040/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Byadgi Market",
+          "cropPrices": {
+            "Cotton": "₹6,460/quintal",
+            "Byadgi Chilli": "₹19,500/quintal",
+            "Maize": "₹2,040/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.7 Cr",
+        "activeBuyers": 540,
+        "averagePricePerQuintal": "₹9,330",
+        "monthlyTransactions": 1900,
+        "topCommodity": "Byadgi Chilli"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Byadgi Chilli",
+          "change": "+8.0%",
+          "price": "₹19,500/quintal",
+          "time": "5 hours ago",
+          "reason": "Export colour value surge"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Byadgi Chilli Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Kalaburagi",
+      "markets": [
+        {
+          "name": "Kalaburagi APMC",
+          "cropPrices": {
+            "Pigeon-pea": "₹6,750/quintal",
+            "Sugarcane": "₹3,320/quintal",
+            "Sunflower": "₹5,900/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Jewargi Market",
+          "cropPrices": {
+            "Pigeon-pea": "₹6,750/quintal",
+            "Sugarcane": "₹3,320/quintal",
+            "Sunflower": "₹5,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.3 Cr",
+        "activeBuyers": 490,
+        "averagePricePerQuintal": "₹5,320",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Pigeon-pea"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pigeon-pea",
+          "change": "+3.5%",
+          "price": "₹6,750/quintal",
+          "time": "4 hours ago",
+          "reason": "Maharashtra truck demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kalaburagi Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Kodagu",
+      "markets": [
+        {
+          "name": "Madikeri APMC",
+          "cropPrices": {
+            "Coffee": "₹12,200/quintal",
+            "Pepper": "₹7,400/quintal",
+            "Cardamom": "₹14,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Virajpet Market",
+          "cropPrices": {
+            "Coffee": "₹12,200/quintal",
+            "Pepper": "₹7,400/quintal",
+            "Cardamom": "₹14,000/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 360,
+        "averagePricePerQuintal": "₹11,200",
+        "monthlyTransactions": 1350,
+        "topCommodity": "Coffee"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Coffee",
+          "change": "+4.0%",
+          "price": "₹12,200/quintal",
+          "time": "6 hours ago",
+          "reason": "NY ICE rally continues"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Madikeri Coffee Works",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "8,000 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Kolar",
+      "markets": [
+        {
+          "name": "Kolar APMC",
+          "cropPrices": {
+            "Tomato": "₹1,750/quintal",
+            "Mango": "₹4,400/quintal",
+            "Flowers": "₹2,600/quintal"
+          },
+          "marketTimings": "5 AM - 1 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Malur Market",
+          "cropPrices": {
+            "Tomato": "₹1,750/quintal",
+            "Mango": "₹4,400/quintal",
+            "Flowers": "₹2,600/quintal"
+          },
+          "marketTimings": "6 AM - 12 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹2,900",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Tomato"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Tomato",
+          "change": "+6.5%",
+          "price": "₹1,750/quintal",
+          "time": "3 hours ago",
+          "reason": "Rainfall supply hit"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kolar Tomato Consortium",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "16,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Koppal",
+      "markets": [
+        {
+          "name": "Koppal APMC",
+          "cropPrices": {
+            "Cotton": "₹6,430/quintal",
+            "Pomegranate": "₹5,200/quintal",
+            "Onion": "₹2,150/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Gangavathi Market",
+          "cropPrices": {
+            "Cotton": "₹6,430/quintal",
+            "Pomegranate": "₹5,200/quintal",
+            "Onion": "₹2,150/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹4,590",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pomegranate",
+          "change": "+3.2%",
+          "price": "₹5,200/quintal",
+          "time": "5 hours ago",
+          "reason": "Mumbai retail lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gangavathi Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,500 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Mandya",
+      "markets": [
+        {
+          "name": "Mandya APMC",
+          "cropPrices": {
+            "Sugarcane": "₹3,480/quintal",
+            "Rice": "₹2,250/quintal",
+            "Coconut": "₹2,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Maddur Market",
+          "cropPrices": {
+            "Sugarcane": "₹3,480/quintal",
+            "Rice": "₹2,250/quintal",
+            "Coconut": "₹2,800/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 510,
+        "averagePricePerQuintal": "₹2,843",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Sugarcane"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sugarcane",
+          "change": "+2.5%",
+          "price": "₹3,480/quintal",
+          "time": "4 hours ago",
+          "reason": "Early mill crushing"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mandya Sugar Co-op",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "16,000 tons",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Mysuru",
+      "markets": [
+        {
+          "name": "Mysuru APMC",
+          "cropPrices": {
+            "Sugarcane": "₹3,460/quintal",
+            "Banana": "₹1,480/quintal",
+            "Turmeric": "₹7,900/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Nanjangud Market",
+          "cropPrices": {
+            "Sugarcane": "₹3,460/quintal",
+            "Banana": "₹1,480/quintal",
+            "Turmeric": "₹7,900/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.3 Cr",
+        "activeBuyers": 490,
+        "averagePricePerQuintal": "₹4,280",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Sugarcane"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Turmeric",
+          "change": "+5.3%",
+          "price": "₹7,900/quintal",
+          "time": "6 hours ago",
+          "reason": "Export curry industry lift"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nanjangud Turmeric Traders",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Raichur",
+      "markets": [
+        {
+          "name": "Raichur APMC",
+          "cropPrices": {
+            "Cotton": "₹6,470/quintal",
+            "Paddy": "₹2,200/quintal",
+            "Sunflower": "₹5,950/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sindhanur Market",
+          "cropPrices": {
+            "Cotton": "₹6,470/quintal",
+            "Paddy": "₹2,200/quintal",
+            "Sunflower": "₹5,950/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.6 Cr",
+        "activeBuyers": 520,
+        "averagePricePerQuintal": "₹4,875",
+        "monthlyTransactions": 1850,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.1%",
+          "price": "₹6,470/quintal",
+          "time": "3 hours ago",
+          "reason": "Telangana mill buying"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Raichur Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Ramanagara",
+      "markets": [
+        {
+          "name": "Ramanagara APMC",
+          "cropPrices": {
+            "Silk Cocoons": "₹42,000/quintal",
+            "Mango": "₹4,500/quintal",
+            "Flowers": "₹2,700/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Channapatna Market",
+          "cropPrices": {
+            "Silk Cocoons": "₹42,000/quintal",
+            "Mango": "₹4,500/quintal",
+            "Flowers": "₹2,700/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.2 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹16,400",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Silk Cocoons"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Silk Cocoons",
+          "change": "+5.5%",
+          "price": "₹42,000/quintal",
+          "time": "7 hours ago",
+          "reason": "Chinese silk import parity rise"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ramanagara Silk Filatures",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "6,500 quintals",
+          "contact": "9123456789"
+        }
+      ]
+    },
+    {
+      "city": "Shivamogga",
+      "markets": [
+        {
+          "name": "Shivamogga APMC",
+          "cropPrices": {
+            "Rice": "₹2,280/quintal",
+            "Arecanut": "₹37,500/quintal",
+            "Pepper": "₹7,600/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sagara Market",
+          "cropPrices": {
+            "Rice": "₹2,280/quintal",
+            "Arecanut": "₹37,500/quintal",
+            "Pepper": "₹7,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹15,800",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Arecanut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Arecanut",
+          "change": "+3.8%",
+          "price": "₹37,500/quintal",
+          "time": "5 hours ago",
+          "reason": "Kerala festival buying"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sagara Arecanut Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Tumakuru",
+      "markets": [
+        {
+          "name": "Tumakuru APMC",
+          "cropPrices": {
+            "Coconut": "₹2,720/quintal",
+            "Groundnut": "₹5,980/quintal",
+            "Onion": "₹2,120/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Tiptur Market",
+          "cropPrices": {
+            "Coconut": "₹2,720/quintal",
+            "Groundnut": "₹5,980/quintal",
+            "Onion": "₹2,120/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.2 Cr",
+        "activeBuyers": 500,
+        "averagePricePerQuintal": "₹3,610",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Coconut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Groundnut",
+          "change": "+2.9%",
+          "price": "₹5,980/quintal",
+          "time": "4 hours ago",
+          "reason": "Oil mills restock"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tiptur Oil Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Udupi",
+      "markets": [
+        {
+          "name": "Udupi APMC",
+          "cropPrices": {
+            "Coconut": "₹2,780/quintal",
+            "Arecanut": "₹38,000/quintal",
+            "Rice": "₹2,320/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Karkala Market",
+          "cropPrices": {
+            "Coconut": "₹2,780/quintal",
+            "Arecanut": "₹38,000/quintal",
+            "Rice": "₹2,320/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹14,370",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Arecanut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Coconut",
+          "change": "+2.2%",
+          "price": "₹2,780/quintal",
+          "time": "3 hours ago",
+          "reason": "Kerala copra demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Karkala Arecanut Co-op",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "9,500 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Uttara Kannada",
+      "markets": [
+        {
+          "name": "Karwar APMC",
+          "cropPrices": {
+            "Arecanut": "₹37,800/quintal",
+            "Pepper": "₹7,500/quintal",
+            "Rice": "₹2,300/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sirsi Market",
+          "cropPrices": {
+            "Arecanut": "₹37,800/quintal",
+            "Pepper": "₹7,500/quintal",
+            "Rice": "₹2,300/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 420,
+        "averagePricePerQuintal": "₹15,870",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Arecanut"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Pepper",
+          "change": "+4.5%",
+          "price": "₹7,500/quintal",
+          "time": "6 hours ago",
+          "reason": "Vietnam crop shortfall"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sirsi Arecanut Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "9,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Vijayanagara",
+      "markets": [
+        {
+          "name": "Hosapete APMC",
+          "cropPrices": {
+            "Cotton": "₹6,480/quintal",
+            "Banana": "₹1,420/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Hagaribommanahalli Market",
+          "cropPrices": {
+            "Cotton": "₹6,480/quintal",
+            "Banana": "₹1,420/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹3,330",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+2.3%",
+          "price": "₹6,480/quintal",
+          "time": "4 hours ago",
+          "reason": "Ginners restock for new season"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hosapete Cotton Ginning",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9444456789"
+        }
+      ]
+    },
+    {
+      "city": "Yadgir",
+      "markets": [
+        {
+          "name": "Yadgir APMC",
+          "cropPrices": {
+            "Pigeon-pea": "₹6,700/quintal",
+            "Sunflower": "₹5,920/quintal",
+            "Cotton": "₹6,450/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Shahapur Market",
+          "cropPrices": {
+            "Pigeon-pea": "₹6,700/quintal",
+            "Sunflower": "₹5,920/quintal",
+            "Cotton": "₹6,450/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹6,357",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Pigeon-pea"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Sunflower",
+          "change": "+3.9%",
+          "price": "₹5,920/quintal",
+          "time": "5 hours ago",
+          "reason": "Lower Karnataka arrivals"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Yadgir Dal Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Bangalore Rural",
+      "markets": [
+        {
+          "name": "Doddaballapur APMC",
+          "cropPrices": {
+            "Vegetables": "₹2,500/quintal",
+            "Flowers": "₹2,600/quintal",
+            "Fruits": "₹4,000/quintal"
+          },
+          "marketTimings": "5 AM - 7 PM",
+          "tradingDays": "Monday to Sunday"
+        },
+        {
+          "name": "Kanakapura Market",
+          "cropPrices": {
+            "Vegetables": "₹2,500/quintal",
+            "Flowers": "₹2,600/quintal",
+            "Fruits": "₹4,000/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 560,
+        "averagePricePerQuintal": "₹3,033",
+        "monthlyTransactions": 1900,
+        "topCommodity": "Vegetables"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Flowers",
+          "change": "+3.0%",
+          "price": "₹2,600/quintal",
+          "time": "2 hours ago",
+          "reason": "Weekend temple demand"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bangalore Rural Veg Traders",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    }
+  ]
+}

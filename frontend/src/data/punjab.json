@@ -1,0 +1,1087 @@
+{
+  "cities": [
+    {
+      "city": "Ludhiana",
+      "markets": [
+        {
+          "name": "Ludhiana APMC",
+          "cropPrices": {
+            "Wheat": "₹2,180/quintal",
+            "Paddy": "₹2,040/quintal",
+            "Potato": "₹1,650/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Khanna Grain Market",
+          "cropPrices": {
+            "Wheat": "₹2,185/quintal",
+            "Paddy": "₹2,045/quintal",
+            "Potato": "₹1,660/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹4.2 Cr",
+        "activeBuyers": 520,
+        "averagePricePerQuintal": "₹2,050",
+        "monthlyTransactions": 2100,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Wheat",
+          "change": "+1.8%",
+          "price": "₹2,180/quintal",
+          "time": "2 hours ago",
+          "reason": "Strong export demand from UP mills"
+        },
+        {
+          "crop": "Potato",
+          "change": "-2.1%",
+          "price": "₹1,650/quintal",
+          "time": "5 hours ago",
+          "reason": "Bulk cold-storage release"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Ludhiana Roller Flour Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "18,000 quintals",
+          "contact": "9876543210"
+        }
+      ]
+    },
+    {
+      "city": "Amritsar",
+      "markets": [
+        {
+          "name": "Amritsar APMC",
+          "cropPrices": {
+            "Paddy": "₹2,050/quintal",
+            "Kinnow": "₹3,200/quintal",
+            "Wheat": "₹2,190/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Raja Sansi Mandi",
+          "cropPrices": {
+            "Paddy": "₹2,055/quintal",
+            "Kinnow": "₹3,250/quintal",
+            "Wheat": "₹2,195/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.8 Cr",
+        "activeBuyers": 480,
+        "averagePricePerQuintal": "₹2,500",
+        "monthlyTransactions": 1950,
+        "topCommodity": "Paddy"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Kinnow",
+          "change": "+2.4%",
+          "price": "₹3,200/quintal",
+          "time": "3 hours ago",
+          "reason": "Export orders to Bangladesh"
+        },
+        {
+          "crop": "Paddy",
+          "change": "+1.2%",
+          "price": "₹2,050/quintal",
+          "time": "6 hours ago",
+          "reason": "Arrival slowdown due to fog"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Amritsar Citrus Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "15,000 quintals",
+          "contact": "9234567890"
+        }
+      ]
+    },
+    {
+      "city": "Bathinda",
+      "markets": [
+        {
+          "name": "Bathinda APMC",
+          "cropPrices": {
+            "Cotton": "₹6,350/quintal",
+            "Paddy": "₹2,030/quintal",
+            "Kinnow": "₹3,150/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Raman Mandi",
+          "cropPrices": {
+            "Cotton": "₹6,360/quintal",
+            "Paddy": "₹2,035/quintal",
+            "Kinnow": "₹3,180/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.5 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹3,800",
+        "monthlyTransactions": 1850,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.9%",
+          "price": "₹6,350/quintal",
+          "time": "1 hour ago",
+          "reason": "Gujarat mills lifting extra bales"
+        },
+        {
+          "crop": "Kinnow",
+          "change": "-1.5%",
+          "price": "₹3,150/quintal",
+          "time": "4 hours ago",
+          "reason": "Peak arrival pressure"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Bathinda Cotton Ginning Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "16,500 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Firozpur",
+      "markets": [
+        {
+          "name": "Firozpur APMC",
+          "cropPrices": {
+            "Wheat": "₹2,200/quintal",
+            "Cotton": "₹6,300/quintal",
+            "Chilli": "₹12,500/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Zira Mandi",
+          "cropPrices": {
+            "Wheat": "₹2,205/quintal",
+            "Cotton": "₹6,310/quintal",
+            "Chilli": "₹12,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.1 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹7,000",
+        "monthlyTransactions": 1750,
+        "topCommodity": "Chilli"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Chilli",
+          "change": "+3.2%",
+          "price": "₹12,500/quintal",
+          "time": "2 hours ago",
+          "reason": "Export demand from spice firms"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+1.0%",
+          "price": "₹2,200/quintal",
+          "time": "7 hours ago",
+          "reason": "Procurement window opens"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Firozpur Chilli Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Patiala",
+      "markets": [
+        {
+          "name": "Patiala APMC",
+          "cropPrices": {
+            "Rice": "₹2,060/quintal",
+            "Guava": "₹3,800/quintal",
+            "Wheat": "₹2,185/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Rajpura Mandi",
+          "cropPrices": {
+            "Rice": "₹2,065/quintal",
+            "Guava": "₹3,850/quintal",
+            "Wheat": "₹2,190/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.3 Cr",
+        "activeBuyers": 440,
+        "averagePricePerQuintal": "₹2,700",
+        "monthlyTransactions": 1800,
+        "topCommodity": "Guava"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Guava",
+          "change": "+2.8%",
+          "price": "₹3,800/quintal",
+          "time": "1 hour ago",
+          "reason": "Delhi retailers placing advance orders"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1.1%",
+          "price": "₹2,060/quintal",
+          "time": "5 hours ago",
+          "reason": "Fresh arrival from Sangrur belt"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Patiala Fruit Processing Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Sangrur",
+      "markets": [
+        {
+          "name": "Sangrur APMC",
+          "cropPrices": {
+            "Mushroom": "₹28,000/quintal",
+            "Paddy": "₹2,040/quintal",
+            "Wheat": "₹2,175/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bhawanigarh Mandi",
+          "cropPrices": {
+            "Mushroom": "₹28,500/quintal",
+            "Paddy": "₹2,045/quintal",
+            "Wheat": "₹2,180/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.0 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹10,800",
+        "monthlyTransactions": 1650,
+        "topCommodity": "Mushroom"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Mushroom",
+          "change": "+3.5%",
+          "price": "₹28,000/quintal",
+          "time": "2 hours ago",
+          "reason": "Pizza chains lifting extra volumes"
+        },
+        {
+          "crop": "Paddy",
+          "change": "+1.0%",
+          "price": "₹2,040/quintal",
+          "time": "6 hours ago",
+          "reason": "Moisture content improving bids"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Sangrur Agro-Mushroom Pvt Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9789012345"
+        }
+      ]
+    },
+    {
+      "city": "Moga",
+      "markets": [
+        {
+          "name": "Moga APMC",
+          "cropPrices": {
+            "Potato": "₹1,550/quintal",
+            "Milk": "₹32/litre",
+            "Basmati": "₹4,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Bagha Purana Mandi",
+          "cropPrices": {
+            "Potato": "₹1,560/quintal",
+            "Milk": "₹32.5/litre",
+            "Basmati": "₹4,850/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.6 Cr",
+        "activeBuyers": 470,
+        "averagePricePerQuintal": "₹2,200",
+        "monthlyTransactions": 1900,
+        "topCommodity": "Potato"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Potato",
+          "change": "-2.0%",
+          "price": "₹1,550/quintal",
+          "time": "3 hours ago",
+          "reason": "Cold-storage clearance sale"
+        },
+        {
+          "crop": "Basmati",
+          "change": "+1.4%",
+          "price": "₹4,800/quintal",
+          "time": "7 hours ago",
+          "reason": "Export inquiries from Iran"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Moga Potato Chips Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "16,000 quintals",
+          "contact": "9345678901"
+        }
+      ]
+    },
+    {
+      "city": "Gurdaspur",
+      "markets": [
+        {
+          "name": "Gurdaspur APMC",
+          "cropPrices": {
+            "Sugarcane": "₹3,450/quintal",
+            "Rice": "₹2,055/quintal",
+            "Litchi": "₹9,200/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Dinanagar Mandi",
+          "cropPrices": {
+            "Sugarcane": "₹3,460/quintal",
+            "Rice": "₹2,060/quintal",
+            "Litchi": "₹9,300/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 400,
+        "averagePricePerQuintal": "₹4,900",
+        "monthlyTransactions": 1700,
+        "topCommodity": "Litchi"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Litchi",
+          "change": "+4.1%",
+          "price": "₹9,200/quintal",
+          "time": "1 hour ago",
+          "reason": "Early season, limited supply"
+        },
+        {
+          "crop": "Sugarcane",
+          "change": "-0.8%",
+          "price": "₹3,450/quintal",
+          "time": "5 hours ago",
+          "reason": "Mill gate price revision"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Gurdaspur Litchi Packers",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Faridkot",
+      "markets": [
+        {
+          "name": "Faridkot APMC",
+          "cropPrices": {
+            "Milk": "₹33/litre",
+            "Paddy": "₹2,025/quintal",
+            "Wheat": "₹2,170/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kotkapura Mandi",
+          "cropPrices": {
+            "Milk": "₹33.5/litre",
+            "Paddy": "₹2,030/quintal",
+            "Wheat": "₹2,175/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹2,100",
+        "monthlyTransactions": 1550,
+        "topCommodity": "Milk"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Milk",
+          "change": "+2.0%",
+          "price": "₹33/litre",
+          "time": "2 hours ago",
+          "reason": "Festive demand for sweets"
+        },
+        {
+          "crop": "Paddy",
+          "change": "+1.1%",
+          "price": "₹2,025/quintal",
+          "time": "6 hours ago",
+          "reason": "Moisture levels below 18 %"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Faridkot Dairy Union",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "1.5 lakh litres",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Jalandhar",
+      "markets": [
+        {
+          "name": "Jalandhar APMC",
+          "cropPrices": {
+            "Potato": "₹1,620/quintal",
+            "Rice": "₹2,070/quintal",
+            "Tomato": "₹1,900/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Adampur Mandi",
+          "cropPrices": {
+            "Potato": "₹1,630/quintal",
+            "Rice": "₹2,075/quintal",
+            "Tomato": "₹1,920/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹3.4 Cr",
+        "activeBuyers": 460,
+        "averagePricePerQuintal": "₹1,850",
+        "monthlyTransactions": 1820,
+        "topCommodity": "Potato"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Potato",
+          "change": "+3.0%",
+          "price": "₹1,620/quintal",
+          "time": "3 hours ago",
+          "reason": "Chip-makers lifting large lots"
+        },
+        {
+          "crop": "Tomato",
+          "change": "-2.5%",
+          "price": "₹1,900/quintal",
+          "time": "5 hours ago",
+          "reason": "Surplus supply from Hoshiarpur"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Jalandhar Potato Chips Ltd",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "17,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Hoshiarpur",
+      "markets": [
+        {
+          "name": "Hoshiarpur APMC",
+          "cropPrices": {
+            "Tomato": "₹1,850/quintal",
+            "Ginger": "₹5,400/quintal",
+            "Maize": "₹2,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Dasuya Mandi",
+          "cropPrices": {
+            "Tomato": "₹1,870/quintal",
+            "Ginger": "₹5,450/quintal",
+            "Maize": "₹2,110/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 370,
+        "averagePricePerQuintal": "₹3,100",
+        "monthlyTransactions": 1480,
+        "topCommodity": "Ginger"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Ginger",
+          "change": "+4.2%",
+          "price": "₹5,400/quintal",
+          "time": "1 hour ago",
+          "reason": "North-India demand surge"
+        },
+        {
+          "crop": "Tomato",
+          "change": "-1.8%",
+          "price": "₹1,850/quintal",
+          "time": "4 hours ago",
+          "reason": "Seasonal oversupply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Hoshiarpur Spice Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "12,500 quintals",
+          "contact": "9789012345"
+        }
+      ]
+    },
+    {
+      "city": "Kapurthala",
+      "markets": [
+        {
+          "name": "Kapurthala APMC",
+          "cropPrices": {
+            "Rice": "₹2,080/quintal",
+            "Sugarcane": "₹3,480/quintal",
+            "Potato": "₹1,590/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Phagwara Mandi",
+          "cropPrices": {
+            "Rice": "₹2,085/quintal",
+            "Sugarcane": "₹3,490/quintal",
+            "Potato": "₹1,600/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 390,
+        "averagePricePerQuintal": "₹2,400",
+        "monthlyTransactions": 1520,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Rice",
+          "change": "+1.5%",
+          "price": "₹2,080/quintal",
+          "time": "2 hours ago",
+          "reason": "Millers covering short positions"
+        },
+        {
+          "crop": "Sugarcane",
+          "change": "-0.9%",
+          "price": "₹3,480/quintal",
+          "time": "6 hours ago",
+          "reason": "Crushing season peak supply"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Kapurthala Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Mansa",
+      "markets": [
+        {
+          "name": "Mansa APMC",
+          "cropPrices": {
+            "Cotton": "₹6,270/quintal",
+            "Wheat": "₹2,150/quintal",
+            "Paddy": "₹2,030/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Budhlada Mandi",
+          "cropPrices": {
+            "Cotton": "₹6,280/quintal",
+            "Wheat": "₹2,155/quintal",
+            "Paddy": "₹2,035/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.6 Cr",
+        "activeBuyers": 350,
+        "averagePricePerQuintal": "₹3,500",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Cotton"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Cotton",
+          "change": "+1.7%",
+          "price": "₹6,270/quintal",
+          "time": "2 hours ago",
+          "reason": "Rajasthan mills increase lifting"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+0.9%",
+          "price": "₹2,150/quintal",
+          "time": "5 hours ago",
+          "reason": "Arrivals thin, millers cover"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mansa Cotton Ginners",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Sri Muktsar Sahib",
+      "markets": [
+        {
+          "name": "Muktsar APMC",
+          "cropPrices": {
+            "Cotton": "₹6,290/quintal",
+            "Kinnow": "₹3,000/quintal",
+            "Paddy": "₹2,025/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Gidderbaha Mandi",
+          "cropPrices": {
+            "Cotton": "₹6,300/quintal",
+            "Kinnow": "₹3,030/quintal",
+            "Paddy": "₹2,030/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.9 Cr",
+        "activeBuyers": 380,
+        "averagePricePerQuintal": "₹3,700",
+        "monthlyTransactions": 1500,
+        "topCommodity": "Kinnow"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Kinnow",
+          "change": "+2.5%",
+          "price": "₹3,000/quintal",
+          "time": "1 hour ago",
+          "reason": "Export trucks to Bangladesh"
+        },
+        {
+          "crop": "Cotton",
+          "change": "-0.5%",
+          "price": "₹6,290/quintal",
+          "time": "4 hours ago",
+          "reason": "Gujarat new arrivals pressure"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Muktsar Citrus Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "14,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Pathankot",
+      "markets": [
+        {
+          "name": "Pathankot APMC",
+          "cropPrices": {
+            "Rice": "₹2,100/quintal",
+            "Maize": "₹2,180/quintal",
+            "Ginger": "₹5,600/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Sujanpur Mandi",
+          "cropPrices": {
+            "Rice": "₹2,105/quintal",
+            "Maize": "₹2,190/quintal",
+            "Ginger": "₹5,650/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.2 Cr",
+        "activeBuyers": 310,
+        "averagePricePerQuintal": "₹3,300",
+        "monthlyTransactions": 1300,
+        "topCommodity": "Ginger"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Ginger",
+          "change": "+4.5%",
+          "price": "₹5,600/quintal",
+          "time": "3 hours ago",
+          "reason": "Himachal road blockage lifts local bids"
+        },
+        {
+          "crop": "Maize",
+          "change": "+1.0%",
+          "price": "₹2,180/quintal",
+          "time": "5 hours ago",
+          "reason": "Poultry feed mills active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Pathankot Spice Traders",
+          "type": "Trader",
+          "status": "Active",
+          "volume": "10,000 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Rupnagar",
+      "markets": [
+        {
+          "name": "Rupnagar APMC",
+          "cropPrices": {
+            "Rice": "₹2,110/quintal",
+            "Wheat": "₹2,185/quintal",
+            "Peas": "₹3,300/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Nangal Mandi",
+          "cropPrices": {
+            "Rice": "₹2,115/quintal",
+            "Wheat": "₹2,190/quintal",
+            "Peas": "₹3,350/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.4 Cr",
+        "activeBuyers": 340,
+        "averagePricePerQuintal": "₹2,500",
+        "monthlyTransactions": 1380,
+        "topCommodity": "Rice"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Peas",
+          "change": "+3.0%",
+          "price": "₹3,300/quintal",
+          "time": "2 hours ago",
+          "reason": "Short supply from hills"
+        },
+        {
+          "crop": "Rice",
+          "change": "-1.0%",
+          "price": "₹2,110/quintal",
+          "time": "6 hours ago",
+          "reason": "Fresh arrival from nearby belts"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Rupnagar Rice Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "11,000 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    },
+    {
+      "city": "Sahibzada Ajit Singh Nagar",
+      "markets": [
+        {
+          "name": "Mohali APMC",
+          "cropPrices": {
+            "Wheat": "₹2,195/quintal",
+            "Rice": "₹2,120/quintal",
+            "Capsicum": "₹2,800/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Kharar Mandi",
+          "cropPrices": {
+            "Wheat": "₹2,200/quintal",
+            "Rice": "₹2,125/quintal",
+            "Capsicum": "₹2,850/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.8 Cr",
+        "activeBuyers": 410,
+        "averagePricePerQuintal": "₹2,400",
+        "monthlyTransactions": 1600,
+        "topCommodity": "Capsicum"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Capsicum",
+          "change": "+3.5%",
+          "price": "₹2,800/quintal",
+          "time": "2 hours ago",
+          "reason": "Delhi NCR retail demand spike"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+0.9%",
+          "price": "₹2,195/quintal",
+          "time": "5 hours ago",
+          "reason": "Local roller mills cover shorts"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Mohali Veg Supply Chain",
+          "type": "Retailer",
+          "status": "Active",
+          "volume": "12,000 quintals",
+          "contact": "9678901234"
+        }
+      ]
+    },
+    {
+      "city": "Shahid Bhagat Singh Nagar",
+      "markets": [
+        {
+          "name": "Nawanshahr APMC",
+          "cropPrices": {
+            "Wheat": "₹2,185/quintal",
+            "Rice": "₹2,115/quintal",
+            "Potato": "₹1,640/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Balachaur Mandi",
+          "cropPrices": {
+            "Wheat": "₹2,190/quintal",
+            "Rice": "₹2,120/quintal",
+            "Potato": "₹1,650/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Tuesday to Sunday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.3 Cr",
+        "activeBuyers": 320,
+        "averagePricePerQuintal": "₹2,050",
+        "monthlyTransactions": 1320,
+        "topCommodity": "Wheat"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Potato",
+          "change": "-2.2%",
+          "price": "₹1,640/quintal",
+          "time": "3 hours ago",
+          "reason": "Cold store releases pick up"
+        },
+        {
+          "crop": "Wheat",
+          "change": "+1.2%",
+          "price": "₹2,185/quintal",
+          "time": "6 hours ago",
+          "reason": "Procurement centre opens today"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Nawanshahr Roller Flour Mills",
+          "type": "Processor",
+          "status": "Active",
+          "volume": "10,500 quintals",
+          "contact": "9456781234"
+        }
+      ]
+    },
+    {
+      "city": "Tarn Taran",
+      "markets": [
+        {
+          "name": "Tarn Taran APMC",
+          "cropPrices": {
+            "Paddy": "₹2,055/quintal",
+            "Wheat": "₹2,180/quintal",
+            "Kinnow": "₹3,100/quintal"
+          },
+          "marketTimings": "6 AM - 6 PM",
+          "tradingDays": "Monday to Saturday"
+        },
+        {
+          "name": "Patti Mandi",
+          "cropPrices": {
+            "Paddy": "₹2,060/quintal",
+            "Wheat": "₹2,185/quintal",
+            "Kinnow": "₹3,130/quintal"
+          },
+          "marketTimings": "7 AM - 5 PM",
+          "tradingDays": "Monday to Friday"
+        }
+      ],
+      "marketStats": {
+        "dailyTradingVolume": "₹2.7 Cr",
+        "activeBuyers": 370,
+        "averagePricePerQuintal": "₹2,450",
+        "monthlyTransactions": 1450,
+        "topCommodity": "Paddy"
+      },
+      "priceAlerts": [
+        {
+          "crop": "Kinnow",
+          "change": "+2.0%",
+          "price": "₹3,100/quintal",
+          "time": "1 hour ago",
+          "reason": "Early harvest, limited supply"
+        },
+        {
+          "crop": "Paddy",
+          "change": "+1.3%",
+          "price": "₹2,055/quintal",
+          "time": "4 hours ago",
+          "reason": "Moisture below 17 %, mills active"
+        }
+      ],
+      "buyers": [
+        {
+          "name": "Tarn Taran Agro Exporters",
+          "type": "Exporter",
+          "status": "Active",
+          "volume": "13,000 quintals",
+          "contact": "9567890123"
+        }
+      ]
+    }
+  ]
+}

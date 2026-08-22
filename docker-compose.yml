@@ -1,0 +1,144 @@
+# Kisaan Saathi - YOLO Branch
+# Complete architecture with YOLO + Gemini Live WebSocket (built into backend)
+# One command: docker-compose up --build
+
+services:
+  # Main Backend API + WebSocket /gemini-live (port 3000)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kisan-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GROQ_API_KEY=${GROQ_API_KEY}
+      - WEATHER_API_KEY=${WEATHER_API_KEY}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET}
+    networks:
+      - kisan-network
+    depends_on:
+      yolo:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "-O",
+          "/dev/null",
+          "http://localhost:3000/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # YOLO Object Detection Service (FastAPI + YOLO11n)
+  yolo:
+    build:
+      context: ./yolo
+      dockerfile: Dockerfile
+    container_name: kisan-yolo
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - YOLO_MODEL_PATH=yolo11n.pt
+    networks:
+      - kisan-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "-O",
+          "/dev/null",
+          "http://localhost:8000/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  # Voice Service — Gemini Live Audio Proxy (Python, port 8001)
+  voice-service:
+    build:
+      context: ./voice-service
+      dockerfile: Dockerfile
+    container_name: kisan-voice
+    ports:
+      - "8001:8001"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - VOICE_SERVICE_PORT=8001
+      - GEMINI_LIVE_MODEL=gemini-2.5-flash-native-audio-preview-12-2025
+    networks:
+      - kisan-network
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "-O",
+          "/dev/null",
+          "http://localhost:8001/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Frontend React App — static nginx build
+  # VITE_* env vars are baked at build time (npm run build), NOT at runtime.
+  # All routing is handled by nginx proxy blocks in nginx.conf:
+  #   /api/*        → backend:3000
+  #   /gemini-live  → backend:3000  (WebSocket)
+  #   /voice-live   → voice-service:8001  (WebSocket)
+  #   /yolo/*       → yolo:8000
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kisan-frontend
+    ports:
+      - "5173:5173"
+    networks:
+      - kisan-network
+    depends_on:
+      - backend
+      - yolo
+      - voice-service
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "-O",
+          "/dev/null",
+          "http://localhost:5173/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  kisan-network:
+    driver: bridge

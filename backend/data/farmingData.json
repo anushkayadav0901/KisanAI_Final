@@ -1,0 +1,530 @@
+{
+    "subsidies": {
+        "organic_farming": [
+            {
+                "id": "pkvy-001",
+                "name": "Paramparagat Krishi Vikas Yojana (PKVY)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Organic Farming Support",
+                "summary": "Government scheme to promote organic farming through cluster-based approach. Provides financial assistance of ₹50,000 per hectare over 3 years for organic inputs, certification, labeling, packaging, and marketing support.",
+                "benefits": "₹50,000/hectare over 3 years",
+                "eligibility": [
+                    "Farmer groups with minimum 20 hectares cluster",
+                    "Valid land records and Aadhaar",
+                    "Willingness to adopt organic practices for 3+ years"
+                ],
+                "applicationProcess": [
+                    "Contact your District Agriculture Officer",
+                    "Form a cluster of farmers (50 or more in 20+ hectares)",
+                    "Apply through State Agriculture Department",
+                    "Undergo PGS (Participatory Guarantee System) certification"
+                ],
+                "applicationUrl": "https://pgsindia-ncof.gov.in/pkvy/Index.aspx",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/rainfed-farming-system/paramparagat-krishi-vikas-yojana",
+                "deadline": "Open — year-round enrollment",
+                "relevanceScore": 98
+            },
+            {
+                "id": "pmkisan-001",
+                "name": "PM-KISAN Samman Nidhi",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Direct Benefit Transfer",
+                "summary": "Income support scheme providing ₹6,000 per year to all landholding farmer families. Amount is paid in three equal installments of ₹2,000 every four months directly to the farmer's bank account.",
+                "benefits": "₹6,000/year (₹2,000 × 3 installments)",
+                "eligibility": [
+                    "All landholding farmer families",
+                    "Valid Aadhaar linked to bank account",
+                    "Not a government employee or income tax payer"
+                ],
+                "applicationProcess": [
+                    "Visit pmkisan.gov.in or nearest CSC center",
+                    "Click 'New Farmer Registration'",
+                    "Enter Aadhaar, bank details, and land info",
+                    "Verification done by State Nodal Officer"
+                ],
+                "applicationUrl": "https://pmkisan.gov.in/registrationform.aspx",
+                "sourceUrl": "https://pmkisan.gov.in",
+                "deadline": "Open enrollment",
+                "relevanceScore": 90
+            },
+            {
+                "id": "movcdner-001",
+                "name": "Mission Organic Value Chain Development (MOVCDNER)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Organic Certification & Marketing",
+                "summary": "Scheme for NE region focused on development of certified organic production in a value chain mode. Provides support for organic inputs, quality seeds, and post-harvest management including FPO development.",
+                "benefits": "Up to ₹2 Crore per FPO for value chain development",
+                "eligibility": [
+                    "Farmers in North Eastern states",
+                    "Farmer Producer Organizations (FPOs)",
+                    "Minimum 200 hectares cluster formation"
+                ],
+                "applicationProcess": [
+                    "Register with State Agriculture Department",
+                    "Form or join a Farmer Producer Organization",
+                    "Submit project proposal through State Mission Director"
+                ],
+                "applicationUrl": "https://movcd.nic.in",
+                "sourceUrl": "https://agricoop.nic.in/en/organic",
+                "deadline": "Project-based — contact State agency",
+                "relevanceScore": 75
+            },
+            {
+                "id": "nmsa-001",
+                "name": "National Mission for Sustainable Agriculture (NMSA)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Sustainable Farming",
+                "summary": "Promotes sustainable agriculture through climate-resilient practices. Offers financial support for soil health management, rainfed area development, and on-farm water management to improve farm productivity.",
+                "benefits": "50-100% subsidy depending on component & category",
+                "eligibility": [
+                    "All farmers with cultivable land",
+                    "Priority to SC/ST and small/marginal farmers",
+                    "Land should be under rainfed/dry farming"
+                ],
+                "applicationProcess": [
+                    "Apply through District Agriculture Office",
+                    "Submit land records and farmer ID",
+                    "Selection as per state government criteria"
+                ],
+                "applicationUrl": "https://nmsa.dac.gov.in",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/rainfed-farming-system/national-mission-sustainable-agriculture",
+                "deadline": "Ongoing annual scheme",
+                "relevanceScore": 85
+            },
+            {
+                "id": "smam-001",
+                "name": "Sub-Mission on Agricultural Mechanization (SMAM)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Equipment & Machinery",
+                "summary": "Provides subsidies for purchase of agricultural machinery and equipment. Farmers can get 40-50% subsidy on tractors, tillers, sprayers, harvesters and other farm equipment from empanelled manufacturers.",
+                "benefits": "40-50% subsidy on farm machinery (up to ₹5 Lakh)",
+                "eligibility": [
+                    "Individual farmers with valid land holding",
+                    "SC/ST/Small/Marginal farmers get higher subsidy",
+                    "One machine per farmer per category"
+                ],
+                "applicationProcess": [
+                    "Register on AGRIMACHINERY portal (agrimachinery.nic.in)",
+                    "Select machinery from empanelled list",
+                    "Upload documents: Aadhaar, land records, bank passbook",
+                    "Subsidy disbursed via DBT after purchase verification"
+                ],
+                "applicationUrl": "https://agrimachinery.nic.in",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/farm-mechanization",
+                "deadline": "Annual — April to March",
+                "relevanceScore": 80
+            }
+        ],
+        "rainwater_farming": [
+            {
+                "id": "pmksy-001",
+                "name": "Pradhan Mantri Krishi Sinchai Yojana (PMKSY)",
+                "ministry": "Ministry of Agriculture & Ministry of Jal Shakti",
+                "category": "Irrigation & Water Management",
+                "summary": "Flagship scheme for 'Har Khet Ko Paani' – ensures access to protective irrigation for all farms. Provides 55-100% subsidy on micro-irrigation systems including drip and sprinkler, rainwater harvesting structures, and farm ponds.",
+                "benefits": "55-100% subsidy on micro-irrigation (₹1-5 Lakh per unit)",
+                "eligibility": [
+                    "All farmers with cultivable land",
+                    "Small and marginal farmers get higher subsidy (100%)",
+                    "Land should have water source or potential for harvesting"
+                ],
+                "applicationProcess": [
+                    "Apply through State Agriculture/Horticulture Department",
+                    "Register on PMKSY portal or visit Krishi Vigyan Kendra",
+                    "Submit land records, water source details",
+                    "Technical survey and approval by district committee"
+                ],
+                "applicationUrl": "https://pmksy.gov.in",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/rainfed-farming-system/pmksy",
+                "deadline": "Rolling applications through state agencies",
+                "relevanceScore": 98
+            },
+            {
+                "id": "mgnrega-farm",
+                "name": "MGNREGA – Farm Pond / Water Harvesting",
+                "ministry": "Ministry of Rural Development",
+                "category": "Water Harvesting Infrastructure",
+                "summary": "Under MGNREGA, farmers can get free farm ponds, check dams, and rainwater harvesting structures built on their land. Labour costs are fully covered, and material costs are subsidized. Excellent for rainfed areas.",
+                "benefits": "100% labour cost + material allowance (up to ₹3 Lakh per structure)",
+                "eligibility": [
+                    "Job card holder under MGNREGA",
+                    "Land in rainfed / drought-prone areas",
+                    "SC/ST and small farmers get priority"
+                ],
+                "applicationProcess": [
+                    "Apply at Gram Panchayat with MGNREGA job card",
+                    "Request farm pond / water harvesting under Individual Beneficiary scheme",
+                    "Technical approval by Block Development Officer"
+                ],
+                "applicationUrl": "https://nrega.nic.in",
+                "sourceUrl": "https://nrega.nic.in/netnrega/home.aspx",
+                "deadline": "Year-round — demand-based",
+                "relevanceScore": 95
+            },
+            {
+                "id": "nmsa-rain",
+                "name": "NMSA – Rainfed Area Development (RAD)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Rainfed Farming",
+                "summary": "Specifically targets rainfed areas with integrated farming system approach. Provides support for soil moisture conservation, rainwater harvesting, groundwater recharging, and drought-proofing activities.",
+                "benefits": "Up to ₹1.5 Lakh per hectare for integrated activities",
+                "eligibility": [
+                    "Farmers in identified rainfed areas",
+                    "Cluster-based approach with community participation",
+                    "Priority to tribal and drought-prone districts"
+                ],
+                "applicationProcess": [
+                    "Contact District Agriculture Office",
+                    "Identified through watershed development programs",
+                    "Community mobilization and cluster formation"
+                ],
+                "applicationUrl": "https://nmsa.dac.gov.in",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/rainfed-farming-system",
+                "deadline": "Annual planning cycle",
+                "relevanceScore": 92
+            },
+            {
+                "id": "pmkisan-rain",
+                "name": "PM-KISAN Samman Nidhi",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Direct Benefit Transfer",
+                "summary": "Income support scheme providing ₹6,000 per year to all landholding farmer families. Amount is paid in three equal installments of ₹2,000 every four months directly to the farmer's bank account.",
+                "benefits": "₹6,000/year (₹2,000 × 3 installments)",
+                "eligibility": [
+                    "All landholding farmer families",
+                    "Valid Aadhaar linked to bank account",
+                    "Not a government employee or income tax payer"
+                ],
+                "applicationProcess": [
+                    "Visit pmkisan.gov.in or nearest CSC center",
+                    "Click 'New Farmer Registration'",
+                    "Enter Aadhaar, bank details, and land info",
+                    "Verification done by State Nodal Officer"
+                ],
+                "applicationUrl": "https://pmkisan.gov.in/registrationform.aspx",
+                "sourceUrl": "https://pmkisan.gov.in",
+                "deadline": "Open enrollment",
+                "relevanceScore": 85
+            }
+        ],
+        "integrated_farming": [
+            {
+                "id": "pmmsy-001",
+                "name": "Pradhan Mantri Matsya Sampada Yojana (PMMSY)",
+                "ministry": "Ministry of Fisheries, Animal Husbandry & Dairying",
+                "category": "Fish Farming & Aquaculture",
+                "summary": "Dedicated scheme for fisheries development. Provides 40-60% subsidy for fresh water fish farming, pond construction, hatchery setup, biofloc units, and cage culture. Aims to double fisheries production and exports.",
+                "benefits": "40-60% subsidy (up to ₹25 Lakh for pond construction, ₹50 Lakh for RAS units)",
+                "eligibility": [
+                    "Individual fishers, fish farmers, SHGs, FPOs",
+                    "SC/ST/Women get 60% subsidy, General 40%",
+                    "Valid ID, land/lease documents, bank account"
+                ],
+                "applicationProcess": [
+                    "Register on PMMSY portal (pmmsy.dof.gov.in)",
+                    "Select activity component (pond, hatchery, biofloc, etc.)",
+                    "Submit DPR (Detailed Project Report)",
+                    "State Fisheries Department verifies and approves"
+                ],
+                "applicationUrl": "https://pmmsy.dof.gov.in",
+                "sourceUrl": "https://dof.gov.in/pmmsy",
+                "deadline": "Rolling applications — scheme valid till 2025-26",
+                "relevanceScore": 98
+            },
+            {
+                "id": "blue-rev",
+                "name": "Blue Revolution (Neel Kranti Mission)",
+                "ministry": "Ministry of Fisheries",
+                "category": "Aquaculture Infrastructure",
+                "summary": "Comprehensive scheme for integrated development of inland and marine fisheries. Covers pond construction, feed mills, cold chain infrastructure, ornamental fisheries, and seaweed cultivation.",
+                "benefits": "50-80% subsidy based on component and category",
+                "eligibility": [
+                    "Fishers, fish farmers, fish workers",
+                    "Entrepreneurs with relevant training/experience",
+                    "Cooperative societies and SHGs"
+                ],
+                "applicationProcess": [
+                    "Apply through State Fisheries Department",
+                    "Submit project proposal with technical details",
+                    "Training certificate from CIFE/ICAR beneficial"
+                ],
+                "applicationUrl": "https://dof.gov.in",
+                "sourceUrl": "https://dof.gov.in/blue-revolution",
+                "deadline": "Annual — based on state allocation",
+                "relevanceScore": 90
+            },
+            {
+                "id": "rkvy-ifs",
+                "name": "RKVY – Integrated Farming System",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Integrated Farming",
+                "summary": "Under Rashtriya Krishi Vikas Yojana, supports Integrated Farming System models combining crops + fish + livestock + horticulture. Provides holistic support for farm diversification and income enhancement.",
+                "benefits": "Up to ₹5 Lakh per IFS unit depending on components",
+                "eligibility": [
+                    "Farmers willing to adopt integrated farming model",
+                    "Minimum 0.5 hectare land holding",
+                    "Priority to small, marginal, and SC/ST farmers"
+                ],
+                "applicationProcess": [
+                    "Apply at District Agriculture Office under RKVY",
+                    "Submit integrated farm plan with components",
+                    "Training at nearest KVK (Krishi Vigyan Kendra)"
+                ],
+                "applicationUrl": "https://rkvy.nic.in",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/rkvy",
+                "deadline": "Annual cycle — April-March",
+                "relevanceScore": 92
+            },
+            {
+                "id": "pmkisan-fish",
+                "name": "PM-KISAN Samman Nidhi",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Direct Benefit Transfer",
+                "summary": "Income support scheme providing ₹6,000 per year to all landholding farmer families. Amount is paid in three equal installments of ₹2,000 every four months directly to the farmer's bank account.",
+                "benefits": "₹6,000/year (₹2,000 × 3 installments)",
+                "eligibility": [
+                    "All landholding farmer families",
+                    "Valid Aadhaar linked to bank account",
+                    "Not a government employee or income tax payer"
+                ],
+                "applicationProcess": [
+                    "Visit pmkisan.gov.in or nearest CSC center",
+                    "Click 'New Farmer Registration'",
+                    "Enter Aadhaar, bank details, and land info",
+                    "Verification done by State Nodal Officer"
+                ],
+                "applicationUrl": "https://pmkisan.gov.in/registrationform.aspx",
+                "sourceUrl": "https://pmkisan.gov.in",
+                "deadline": "Open enrollment",
+                "relevanceScore": 82
+            }
+        ],
+        "default": [
+            {
+                "id": "pmkisan-gen",
+                "name": "PM-KISAN Samman Nidhi",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Direct Benefit Transfer",
+                "summary": "Income support scheme providing ₹6,000 per year to all landholding farmer families. Amount is paid in three equal installments of ₹2,000 every four months directly to the farmer's bank account.",
+                "benefits": "₹6,000/year (₹2,000 × 3 installments)",
+                "eligibility": [
+                    "All landholding farmer families",
+                    "Valid Aadhaar linked to bank account",
+                    "Not a government employee or income tax payer"
+                ],
+                "applicationProcess": [
+                    "Visit pmkisan.gov.in or nearest CSC center",
+                    "Click 'New Farmer Registration'",
+                    "Enter Aadhaar, bank details, and land info",
+                    "Verification done by State Nodal Officer"
+                ],
+                "applicationUrl": "https://pmkisan.gov.in/registrationform.aspx",
+                "sourceUrl": "https://pmkisan.gov.in",
+                "deadline": "Open enrollment",
+                "relevanceScore": 90
+            },
+            {
+                "id": "kcc-gen",
+                "name": "Kisan Credit Card (KCC)",
+                "ministry": "Ministry of Finance / NABARD",
+                "category": "Agricultural Credit",
+                "summary": "Provides affordable credit to farmers at subsidized interest rates (4% effective rate). Covers crop production, maintenance, and post-harvest expenses. Includes personal accident insurance of ₹50,000.",
+                "benefits": "Credit up to ₹3 Lakh at 4% interest + ₹50,000 accident insurance",
+                "eligibility": [
+                    "All farmers — including tenant farmers and sharecroppers",
+                    "Fishers, livestock farmers, SHG members",
+                    "Valid land documents or lease agreement"
+                ],
+                "applicationProcess": [
+                    "Visit any bank branch (SBI, PNB, cooperative bank)",
+                    "Fill KCC application form",
+                    "Submit land records, Aadhaar, passport-size photo",
+                    "Card issued within 14 working days"
+                ],
+                "applicationUrl": "https://www.nabard.org/content.aspx?id=604",
+                "sourceUrl": "https://www.nabard.org/content.aspx?id=604",
+                "deadline": "Anytime — all bank branches",
+                "relevanceScore": 88
+            },
+            {
+                "id": "pmfby-gen",
+                "name": "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Crop Insurance",
+                "summary": "Crop insurance scheme protecting farmers against crop loss due to natural calamities, pests, and diseases. Farmers pay very low premium (1.5-5% of sum insured) while government subsidizes the rest.",
+                "benefits": "Full sum insured at 1.5% premium (Rabi), 2% (Kharif), 5% (Commercial/Hort)",
+                "eligibility": [
+                    "All farmers growing notified crops",
+                    "Both loanee and non-loanee farmers (voluntary since 2020)",
+                    "Aadhaar, land records, bank account, sowing certificate"
+                ],
+                "applicationProcess": [
+                    "Apply through bank, CSC, or PMFBY portal before cut-off date",
+                    "Pay nominal premium (rest subsidized by govt)",
+                    "Claims settled based on CCE or satellite data"
+                ],
+                "applicationUrl": "https://pmfby.gov.in",
+                "sourceUrl": "https://pmfby.gov.in",
+                "deadline": "Kharif: July 31 | Rabi: December 31 (varies by state)",
+                "relevanceScore": 85
+            },
+            {
+                "id": "smam-gen",
+                "name": "Sub-Mission on Agricultural Mechanization (SMAM)",
+                "ministry": "Ministry of Agriculture & Farmers Welfare",
+                "category": "Equipment & Machinery",
+                "summary": "Provides subsidies for purchase of agricultural machinery and equipment. Farmers can get 40-50% subsidy on tractors, tillers, sprayers, harvesters and other farm equipment.",
+                "benefits": "40-50% subsidy on farm machinery (up to ₹5 Lakh)",
+                "eligibility": [
+                    "Individual farmers with valid land holding",
+                    "SC/ST/Small/Marginal farmers get higher subsidy",
+                    "One machine per farmer per category"
+                ],
+                "applicationProcess": [
+                    "Register on AGRIMACHINERY portal (agrimachinery.nic.in)",
+                    "Select machinery from empanelled list",
+                    "Upload documents: Aadhaar, land records, bank passbook",
+                    "Subsidy disbursed via DBT after purchase verification"
+                ],
+                "applicationUrl": "https://agrimachinery.nic.in",
+                "sourceUrl": "https://agricoop.nic.in/en/divisiontype/farm-mechanization",
+                "deadline": "Annual — April to March",
+                "relevanceScore": 80
+            }
+        ]
+    },
+    "videos": {
+        "organic_farming": {
+            "featured": {
+                "id": "qJnNzWMcFn8",
+                "title": "Organic Farming Success: Earning ₹50 Lakh Per Year from 5 Acres",
+                "channel": "Indian Agriculture",
+                "duration": "14:22",
+                "views": "2.8M",
+                "summary": "This inspiring documentary follows Rajesh Sharma from Punjab who transitioned his 5-acre conventional farm to 100% organic over 3 years. He now earns ₹50 lakh annually by growing organic wheat, basmati rice, and vegetables. Key to his success: vermicompost preparation, neem-based pest control, crop rotation with legumes, and direct marketing through organic cooperatives. His input costs dropped by 60% while selling prices increased 40% through organic certification (PGS India).",
+                "keyTakeaways": [
+                    "Started with just 1 acre pilot, proved profitability before scaling",
+                    "60% lower input costs using farm-made compost and bio-pesticides",
+                    "PGS certification took 3 years but increased selling prices by 40%",
+                    "Direct-to-consumer via cooperatives eliminates middlemen",
+                    "Crop rotation with mustard and lentils maintains soil nitrogen naturally"
+                ]
+            },
+            "related": [
+                {
+                    "id": "kHo5NOjJMYg",
+                    "title": "Zero Budget Natural Farming – Subhash Palekar Method Explained",
+                    "channel": "Agriculture World",
+                    "duration": "18:45",
+                    "thumbnail": "https://img.youtube.com/vi/kHo5NOjJMYg/mqdefault.jpg"
+                },
+                {
+                    "id": "HVPk5IXKxMQ",
+                    "title": "How This Farmer Grows 400+ Varieties of Rice Organically",
+                    "channel": "Krishi Jagran",
+                    "duration": "12:30",
+                    "thumbnail": "https://img.youtube.com/vi/HVPk5IXKxMQ/mqdefault.jpg"
+                }
+            ]
+        },
+        "rainwater_farming": {
+            "featured": {
+                "id": "lnkcBiQp7nE",
+                "title": "Rainwater Harvesting Revolution: How One Village Beat Drought Forever",
+                "channel": "Down To Earth",
+                "duration": "16:08",
+                "views": "1.5M",
+                "summary": "A powerful documentary showing how Hiware Bazar village in Maharashtra transformed from a drought-hit, migration-prone village to a model of water sustainability. Through community-led rainwater harvesting — check dams, contour trenches, farm ponds, and rooftop collection — they raised groundwater levels by 15 feet in just 5 years. Per-capita income went from ₹830 to ₹30,000, and 60 families that had migrated returned. Government MGNREGA funds were used for construction.",
+                "keyTakeaways": [
+                    "Community approach: entire village participated in watershed management",
+                    "Used MGNREGA funds — zero personal cost for construction",
+                    "Groundwater rose by 15 feet within 5 years of rainwater harvesting",
+                    "Per-capita income increased 36x — from ₹830 to ₹30,000",
+                    "Farm ponds + contour bunding + check dams = complete water security"
+                ]
+            },
+            "related": [
+                {
+                    "id": "rVYeMXb4pOU",
+                    "title": "How to Build a Perfect Farm Pond – Complete Guide",
+                    "channel": "Smart Farmer India",
+                    "duration": "11:20",
+                    "thumbnail": "https://img.youtube.com/vi/rVYeMXb4pOU/mqdefault.jpg"
+                },
+                {
+                    "id": "Z_-P7I7T3Q8",
+                    "title": "Drip Irrigation on Budget: Complete Setup Under ₹15,000",
+                    "channel": "Agri Junction",
+                    "duration": "09:45",
+                    "thumbnail": "https://img.youtube.com/vi/Z_-P7I7T3Q8/mqdefault.jpg"
+                }
+            ]
+        },
+        "integrated_farming": {
+            "featured": {
+                "id": "CGPBHi8y6M0",
+                "title": "Integrated Fish Farming: ₹20 Lakh Profit from 2 Acre Pond",
+                "channel": "Fisheries India",
+                "duration": "13:56",
+                "views": "3.1M",
+                "summary": "Meet Suresh Yadav from Bihar who combines fish farming with poultry, duckery, and vegetable cultivation on just 2 acres. His integrated model produces 8 tonnes of fish, 2,000 eggs monthly, and 500kg vegetables per season. The genius is in the synergy — poultry waste feeds the fish, fish pond water irrigates vegetables, and duck droppings enrich the pond. Total investment was ₹8 Lakh (₹5 Lakh covered by PMMSY subsidy), now earning ₹22 Lakh/year net profit.",
+                "keyTakeaways": [
+                    "Integrated model: fish + poultry + duckery + vegetables on 2 acres",
+                    "₹5 Lakh PMMSY subsidy covered 60% of initial investment",
+                    "Zero waste cycle: poultry feeds fish, fish water irrigates crops",
+                    "8 tonnes of fish per year from Rohu, Catla, and Mrigal polyculture",
+                    "ROI achieved in 14 months — now ₹22 Lakh/year net profit"
+                ]
+            },
+            "related": [
+                {
+                    "id": "nxT_WqFBv9w",
+                    "title": "Biofloc Fish Farming at Home – Complete Setup Guide",
+                    "channel": "Aqua India",
+                    "duration": "15:40",
+                    "thumbnail": "https://img.youtube.com/vi/nxT_WqFBv9w/mqdefault.jpg"
+                },
+                {
+                    "id": "VBkFm6hG3f0",
+                    "title": "How to Get PMMSY Subsidy for Fish Farming – Step by Step",
+                    "channel": "Matsya Sagar",
+                    "duration": "10:12",
+                    "thumbnail": "https://img.youtube.com/vi/VBkFm6hG3f0/mqdefault.jpg"
+                }
+            ]
+        },
+        "default": {
+            "featured": {
+                "id": "qJnNzWMcFn8",
+                "title": "Smart Farming Technologies Transforming Indian Agriculture",
+                "channel": "Agriculture Today",
+                "duration": "15:30",
+                "views": "2.1M",
+                "summary": "Comprehensive overview of modern farming technologies adopted by progressive Indian farmers. Covers precision agriculture using drones, IoT-based soil monitoring, automated drip irrigation, AI-based crop advisory, and direct market linkage through farmer apps. Features success stories from Karnataka, Tamil Nadu, and Haryana.",
+                "keyTakeaways": [
+                    "Drone-based crop monitoring reduces pesticide use by 30%",
+                    "IoT soil sensors help optimize irrigation — saving 40% water",
+                    "Government subsidies available for most smart farm technologies",
+                    "Direct market apps eliminate 3-4 middlemen in supply chain",
+                    "Average income increase of 50-70% after adopting smart farming"
+                ]
+            },
+            "related": [
+                {
+                    "id": "kHo5NOjJMYg",
+                    "title": "Top 10 Government Schemes for Farmers in 2024-25",
+                    "channel": "Kisan Help",
+                    "duration": "13:15",
+                    "thumbnail": "https://img.youtube.com/vi/kHo5NOjJMYg/mqdefault.jpg"
+                },
+                {
+                    "id": "HVPk5IXKxMQ",
+                    "title": "Future of Indian Agriculture — Technology & Innovation",
+                    "channel": "Down To Earth",
+                    "duration": "17:50",
+                    "thumbnail": "https://img.youtube.com/vi/HVPk5IXKxMQ/mqdefault.jpg"
+                }
+            ]
+        }
+    }
+}

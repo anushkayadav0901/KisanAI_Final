@@ -1,0 +1,608 @@
+/**
+ * farmingScraper.js — Government subsidy data via web scraping + AI enrichment
+ *
+ * Approach: Scrape DuckDuckGo HTML search for government subsidy pages,
+ * then use llama-3.1 (NOT compound-beta) to structure the results.
+ *
+ * This avoids the 429 rate limit on compound-beta while still getting
+ * real .gov.in URLs and up-to-date scheme information.
+ *
+ * Flow:
+ *   1. Check cache
+ *   2. Scrape DuckDuckGo HTML for "site:gov.in {technique} farming subsidy"
+ *   3. Use llama-3.1 to enrich raw snippets into structured subsidy data
+ *   4. Fall back to curated static data if scraping fails
+ */
+
+import { readFile } from "fs/promises";
+import { fileURLToPath } from "url";
+import path from "path";
+
+import { GROQ_API_KEY, GROQ_CHAT_URL } from "../config.js";
+import { cacheGet, cacheSet } from "./farmingCache.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DATA_PATH = path.join(__dirname, "..", "data", "farmingData.json");
+
+const SUBSIDY_CACHE_TTL = 6 * 60 * 60; // 6 hours
+
+// Map technique IDs to specific search terms
+const TECHNIQUE_SEARCH_MAP = {
+  integrated_farming: "fish farming aquaculture",
+  organic_farming: "organic farming",
+  rainwater_farming: "rainwater harvesting agriculture",
+  precision_agriculture: "precision agriculture",
+  hydroponics: "hydroponic farming",
+  aquaponics: "aquaponics",
+  vertical_farming: "vertical farming",
+  mushroom_farming: "mushroom cultivation",
+  dairy_farming: "dairy farming",
+  poultry_farming: "poultry farming",
+  sericulture: "silk sericulture",
+  apiculture: "beekeeping apiculture",
+};
+
+/**
+ * Map a technique string to a known category key (for static fallback).
+ */
+function resolveKey(technique) {
+  const t = technique?.toLowerCase().replace(/\s+/g, "_") || "";
+  if (t.includes("organic")) return "organic_farming";
+  if (t.includes("rain") || t.includes("water")) return "rainwater_farming";
+  if (t.includes("fish") || t.includes("integrated") || t.includes("aqua"))
+    return "integrated_farming";
+  return "default";
+}
+
+/**
+ * Load subsidies from the static curated JSON file.
+ */
+async function loadStaticSubsidies(key) {
+  try {
+    const raw = await readFile(DATA_PATH, "utf-8");
+    const data = JSON.parse(raw);
+    return data.subsidies?.[key] || data.subsidies?.["default"] || [];
+  } catch (err) {
+    console.error("[farmingScraper] static data load error:", err.message);
+    return [];
+  }
+}
+
+/**
+ * Scrape DuckDuckGo HTML search results for government subsidy pages.
+ * Returns raw search results with titles, snippets, and URLs.
+ *
+ * @param {string} searchTerm
+ * @returns {Promise<object[]>}
+ */
+async function scrapeDuckDuckGo(searchTerm) {
+  try {
+    const query = `site:gov.in ${searchTerm} subsidy scheme farmer India 2024 2025`;
+    const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "text/html",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`[farmingScraper] DuckDuckGo error: ${response.status}`);
+      return [];
+    }
+
+    const html = await response.text();
+
+    // Parse results using regex (DuckDuckGo HTML is simple)
+    const results = [];
+    const resultRegex =
+      /<a[^>]*class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?<a[^>]*class="result__snippet"[^>]*>([\s\S]*?)<\/a>/gi;
+
+    let match;
+    while ((match = resultRegex.exec(html)) !== null && results.length < 10) {
+      const rawUrl = match[1];
+      const title = match[2].replace(/<[^>]*>/g, "").trim();
+      const snippet = match[3].replace(/<[^>]*>/g, "").trim();
+
+      // Extract actual URL from DuckDuckGo redirect
+      let actualUrl = rawUrl;
+      const uddgMatch = rawUrl.match(/uddg=([^&]+)/);
+      if (uddgMatch) {
+        actualUrl = decodeURIComponent(uddgMatch[1]);
+      }
+
+      if (title && title.length > 5) {
+        results.push({ title, snippet, url: actualUrl });
+      }
+    }
+
+    console.log(
+      `[farmingScraper] DuckDuckGo found ${results.length} results for "${searchTerm}"`,
+    );
+    return results;
+  } catch (err) {
+    console.error("[farmingScraper] DuckDuckGo scrape error:", err.message);
+    return [];
+  }
+}
+
+/**
+ * Use llama-3.1 to structure raw search results into subsidy data.
+ * Uses llama (NOT compound-beta) to avoid rate limits.
+ *
+ * @param {object[]} searchResults — raw DuckDuckGo results
+ * @param {string} technique
+ * @returns {Promise<object[]|null>}
+ */
+async function enrichWithLlama(searchResults, technique) {
+  if (!GROQ_API_KEY || searchResults.length === 0) return null;
+
+  const techniqueName = technique.replace(/_/g, " ");
+  const resultsText = searchResults
+    .map(
+      (r, i) =>
+        `${i + 1}. Title: ${r.title}\n   URL: ${r.url}\n   Snippet: ${r.snippet}`,
+    )
+    .join("\n\n");
+
+  try {
+    const response = await fetch(GROQ_CHAT_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          {
+            role: "system",
+            content: `You are a government agricultural scheme expert. You identify and explain Indian government subsidies in simple farmer-friendly language. You ONLY output valid JSON — no markdown, no extra text.`,
+          },
+          {
+            role: "user",
+            content: `From these search results about "${techniqueName}" farming subsidies, extract the top 5 most relevant government schemes.
+
+Search Results:
+${resultsText}
+
+For each scheme, return structured data. Use the REAL URLs from the search results.
+If a result doesn't look like a real subsidy scheme, skip it.
+
+Return ONLY valid JSON (no markdown fences):
+{
+  "subsidies": [
+    {
+      "id": "scheme-1",
+      "name": "Official Scheme Name",
+      "ministry": "Ministry/Department name",
+      "category": "Category (e.g. Direct Benefit, Equipment Subsidy, Credit, Insurance)",
+      "summary": "2-3 sentence farmer-friendly explanation of what this scheme gives",
+      "benefits": "Exact financial benefit (₹X or Y% subsidy)",
+      "eligibility": ["Who can apply - criterion 1", "criterion 2", "criterion 3"],
+      "applicationProcess": ["Step 1 to apply", "Step 2", "Step 3"],
+      "applicationUrl": "real URL from search results",
+      "sourceUrl": "real URL from search results",
+      "deadline": "Open enrollment / deadline if mentioned",
+      "relevanceScore": 90
+    }
+  ]
+}
+
+RULES:
+- Use REAL URLs from the search results above — do not make up URLs
+- Keep summaries in simple language a farmer can understand
+- relevanceScore: how useful this scheme is for "${techniqueName}" specifically (0-100)
+- If fewer than 5 relevant schemes found, return only what you find
+- Include PM-KISAN and KCC if they appear (they apply to all farmers)`,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 2500,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `[farmingScraper] llama enrichment error: ${response.status}`,
+      );
+      return null;
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content?.trim();
+    if (!content) return null;
+
+    // Parse JSON
+    let clean = content
+      .replace(/```json\s*/gi, "")
+      .replace(/```/g, "")
+      .trim();
+    const first = clean.indexOf("{");
+    const last = clean.lastIndexOf("}");
+    if (first !== -1 && last !== -1) clean = clean.substring(first, last + 1);
+
+    const parsed = JSON.parse(clean);
+    const subsidies = parsed.subsidies || [];
+
+    if (subsidies.length > 0) {
+      console.log(
+        `[farmingScraper] Enriched ${subsidies.length} schemes for "${techniqueName}"`,
+      );
+      return subsidies;
+    }
+
+    return null;
+  } catch (err) {
+    console.error("[farmingScraper] enrichment error:", err.message);
+    return null;
+  }
+}
+
+// ── Public API ────────────────────────────────────────────────────────────────
+
+/**
+ * Get government subsidies for a farming technique.
+ * Flow: cache → DuckDuckGo scrape → llama enrichment → curated fallback
+ */
+export async function getSubsidies(technique, state, budget) {
+  const key = resolveKey(technique);
+  const cacheKey = `subsidies:${technique}:${state || "all"}`;
+
+  // 1. Check cache
+  const cached = cacheGet(cacheKey);
+  if (cached) {
+    console.log(`[farmingScraper] Cache hit for "${cacheKey}"`);
+    return cached;
+  }
+
+  // 2. Get search term for this technique
+  const searchTerm =
+    TECHNIQUE_SEARCH_MAP[technique] || technique.replace(/_/g, " ");
+
+  // 3. Scrape DuckDuckGo for .gov.in subsidy pages
+  const searchResults = await scrapeDuckDuckGo(searchTerm);
+
+  let subsidies = null;
+  let source = "web-search";
+
+  // 4. Enrich with llama if we got results
+  if (searchResults.length > 0) {
+    subsidies = await enrichWithLlama(searchResults, technique);
+  }
+
+  // 5. Fall back to curated data
+  if (!subsidies || subsidies.length === 0) {
+    subsidies = await loadStaticSubsidies(key);
+    source = "curated";
+    console.log(`[farmingScraper] Using curated data for "${key}"`);
+  }
+
+  // 6. Sort by relevance
+  subsidies.sort((a, b) => (b.relevanceScore || 0) - (a.relevanceScore || 0));
+
+  const result = {
+    subsidies,
+    totalResults: subsidies.length,
+    lastUpdated: new Date().toISOString(),
+    source,
+  };
+
+  // 7. Cache
+  cacheSet(cacheKey, result, SUBSIDY_CACHE_TTL);
+
+  return result;
+}
+
+/**
+ * Manually trigger a re-search (invalidates cache).
+ */
+export async function manualScrape(technique) {
+  const { cacheInvalidate } = await import("./farmingCache.js");
+  cacheInvalidate(`subsidies:${technique}`);
+  return getSubsidies(technique);
+}
+
+// ── Government Schemes for Monitoring ─────────────────────────────────────────
+
+const GOVT_SCHEME_CACHE_TTL = 6 * 60 * 60; // 6 hours
+
+/**
+ * Scrape and enrich government schemes relevant to detected crop issues.
+ * Used by the monitoring ComprehensiveReport to replace AI-hallucinated schemes
+ * with real, web-scraped government scheme data.
+ *
+ * Flow: cache → DuckDuckGo scrape → llama enrichment → static fallback
+ *
+ * @param {string} cropIssue — detected disease/pest name (e.g. "leaf blight")
+ * @param {string} [cropName] — crop name if known
+ * @param {string} [state] — Indian state for state-specific schemes
+ * @returns {Promise<object>}
+ */
+export async function getGovtSchemes(cropIssue, cropName, state) {
+  const cacheKey = `govt-schemes:${cropIssue}:${cropName || "general"}:${state || "all"}`;
+
+  // 1. Check cache
+  const cached = cacheGet(cacheKey);
+  if (cached) {
+    console.log(`[farmingScraper] Govt schemes cache hit for "${cacheKey}"`);
+    return cached;
+  }
+
+  // 2. Build search queries for government schemes
+  const searchQueries = [
+    `site:gov.in ${cropIssue || "crop"} farmer scheme subsidy India 2025`,
+    `site:gov.in ${cropName || "agriculture"} crop insurance compensation India`,
+  ];
+  if (state) {
+    searchQueries.push(`site:gov.in ${state} agriculture farmer scheme 2025`);
+  }
+
+  // 3. Scrape DuckDuckGo for all queries and merge results
+  let allResults = [];
+  for (const query of searchQueries) {
+    const results = await scrapeDuckDuckGoRaw(query);
+    allResults = allResults.concat(results);
+  }
+
+  // Deduplicate by URL
+  const seen = new Set();
+  allResults = allResults.filter((r) => {
+    if (seen.has(r.url)) return false;
+    seen.add(r.url);
+    return true;
+  });
+
+  console.log(
+    `[farmingScraper] Govt schemes: ${allResults.length} total results for "${cropIssue}"`,
+  );
+
+  let schemes = null;
+  let source = "web-search";
+
+  // 4. Enrich with llama if we got results
+  if (allResults.length > 0) {
+    schemes = await enrichGovtSchemesWithLlama(
+      allResults,
+      cropIssue,
+      cropName,
+      state,
+    );
+  }
+
+  // 5. Fall back to curated static schemes
+  if (!schemes || schemes.length === 0) {
+    schemes = getStaticGovtSchemes(cropIssue);
+    source = "curated";
+    console.log(`[farmingScraper] Using curated govt schemes fallback`);
+  }
+
+  const result = {
+    schemes,
+    totalResults: schemes.length,
+    lastUpdated: new Date().toISOString(),
+    source,
+  };
+
+  // 6. Cache
+  cacheSet(cacheKey, result, GOVT_SCHEME_CACHE_TTL);
+
+  return result;
+}
+
+/**
+ * Raw DuckDuckGo scrape (reuses same logic but accepts full query string).
+ */
+async function scrapeDuckDuckGoRaw(query) {
+  try {
+    const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
+
+    const response = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        Accept: "text/html",
+        "Accept-Language": "en-US,en;q=0.9",
+      },
+    });
+
+    if (!response.ok) return [];
+
+    const html = await response.text();
+    const results = [];
+    const resultRegex =
+      /<a[^>]*class="result__a"[^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>[\s\S]*?<a[^>]*class="result__snippet"[^>]*>([\s\S]*?)<\/a>/gi;
+
+    let match;
+    while ((match = resultRegex.exec(html)) !== null && results.length < 10) {
+      const rawUrl = match[1];
+      const title = match[2].replace(/<[^>]*>/g, "").trim();
+      const snippet = match[3].replace(/<[^>]*>/g, "").trim();
+
+      let actualUrl = rawUrl;
+      const uddgMatch = rawUrl.match(/uddg=([^&]+)/);
+      if (uddgMatch) actualUrl = decodeURIComponent(uddgMatch[1]);
+
+      if (title && title.length > 5) {
+        results.push({ title, snippet, url: actualUrl });
+      }
+    }
+    return results;
+  } catch (err) {
+    console.error("[farmingScraper] DuckDuckGo raw scrape error:", err.message);
+    return [];
+  }
+}
+
+/**
+ * Use llama-3.1 to structure raw search results into government scheme data
+ * formatted for the monitoring ComprehensiveReport.
+ */
+async function enrichGovtSchemesWithLlama(
+  searchResults,
+  cropIssue,
+  cropName,
+  state,
+) {
+  if (!GROQ_API_KEY || searchResults.length === 0) return null;
+
+  const resultsText = searchResults
+    .map(
+      (r, i) =>
+        `${i + 1}. Title: ${r.title}\n   URL: ${r.url}\n   Snippet: ${r.snippet}`,
+    )
+    .join("\n\n");
+
+  try {
+    const response = await fetch(GROQ_CHAT_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          {
+            role: "system",
+            content: `You are an expert on Indian government agricultural schemes and subsidies. You help farmers understand what government support is available. Output ONLY valid JSON — no markdown, no extra text.`,
+          },
+          {
+            role: "user",
+            content: `From these search results about government schemes for farmers${cropIssue ? ` dealing with "${cropIssue}"` : ""}${cropName ? ` growing "${cropName}"` : ""}${state ? ` in ${state}` : ""}, extract the most relevant government schemes.
+
+Search Results:
+${resultsText}
+
+Return ONLY valid JSON (no markdown fences):
+{
+  "schemes": [
+    {
+      "schemeName": "Official scheme name",
+      "description": "2-3 sentence farmer-friendly explanation of what this scheme provides",
+      "eligibility": "Who can apply for this scheme",
+      "contactNumber": "Helpline number if mentioned (e.g., 1800-180-1551)",
+      "websiteUrl": "REAL .gov.in URL from search results — do NOT make up URLs",
+      "compensationDetails": "What financial benefit/compensation the farmer gets"
+    }
+  ]
+}
+
+RULES:
+- Use REAL URLs from the search results — never fabricate URLs
+- Include schemes like PMFBY, PM-KISAN, KCC, Soil Health Card if they appear
+- Keep descriptions in simple language a farmer can understand
+- Include helpline numbers when available
+- Return 3-6 most relevant schemes
+- If a result doesn't look like a real government scheme, skip it`,
+          },
+        ],
+        temperature: 0.3,
+        max_tokens: 2000,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error(
+        `[farmingScraper] govt scheme enrichment error: ${response.status}`,
+      );
+      return null;
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content?.trim();
+    if (!content) return null;
+
+    let clean = content
+      .replace(/```json\s*/gi, "")
+      .replace(/```/g, "")
+      .trim();
+    const first = clean.indexOf("{");
+    const last = clean.lastIndexOf("}");
+    if (first !== -1 && last !== -1) clean = clean.substring(first, last + 1);
+
+    const parsed = JSON.parse(clean);
+    const schemes = parsed.schemes || [];
+
+    if (schemes.length > 0) {
+      console.log(
+        `[farmingScraper] Enriched ${schemes.length} govt schemes for monitoring`,
+      );
+      return schemes;
+    }
+
+    return null;
+  } catch (err) {
+    console.error(
+      "[farmingScraper] govt scheme enrichment error:",
+      err.message,
+    );
+    return null;
+  }
+}
+
+/**
+ * Static fallback government schemes (always relevant for Indian farmers).
+ */
+function getStaticGovtSchemes(cropIssue) {
+  const schemes = [
+    {
+      schemeName: "Pradhan Mantri Fasal Bima Yojana (PMFBY)",
+      description:
+        "Crop insurance scheme that protects farmers against crop loss due to natural calamities, pests, and diseases. Provides financial support when crops are damaged.",
+      eligibility: "All farmers growing notified crops in notified areas",
+      contactNumber: "1800-180-1551",
+      websiteUrl: "https://pmfby.gov.in",
+      compensationDetails:
+        "Up to 100% of sum insured for crop loss. Premium: 2% for Kharif, 1.5% for Rabi crops.",
+    },
+    {
+      schemeName: "PM-KISAN Samman Nidhi",
+      description:
+        "Direct income support of ₹6,000 per year transferred in 3 installments to all landholding farmer families.",
+      eligibility: "All landholding farmer families",
+      contactNumber: "155261",
+      websiteUrl: "https://pmkisan.gov.in",
+      compensationDetails: "₹6,000/year (₹2,000 every 4 months)",
+    },
+    {
+      schemeName: "Kisan Credit Card (KCC)",
+      description:
+        "Provides affordable credit to farmers for crop cultivation, post-harvest expenses, and farm maintenance at subsidized interest rates.",
+      eligibility: "All farmers, sharecroppers, tenant farmers",
+      contactNumber: "1800-180-1551",
+      websiteUrl: "https://www.pmjdy.gov.in/scheme",
+      compensationDetails:
+        "Credit up to ₹3 lakh at 4% interest (with subvention)",
+    },
+    {
+      schemeName: "Soil Health Card Scheme",
+      description:
+        "Free soil testing and nutrient-based recommendations for your farm. Helps optimize fertilizer use and improve crop yield.",
+      eligibility: "All farmers",
+      contactNumber: "1800-180-1551",
+      websiteUrl: "https://soilhealth.dac.gov.in",
+      compensationDetails: "Free soil testing and expert recommendations",
+    },
+  ];
+
+  // Add crop-loss specific scheme if issue detected
+  if (cropIssue) {
+    schemes.push({
+      schemeName: "National Agriculture Market (e-NAM)",
+      description:
+        "Online trading platform for agricultural commodities. Helps farmers get better prices by connecting to multiple markets.",
+      eligibility: "All farmers with produce to sell",
+      contactNumber: "1800-270-0224",
+      websiteUrl: "https://enam.gov.in",
+      compensationDetails:
+        "Better market prices through transparent online trading",
+    });
+  }
+
+  return schemes;
+}
