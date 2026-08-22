@@ -695,10 +695,19 @@ const ArticlesSection: React.FC<{
     </div>
     <div className="space-y-4">
       {articles.map((article, i) => {
-        const Wrapper = article.url ? "a" : "div";
-        const linkProps = article.url
+        // A model-invented URL looks authoritative and goes nowhere, so an
+        // unverified article falls back to a search scoped to the official
+        // agriculture portals instead of a fabricated link.
+        const searchUrl = article.url
+          ? null
+          : `https://www.google.com/search?q=${encodeURIComponent(
+              `${article.searchHint || article.title} site:icar.org.in OR site:farmer.gov.in OR site:kvk.icar.gov.in`,
+            )}`;
+        const href = article.url ?? searchUrl;
+        const Wrapper = href ? "a" : "div";
+        const linkProps = href
           ? {
-              href: article.url,
+              href,
               target: "_blank",
               rel: "noopener noreferrer",
             }
@@ -707,7 +716,7 @@ const ArticlesSection: React.FC<{
           <Wrapper
             key={i}
             {...linkProps}
-            className={`block p-4 bg-[#FDE7B3]/10 rounded-xl ${article.url ? "hover:bg-[#FDE7B3]/25 hover:shadow-md transition-all cursor-pointer group" : ""}`}
+            className={`block p-4 bg-[#FDE7B3]/10 rounded-xl ${href ? "hover:bg-[#FDE7B3]/25 hover:shadow-md transition-all cursor-pointer group" : ""}`}
           >
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-[#63A361]/10 rounded-lg flex items-center justify-center shrink-0">
@@ -718,7 +727,7 @@ const ArticlesSection: React.FC<{
                   <h4 className="font-medium text-[#5B532C]">
                     {article.title}
                   </h4>
-                  {article.url && (
+                  {href && (
                     <ExternalLink className="w-3.5 h-3.5 text-[#5B532C]/30 group-hover:text-[#63A361] shrink-0" />
                   )}
                 </div>
@@ -728,9 +737,13 @@ const ArticlesSection: React.FC<{
                 <p className="text-sm text-[#5B532C]/60 mt-1">
                   {article.description}
                 </p>
-                {article.url && (
+                {article.url ? (
                   <p className="text-xs text-blue-500 mt-1.5 truncate">
                     {article.url}
+                  </p>
+                ) : (
+                  <p className="text-xs text-[#5B532C]/40 mt-1.5">
+                    Search official portals →
                   </p>
                 )}
               </div>

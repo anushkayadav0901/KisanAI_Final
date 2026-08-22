@@ -117,10 +117,14 @@ export const FieldMonitoringResult: React.FC<Props> = ({
             <h2 className="text-4xl font-black mb-3 text-white">
               {result.cropGrowthStage} <span className="text-green-300 italic">Phase</span>
             </h2>
+            {/* Not an NDVI reading: NDVI needs multispectral bands this pipeline
+                never sees. It is a vigour score estimated from an RGB photo, and
+                it is labelled as one. */}
             <p className="text-white/90 text-lg max-w-xl font-medium leading-relaxed">
-              Vegetation index recorded at
-              <span className="font-black text-green-300"> {result.vegetationIndex} NDVI</span>.
-              {result.analysisSummary}
+              Estimated vigour score
+              <span className="font-black text-green-300"> {result.vegetationIndex}</span>
+              <span className="text-white/60 text-sm font-normal"> (visual estimate, not satellite NDVI)</span>.
+              {" "}{result.analysisSummary}
             </p>
           </div>
 
@@ -269,10 +273,15 @@ export const FieldMonitoringResult: React.FC<Props> = ({
               <div className="mt-4 p-5 bg-[#FDE7B3]/30 rounded-[2rem] border border-[#FFC50F]/20 relative">
                 <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-white rounded-full mb-3 shadow-sm">
                   <Search className="w-3 h-3 text-green-500" />
-                  <span className="text-[8px] font-black text-[#5B532C]/40 uppercase tracking-widest">Global Scan</span>
+                  <span className="text-[8px] font-black text-[#5B532C]/40 uppercase tracking-widest">General Guidance</span>
                 </div>
+                {/* Stated as the general agronomic principle it is. The earlier
+                    copy attributed this to "crawl data from ISRO & ICAR", which
+                    was never true — nothing here queries either organisation. */}
                 <p className="text-[11px] text-[#5B532C] font-semibold italic leading-relaxed">
-                  "Crawl data from ISRO & ICAR indicates that {result.fieldUniformity} fields at {result.cropGrowthStage} stage benefit most from variable rate application (VRA). Most Indian states are subsidizing weed control drones."
+                  "{result.fieldUniformity} fields at the {result.cropGrowthStage} stage
+                  generally respond well to variable rate application (VRA). Check your
+                  state agriculture department for current equipment subsidies."
                 </p>
               </div>
             </div>

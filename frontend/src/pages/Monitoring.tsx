@@ -36,6 +36,8 @@ import { ThermalMonitoringResult } from "../components/monitoring/ThermalMonitor
 import { FieldMonitoringResult } from "../components/monitoring/FieldMonitoringResult";
 import { MultiImageUpload } from "../components/monitoring/MultiImageUpload";
 import { MultiImageAnalysisResult as MultiImageResultComponent } from "../components/monitoring/MultiImageAnalysisResult";
+import { enqueue, countQueue } from "../utils/offlineQueue";
+import { budgetImage } from "../hooks/useConnection";
 import toast, { Toaster } from "react-hot-toast";
 
 const MONITORING_TYPES = [
@@ -120,6 +122,39 @@ const Monitoring: React.FC = () => {
         return prev;
       });
     }, 2500);
+
+    // No network: the capture is far too valuable to discard. Store it on the
+    // device and replay it when signal returns, rather than failing in a field
+    // where the farmer cannot simply try again later.
+    if (!navigator.onLine) {
+      clearInterval(interval);
+      setIsAnalyzing(false);
+      try {
+        const { image } = await budgetImage(images[0], { dataSaver: true });
+        const location = await new Promise<{ lat: number; lon: number } | undefined>(
+          (resolve) => {
+            if (!navigator.geolocation) return resolve(undefined);
+            navigator.geolocation.getCurrentPosition(
+              (pos) =>
+                resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+              () => resolve(undefined),
+              { timeout: 3000, maximumAge: 300000 },
+            );
+          },
+        );
+
+        await enqueue({ image, kind: type, location });
+        const waiting = await countQueue();
+        setErrorMessage(null);
+        toast.success(
+          `Saved on your device — ${waiting} capture${waiting === 1 ? "" : "s"} will be analysed when you have signal.`,
+          { duration: 4500 },
+        );
+      } catch {
+        toast.error("Could not save this capture on the device.");
+      }
+      return;
+    }
 
     try {
       setIsAnalyzing(true);

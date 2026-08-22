@@ -8,12 +8,14 @@ import Water from "./pages/SmartFarming";
 import Research from "./pages/Research";
 import CommandCentre from "./pages/CommandCentre";
 import Chatbot from "./components/Chatbot";
+import { ConnectionBar } from "./components/offline/ConnectionBar";
 
 function App() {
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <div className="min-h-screen bg-white">
         <Navbar />
+        <ConnectionBar />
         <Chatbot />
         <main>
           <Routes>

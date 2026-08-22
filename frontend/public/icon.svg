@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Kisan AI">
+  <rect width="512" height="512" rx="96" fill="#63A361"/>
+  <g fill="none" stroke="#FDFCF8" stroke-width="26" stroke-linecap="round">
+    <path d="M256 400V208"/>
+    <path d="M256 268c-46 0-84-38-84-84 46 0 84 38 84 84z" fill="#FDE7B3" stroke="none"/>
+    <path d="M256 268c46 0 84-38 84-84-46 0-84 38-84 84z" fill="#FFC50F" stroke="none"/>
+    <path d="M256 344c-46 0-84-38-84-84 46 0 84 38 84 84z" fill="#FDE7B3" stroke="none"/>
+    <path d="M256 344c46 0 84-38 84-84-46 0-84 38-84 84z" fill="#FFC50F" stroke="none"/>
+    <path d="M256 404V212"/>
+  </g>
+</svg>

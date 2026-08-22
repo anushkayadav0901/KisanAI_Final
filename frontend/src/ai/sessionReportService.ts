@@ -93,7 +93,10 @@ export interface ComprehensiveSessionReport {
   articleLinks: {
     title: string;
     source: string;
+    /** Only ever set from a real retrieved source — never model-generated. */
     url?: string;
+    /** Search terms to reach the source when no verified URL exists. */
+    searchHint?: string;
     description: string;
   }[];
 
@@ -209,7 +212,8 @@ Generate a comprehensive report with the following structure. Return ONLY valid 
     {
       "title": "Article title",
       "source": "Source (e.g., ICAR, KVK, Krishi Vigyan Kendra)",
-      "url": "MUST provide a real working URL — use official Indian agriculture sites like icar.org.in, farmer.gov.in, agmarknet.gov.in, kvk.icar.gov.in, manage.gov.in, or state agriculture department URLs",
+      "url": null,
+      "searchHint": "Search terms a farmer can use to find this on an official portal (icar.org.in, farmer.gov.in, kvk.icar.gov.in). Do NOT invent a URL — a fabricated link is worse than no link.",
       "description": "Brief description"
     }
   ],
