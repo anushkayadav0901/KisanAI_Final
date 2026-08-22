@@ -6,17 +6,18 @@
  */
 
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { AlertTriangle, Send } from "lucide-react";
 import toast from "react-hot-toast";
 import {
-  ALERTS,
   SEVERITY_META,
   compact,
   type OutbreakAlert,
-} from "../../data/surveillanceEngine";
+} from "../../data/surveillance";
 
 interface Props {
+  alerts: OutbreakAlert[];
+  loading: boolean;
   filterState: string | null;
   onSelectState: (code: string) => void;
 }
@@ -45,7 +46,6 @@ const AlertRow: React.FC<{
     <motion.div
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.25 }}
       className="group p-4 bg-white rounded-2xl border border-[#5B532C]/10 hover:shadow-lg hover:shadow-[#5B532C]/5 transition-all duration-300"
     >
@@ -109,7 +109,12 @@ const AlertRow: React.FC<{
   );
 };
 
-export const AlertFeed: React.FC<Props> = ({ filterState, onSelectState }) => {
+export const AlertFeed: React.FC<Props> = ({
+  alerts,
+  loading,
+  filterState,
+  onSelectState,
+}) => {
   const [revealed, setRevealed] = React.useState(5);
 
   // Restart the reveal whenever the officer changes scope, so the queue is
@@ -125,12 +130,12 @@ export const AlertFeed: React.FC<Props> = ({ filterState, onSelectState }) => {
     return () => clearTimeout(t);
   }, [revealed]);
 
-  const visible = React.useMemo(() => {
-    const pool = filterState
-      ? ALERTS.filter((a) => a.stateCode === filterState)
-      : ALERTS;
-    return pool.slice(0, filterState ? 10 : revealed);
-  }, [filterState, revealed]);
+  // The API already scopes the queue to the requested state; the client only
+  // paces how many rows appear, so a national feed reads as live.
+  const visible = React.useMemo(
+    () => alerts.slice(0, filterState ? 10 : revealed),
+    [alerts, filterState, revealed],
+  );
 
   return (
     <div className="flex flex-col h-full">
@@ -150,13 +155,32 @@ export const AlertFeed: React.FC<Props> = ({ filterState, onSelectState }) => {
         key={filterState ?? "national"}
         className="flex-1 overflow-y-auto space-y-3 min-h-0 pr-1"
       >
-        <AnimatePresence initial={false}>
-          {visible.map((a) => (
+        {!loading &&
+          visible.map((a) => (
             <AlertRow key={a.id} alert={a} onSelectState={onSelectState} />
           ))}
-        </AnimatePresence>
 
-        {visible.length === 0 && (
+        {loading && (
+          <div className="space-y-3" aria-hidden="true">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="p-4 bg-white rounded-2xl border border-[#5B532C]/10 animate-pulse"
+              >
+                <div className="flex gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#FDE7B3]/60 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 w-1/2 rounded bg-[#FDE7B3]/60" />
+                    <div className="h-2.5 w-1/3 rounded bg-[#FDE7B3]/40" />
+                    <div className="h-2.5 w-full rounded bg-[#FDE7B3]/30" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!loading && visible.length === 0 && (
           <div className="text-center py-12 px-4">
             <div className="w-12 h-12 rounded-xl bg-[#63A361]/10 flex items-center justify-center mx-auto mb-3">
               <AlertTriangle className="w-6 h-6 text-[#63A361]" />
@@ -168,9 +192,9 @@ export const AlertFeed: React.FC<Props> = ({ filterState, onSelectState }) => {
         )}
       </div>
 
-      {!filterState && (
+      {!filterState && !loading && (
         <p className="pt-3 mt-3 border-t border-[#5B532C]/10 text-xs text-[#5B532C]/40">
-          Showing {visible.length} of {ALERTS.length} open alerts nationally
+          Showing {visible.length} of {alerts.length} open alerts nationally
         </p>
       )}
     </div>

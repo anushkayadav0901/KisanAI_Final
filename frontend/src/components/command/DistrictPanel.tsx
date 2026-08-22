@@ -11,7 +11,6 @@ import { motion } from "framer-motion";
 import { ArrowLeft, TrendingUp, TrendingDown, Minus, Download } from "lucide-react";
 import toast from "react-hot-toast";
 import {
-  SIGNAL_BY_CODE,
   SEVERITY_META,
   METRIC_META,
   districtMetricValue,
@@ -20,10 +19,14 @@ import {
   inr,
   type MetricKey,
   type DistrictSignal,
-} from "../../data/surveillanceEngine";
+  type StateDetail,
+} from "../../data/surveillance";
+import { API_ROOT } from "../../api/surveillance";
 
 interface Props {
-  stateCode: string;
+  state: StateDetail;
+  districts: DistrictSignal[];
+  loading: boolean;
   metric: MetricKey;
   onBack: () => void;
 }
@@ -76,46 +79,45 @@ const DeltaBadge: React.FC<{ delta: number }> = ({ delta }) => {
   );
 };
 
-export const DistrictPanel: React.FC<Props> = ({ stateCode, metric, onBack }) => {
-  const signal = SIGNAL_BY_CODE[stateCode];
+export const DistrictPanel: React.FC<Props> = ({
+  state,
+  districts: rows,
+  loading,
+  metric,
+  onBack,
+}) => {
   const [sort, setSort] = React.useState<"pressure" | "reach" | "name">("pressure");
 
   const districts = React.useMemo(() => {
-    const list = [...signal.districts];
+    const list = [...rows];
     if (sort === "name") return list.sort((a, b) => a.district.localeCompare(b.district));
     if (sort === "reach") return list.sort((a, b) => b.farmersReached - a.farmersReached);
     return list.sort(
       (a, b) => districtMetricValue(b, metric) - districtMetricValue(a, metric),
     );
-  }, [signal, sort, metric]);
+  }, [rows, sort, metric]);
 
-  const exportFeed = () => {
-    const payload = {
-      schema: "agri-signal/v1",
-      state: signal.node.name,
-      generated: new Date().toISOString(),
-      districts: districts.map((d) => ({
-        district: d.district,
-        state: d.stateName,
-        outbreak_index: d.outbreakIndex,
-        severity: d.severity,
-        top_crop: d.topCrop,
-        top_threat: d.topThreat,
-        diagnoses_30d: d.diagnoses,
-        farmers_reached: d.farmersReached,
-        advisories_7d: d.advisories7d,
-        soil_stress: d.soilStress,
-        water_stress: d.waterStress,
-      })),
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `agri-signal-${stateCode.toLowerCase()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    toast.success(`${signal.node.name} district feed exported`, { duration: 2600 });
+  /**
+   * Downloads the API response itself, byte for byte — not a client-side
+   * reconstruction of it. What the officer saves is exactly what any other
+   * consumer of the endpoint receives.
+   */
+  const exportFeed = async () => {
+    const url = `${API_ROOT}/surveillance/districts?state=${state.code}`;
+    try {
+      const res = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error(String(res.status));
+      const blob = await res.blob();
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = `agri-signal-${state.code.toLowerCase()}.json`;
+      a.click();
+      URL.revokeObjectURL(href);
+      toast.success(`${state.name} feed exported from ${url}`, { duration: 3000 });
+    } catch {
+      toast.error("Export failed — the signal API is not reachable");
+    }
   };
 
   return (
@@ -139,14 +141,14 @@ export const DistrictPanel: React.FC<Props> = ({ stateCode, metric, onBack }) =>
 
         <div className="min-w-0">
           <h3 className="text-xl font-bold text-[#5B532C] truncate">
-            {signal.node.name}
+            {state.name}
           </h3>
           <p className="text-sm text-[#5B532C]/55">
-            {signal.districtsMonitored} districts ·{" "}
-            <span className="font-semibold" style={{ color: SEVERITY_META[signal.severity].text }}>
-              {signal.districtsAtRisk} above threshold
+            {state.districtsMonitored} districts ·{" "}
+            <span className="font-semibold" style={{ color: SEVERITY_META[state.severity].text }}>
+              {state.districtsAtRisk} above threshold
             </span>{" "}
-            · advisories in {signal.node.language}
+            · advisories in {state.language}
           </p>
         </div>
 
@@ -179,7 +181,10 @@ export const DistrictPanel: React.FC<Props> = ({ stateCode, metric, onBack }) =>
       </div>
 
       {/* Table */}
-      <div className="max-h-[420px] overflow-y-auto">
+      <div
+        className={`max-h-[420px] overflow-y-auto transition-opacity ${loading ? "opacity-40" : "opacity-100"}`}
+        aria-busy={loading}
+      >
         <table className="w-full text-left border-collapse">
           <thead className="sticky top-0 bg-[#FDFCF8] z-10">
             <tr className="text-xs font-semibold uppercase tracking-wider text-[#5B532C]/45">
@@ -192,6 +197,13 @@ export const DistrictPanel: React.FC<Props> = ({ stateCode, metric, onBack }) =>
             </tr>
           </thead>
           <tbody>
+            {!loading && districts.length === 0 && (
+              <tr>
+                <td colSpan={6} className="px-6 py-10 text-center text-sm text-[#5B532C]/45">
+                  No district signal returned for this state.
+                </td>
+              </tr>
+            )}
             {districts.map((d: DistrictSignal, i) => {
               const val = districtMetricValue(d, metric);
               const meta = SEVERITY_META[severityOf(val)];

@@ -2,22 +2,23 @@
  * HexIndiaMap — hex tile cartogram of India's agricultural states.
  *
  * Each state is one tile, positioned to approximate its place in the country
- * without drawing a boundary. A cartogram is the honest choice here: it
- * carries the signal without asserting anything about borders, and it stays
- * readable at any size.
+ * without drawing a boundary. A cartogram is the honest choice here: it carries
+ * the signal without asserting anything about borders, and it stays readable at
+ * any size.
+ *
+ * Tile positions arrive from the API (`grid.col` / `grid.row`) rather than a
+ * bundled layout file, so onboarding a new state is a server-side change.
  */
 
 import React from "react";
 import { motion } from "framer-motion";
 import {
-  NATIONAL_SIGNAL,
-  metricValue,
-  severityOf,
   SEVERITY_META,
   METRIC_META,
+  severityOf,
   type MetricKey,
   type StateSignal,
-} from "../../data/surveillanceEngine";
+} from "../../data/surveillance";
 
 const R = 30; // hex circumradius
 const HEX_W = Math.sqrt(3) * R;
@@ -25,12 +26,10 @@ const ROW_H = 1.5 * R;
 const PAD_X = 34;
 const PAD_Y = 30;
 
-function hexCenter(col: number, row: number) {
-  return {
-    cx: PAD_X + col * HEX_W + (row % 2) * (HEX_W / 2),
-    cy: PAD_Y + row * ROW_H,
-  };
-}
+const hexCenter = (col: number, row: number) => ({
+  cx: PAD_X + col * HEX_W + (row % 2) * (HEX_W / 2),
+  cy: PAD_Y + row * ROW_H,
+});
 
 function hexPath(cx: number, cy: number, r: number) {
   const pts: string[] = [];
@@ -41,51 +40,69 @@ function hexPath(cx: number, cy: number, r: number) {
   return `M${pts.join("L")}Z`;
 }
 
-const bounds = NATIONAL_SIGNAL.reduce(
-  (acc, s) => ({
-    maxCol: Math.max(acc.maxCol, s.node.col),
-    maxRow: Math.max(acc.maxRow, s.node.row),
-  }),
-  { maxCol: 0, maxRow: 0 },
-);
-
-const VB_W = PAD_X * 2 + (bounds.maxCol + 1) * HEX_W + HEX_W / 2;
-const VB_H = PAD_Y * 2 + bounds.maxRow * ROW_H + R;
-
 interface Props {
+  states: StateSignal[];
   metric: MetricKey;
   selected: string | null;
   onSelect: (code: string | null) => void;
 }
 
-export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => {
+export const HexIndiaMap: React.FC<Props> = ({
+  states,
+  metric,
+  selected,
+  onSelect,
+}) => {
   const [hovered, setHovered] = React.useState<StateSignal | null>(null);
+
+  const { vbW, vbH } = React.useMemo(() => {
+    const maxCol = states.reduce((m, s) => Math.max(m, s.grid.col), 0);
+    const maxRow = states.reduce((m, s) => Math.max(m, s.grid.row), 0);
+    return {
+      vbW: PAD_X * 2 + (maxCol + 1) * HEX_W + HEX_W / 2,
+      vbH: PAD_Y * 2 + maxRow * ROW_H + R,
+    };
+  }, [states]);
 
   return (
     <div>
       <svg
-        viewBox={`0 0 ${VB_W} ${VB_H}`}
+        viewBox={`0 0 ${vbW} ${vbH}`}
         className="w-full h-auto select-none"
-        role="img"
-        aria-label="Hex tile cartogram of Indian states by agricultural signal"
+        role="group"
+        aria-label="Indian states by agricultural signal. Use Tab to move between states and Enter to open one."
       >
-        {NATIONAL_SIGNAL.map((signal, i) => {
-          const { col, row, code } = signal.node;
-          const { cx, cy } = hexCenter(col, row);
-          const value = metricValue(signal, metric);
+        {states.map((signal, i) => {
+          const { cx, cy } = hexCenter(signal.grid.col, signal.grid.row);
+          const value = signal.metrics[metric];
           const meta = SEVERITY_META[severityOf(value)];
-          const isSelected = selected === code;
+          const isSelected = selected === signal.code;
           const isDimmed = selected !== null && !isSelected;
           const isCritical = value >= 60;
 
+          const toggle = () => onSelect(isSelected ? null : signal.code);
+
           return (
             <motion.g
-              key={code}
+              key={signal.code}
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: isDimmed ? 0.28 : 1, scale: 1 }}
               transition={{ delay: i * 0.012, duration: 0.35, ease: "easeOut" }}
               style={{ cursor: "pointer", transformOrigin: `${cx}px ${cy}px` }}
-              onClick={() => onSelect(isSelected ? null : code)}
+              // Keyboard reachable: an officer should not need a mouse.
+              tabIndex={0}
+              role="button"
+              aria-pressed={isSelected}
+              aria-label={`${signal.name}. ${METRIC_META[metric].label} ${value}. ${signal.districtsMonitored} districts, ${signal.districtsAtRisk} above threshold. Dominant threat ${signal.topThreat}.`}
+              onClick={toggle}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggle();
+                }
+              }}
+              onFocus={() => setHovered(signal)}
+              onBlur={() => setHovered(null)}
               onMouseEnter={() => setHovered(signal)}
               onMouseLeave={() => setHovered(null)}
             >
@@ -104,7 +121,7 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
                     delay: (i % 5) * 0.5,
                     ease: "easeOut",
                   }}
-                  style={{ transformOrigin: `${cx}px ${cy}px` }}
+                  style={{ transformOrigin: `${cx}px ${cy}px`, pointerEvents: "none" }}
                 />
               )}
 
@@ -128,7 +145,7 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
                   fill: value >= 50 ? "#FFFFFF" : "#5B532C",
                 }}
               >
-                {code}
+                {signal.code}
               </text>
               <text
                 x={cx}
@@ -148,7 +165,7 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
         })}
       </svg>
 
-      {/* Hover readout — fixed height so the layout never jumps */}
+      {/* Hover / focus readout — fixed height so the layout never jumps */}
       <div className="mt-2 h-[52px] flex items-center">
         {hovered ? (
           <motion.div
@@ -163,24 +180,24 @@ export const HexIndiaMap: React.FC<Props> = ({ metric, selected, onSelect }) => 
                 color: SEVERITY_META[hovered.severity].text,
               }}
             >
-              {hovered.node.code}
+              {hovered.code}
             </span>
             <div className="min-w-0">
               <div className="text-sm font-bold text-[#5B532C] truncate">
-                {hovered.node.name}
+                {hovered.name}
                 <span className="ml-2 text-xs font-medium text-[#5B532C]/45">
-                  {hovered.node.zone}
+                  {hovered.zone}
                 </span>
               </div>
               <div className="text-xs text-[#5B532C]/55 truncate">
-                {METRIC_META[metric].label} {metricValue(hovered, metric)} ·{" "}
+                {METRIC_META[metric].label} {hovered.metrics[metric]} ·{" "}
                 {hovered.districtsMonitored} districts · {hovered.topThreat}
               </div>
             </div>
           </motion.div>
         ) : (
           <span className="text-xs text-[#5B532C]/40">
-            Hover a state for detail · click to open its districts
+            Hover or Tab to a state for detail · click or press Enter to open its districts
           </span>
         )}
       </div>

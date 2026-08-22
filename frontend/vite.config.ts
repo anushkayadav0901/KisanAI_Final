@@ -13,6 +13,11 @@ export default defineConfig({
         target: "http://localhost:3000",
         changeOrigin: true,
       },
+      // Public open-data API (Agricultural Signal API)
+      "/v1": {
+        target: "http://localhost:3000",
+        changeOrigin: true,
+      },
       // WebSocket proxy for Gemini Live (local dev)
       "/gemini-live": {
         target: "ws://localhost:3000",

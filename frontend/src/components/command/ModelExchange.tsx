@@ -14,44 +14,33 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GitFork, BadgeCheck, Share2, Code2, Check, Copy, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
-import { MODEL_REGISTRY, REGISTRY_TOTALS, inr, type ModelCard } from "../../data/surveillanceEngine";
-import { STATE_BY_CODE } from "../../data/nationalGrid";
+import {
+  inr,
+  type ModelCard,
+  type RegistryTotals,
+  type StateSignal,
+} from "../../data/surveillance";
+import { API_ROOT } from "../../api/surveillance";
 
-/** The artefact a state actually publishes and another state consumes. */
-function toArtifact(m: ModelCard) {
-  return {
-    $schema: `https://kisan.ai/schema/${m.schema}.json`,
-    id: m.id,
-    version: m.version,
-    title: m.title,
-    publisher: {
-      state: m.originState,
-      code: m.originCode,
-      authority: "State Department of Agriculture",
-    },
-    scope: { crop: m.crop, threat: m.threat },
-    license: m.license,
-    validation: { field_validations: m.validations, reported_accuracy_pct: m.accuracy },
-    adoption: { subscribed_states: m.adoptedBy, forks: m.forks },
-    interoperability: {
-      profile: "agri-model/v1",
-      transport: "HTTPS + JSON",
-      auth: "none (open data)",
-    },
-  };
+interface Props {
+  models: ModelCard[];
+  totals: RegistryTotals | null;
+  states: StateSignal[];
+  loading: boolean;
 }
 
 const ModelRow: React.FC<{
   model: ModelCard;
+  stateNames: Record<string, string>;
   adopted: Set<string>;
   onAdopt: (id: string) => void;
-}> = ({ model, adopted, onAdopt }) => {
+}> = ({ model, stateNames, adopted, onAdopt }) => {
   const [showCard, setShowCard] = React.useState(false);
   const isAdopted = adopted.has(model.id);
 
   const copyCard = async () => {
     try {
-      await navigator.clipboard.writeText(JSON.stringify(toArtifact(model), null, 2));
+      await navigator.clipboard.writeText(JSON.stringify(model.raw, null, 2));
       toast.success("Model card copied", { duration: 2000 });
     } catch {
       toast.error("Clipboard unavailable in this browser");
@@ -107,7 +96,7 @@ const ModelRow: React.FC<{
             {model.adoptedBy.map((code) => (
               <span
                 key={code}
-                title={STATE_BY_CODE[code]?.name ?? code}
+                title={stateNames[code] ?? code}
                 className="px-2.5 py-1.5 text-xs font-semibold text-[#5B532C]/70 bg-[#FDE7B3]/50 rounded-full"
               >
                 {code}
@@ -175,7 +164,7 @@ const ModelRow: React.FC<{
                 Copy
               </button>
               <pre className="text-xs leading-relaxed text-[#5B532C]/75 overflow-x-auto font-mono">
-                {JSON.stringify(toArtifact(model), null, 2)}
+                {JSON.stringify(model.raw, null, 2)}
               </pre>
             </div>
           </motion.div>
@@ -185,23 +174,43 @@ const ModelRow: React.FC<{
   );
 };
 
-export const ModelExchange: React.FC = () => {
+export const ModelExchange: React.FC<Props> = ({
+  models,
+  totals,
+  states,
+  loading,
+}) => {
   const [adopted, setAdopted] = React.useState<Set<string>>(new Set());
 
   const onAdopt = React.useCallback((id: string) => {
     setAdopted((prev) => new Set(prev).add(id));
   }, []);
 
+  const stateNames = React.useMemo(
+    () => Object.fromEntries(states.map((s) => [s.code, s.name])),
+    [states],
+  );
+
+  const publishers = new Set(models.map((m) => m.originCode)).size;
+
   const stats = [
-    { value: String(REGISTRY_TOTALS.models), label: "Published models", sublabel: "across 6 states" },
     {
-      value: String(REGISTRY_TOTALS.adoptions + adopted.size),
+      value: totals ? String(totals.models) : "—",
+      label: "Published models",
+      sublabel: `across ${publishers || "—"} states`,
+    },
+    {
+      value: totals ? String(totals.adoptions + adopted.size) : "—",
       label: "State adoptions",
       sublabel: "live in production",
     },
-    { value: String(REGISTRY_TOTALS.forks), label: "Forks", sublabel: "locally adapted" },
     {
-      value: inr(REGISTRY_TOTALS.validations),
+      value: totals ? String(totals.forks) : "—",
+      label: "Forks",
+      sublabel: "locally adapted",
+    },
+    {
+      value: totals ? inr(totals.validations) : "—",
       label: "Field validations",
       sublabel: "farmer-confirmed outcomes",
     },
@@ -253,10 +262,30 @@ export const ModelExchange: React.FC = () => {
       </motion.div>
 
       <div className="grid md:grid-cols-2 gap-5">
-        {MODEL_REGISTRY.map((m) => (
-          <ModelRow key={m.id} model={m} adopted={adopted} onAdopt={onAdopt} />
+        {loading &&
+          [0, 1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-56 bg-white rounded-2xl border border-[#5B532C]/10 animate-pulse"
+              aria-hidden="true"
+            />
+          ))}
+        {models.map((m) => (
+          <ModelRow
+            key={m.id}
+            model={m}
+            stateNames={stateNames}
+            adopted={adopted}
+            onAdopt={onAdopt}
+          />
         ))}
       </div>
+
+      <p className="mt-6 text-xs text-[#5B532C]/45">
+        Every card on this page is served by{" "}
+        <code className="font-semibold text-[#5B532C]/65">{API_ROOT}/models</code> — the
+        same open endpoint any state system calls to adopt a model.
+      </p>
     </section>
   );
 };

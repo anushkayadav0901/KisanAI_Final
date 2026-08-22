@@ -20,6 +20,7 @@ import aiRouter from "./routes/ai.js";
 import weatherRouter from "./routes/weather.js";
 import paymentRouter from "./routes/payment.js";
 import farmingRouter from "./routes/farming.js";
+import v1Router from "./routes/v1.js";
 import { setupGeminiLive, setupGeminiVoiceLiveProxy } from "./routes/ws.js";
 
 // ── App ───────────────────────────────────────────────────────────────────────
@@ -44,6 +45,10 @@ app.use("/api/ai", aiRouter);
 app.use("/api/weather", weatherRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/farming", farmingRouter);
+
+// ── Public open-data API ──────────────────────────────────────────────────────
+// Unauthenticated by design: this is published as a digital public good.
+app.use("/v1", v1Router);
 
 // ── 404 catch-all ─────────────────────────────────────────────────────────────
 
@@ -102,6 +107,18 @@ httpServer.listen(PORT, () => {
   console.log("    POST /api/farming/insights       (AI farming guide)");
   console.log("    GET  /api/weather/coords        (by lat/lon)");
   console.log("    GET  /api/weather/:city         (by city name)");
+  console.log("");
+  console.log("  Public API (open data, no auth)");
+  console.log("    GET  /v1/                       (service discovery)");
+  console.log("    GET  /v1/docs                   (interactive console)");
+  console.log("    GET  /v1/openapi.json           (OpenAPI 3.0 spec)");
+  console.log("    GET  /v1/surveillance/states    (national signal)");
+  console.log("    GET  /v1/surveillance/districts (?state=PB)");
+  console.log("    GET  /v1/surveillance/alerts    (?state=PB)");
+  console.log("    GET  /v1/models                 (model registry)");
+  console.log("    GET  /v1/models/:id             (model card)");
+  console.log("");
+  console.log("  Payments");
   console.log("    POST /api/payment/create-order  (Razorpay)");
   console.log("    POST /api/payment/verify        (Razorpay HMAC)");
   console.log("    GET  /api/payment/key           (Razorpay publishable key)");

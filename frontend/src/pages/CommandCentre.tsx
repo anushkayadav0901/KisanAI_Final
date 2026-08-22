@@ -5,59 +5,244 @@
  * once they are anonymised and aggregated: a live crop-health surveillance
  * picture for a state agriculture department, and a registry through which
  * states hand working advisory models to each other.
+ *
+ * Every figure on this page is fetched from the public /v1 API. The dashboard
+ * holds no private copy of the data and has no privileged access path — it is
+ * one consumer of an open endpoint, exactly like any state system would be.
  */
 
 import React from "react";
 import { motion } from "framer-motion";
 import { Toaster } from "react-hot-toast";
-import { Map as MapIcon, Users, Activity, Info } from "lucide-react";
+import {
+  Map as MapIcon,
+  Users,
+  Activity,
+  Info,
+  Terminal,
+  Copy,
+  Check,
+  AlertTriangle,
+  ExternalLink,
+} from "lucide-react";
 import { HexIndiaMap } from "../components/command/HexIndiaMap";
 import { AlertFeed } from "../components/command/AlertFeed";
 import { DistrictPanel } from "../components/command/DistrictPanel";
 import { ModelExchange } from "../components/command/ModelExchange";
 import Footer from "../components/Footer";
 import {
-  NATIONAL_TOTALS,
   METRIC_META,
-  SIGNAL_BY_CODE,
   SEVERITY_META,
   compact,
   inr,
   type MetricKey,
-} from "../data/surveillanceEngine";
+  type DistrictSignal,
+  type ModelCard,
+  type NationalTotals,
+  type OutbreakAlert,
+  type RegistryTotals,
+  type StateDetail,
+  type StateSignal,
+} from "../data/surveillance";
+import {
+  API_ROOT,
+  endpointFor,
+  fetchAlerts,
+  fetchDistricts,
+  fetchNational,
+  fetchRegistry,
+} from "../api/surveillance";
+
+// ── Live endpoint readout ─────────────────────────────────────────────────────
+
+/**
+ * Shows the exact request behind whatever is on screen. Not decoration: the
+ * point of an open API is that a reader can copy this line, run it themselves
+ * and get the same bytes the page is rendering.
+ */
+const EndpointStrip: React.FC<{ endpoint: string }> = ({ endpoint }) => {
+  const [copied, setCopied] = React.useState(false);
+
+  const copy = async () => {
+    const url = `${window.location.origin}${endpoint.replace("GET ", "")}`;
+    try {
+      await navigator.clipboard.writeText(`curl ${url}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* clipboard unavailable — the endpoint is still readable on screen */
+    }
+  };
+
+  return (
+    <div className="inline-flex items-center gap-2 flex-wrap">
+      <button
+        onClick={copy}
+        className="group inline-flex items-center gap-2 px-3 py-2 bg-white rounded-full
+                   border border-[#5B532C]/12 hover:border-[#63A361]/40 transition-colors max-w-full"
+        title="Copy as a curl command"
+      >
+        <Terminal className="w-3.5 h-3.5 text-[#63A361] shrink-0" />
+        <code className="text-xs font-mono text-[#5B532C]/70 truncate">{endpoint}</code>
+        {copied ? (
+          <Check className="w-3.5 h-3.5 text-[#63A361] shrink-0" />
+        ) : (
+          <Copy className="w-3.5 h-3.5 text-[#5B532C]/30 group-hover:text-[#5B532C]/60 shrink-0" />
+        )}
+      </button>
+      <a
+        href={`${API_ROOT}/docs`}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-[#4A8A4D]
+                   bg-[#63A361]/10 rounded-full hover:bg-[#63A361]/20 transition-colors"
+      >
+        API docs
+        <ExternalLink className="w-3 h-3" />
+      </a>
+    </div>
+  );
+};
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 
 const CommandCentre: React.FC = () => {
   const [metric, setMetric] = React.useState<MetricKey>("outbreak");
   const [selected, setSelected] = React.useState<string | null>(null);
 
-  const signal = selected ? SIGNAL_BY_CODE[selected] : null;
+  // National signal — loaded once.
+  const [states, setStates] = React.useState<StateSignal[]>([]);
+  const [totals, setTotals] = React.useState<NationalTotals | null>(null);
+  const [provenance, setProvenance] = React.useState<string>("");
+  const [nationalLoading, setNationalLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // Escalation queue — refetched whenever scope changes.
+  const [alerts, setAlerts] = React.useState<OutbreakAlert[]>([]);
+  const [alertsLoading, setAlertsLoading] = React.useState(true);
+
+  // District drill-down — fetched on selection.
+  const [stateDetail, setStateDetail] = React.useState<StateDetail | null>(null);
+  const [districts, setDistricts] = React.useState<DistrictSignal[]>([]);
+  const [districtsLoading, setDistrictsLoading] = React.useState(false);
+
+  // Model registry.
+  const [models, setModels] = React.useState<ModelCard[]>([]);
+  const [registryTotals, setRegistryTotals] = React.useState<RegistryTotals | null>(null);
+  const [registryLoading, setRegistryLoading] = React.useState(true);
+
+  // ── Load national signal + registry ────────────────────────────────────────
+  React.useEffect(() => {
+    let cancelled = false;
+
+    fetchNational()
+      .then((res) => {
+        if (cancelled) return;
+        setStates(res.states);
+        setTotals(res.totals);
+        setProvenance(res.provenance);
+        setError(null);
+      })
+      .catch((e: Error) => !cancelled && setError(e.message))
+      .finally(() => !cancelled && setNationalLoading(false));
+
+    fetchRegistry()
+      .then((res) => {
+        if (cancelled) return;
+        setModels(res.models);
+        setRegistryTotals(res.totals);
+      })
+      .catch(() => {
+        /* registry failure is not fatal — the surveillance view still works */
+      })
+      .finally(() => !cancelled && setRegistryLoading(false));
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // ── Alerts follow the selected scope ───────────────────────────────────────
+  React.useEffect(() => {
+    let cancelled = false;
+    setAlertsLoading(true);
+
+    fetchAlerts(selected)
+      .then((res) => !cancelled && setAlerts(res))
+      .catch(() => !cancelled && setAlerts([]))
+      .finally(() => !cancelled && setAlertsLoading(false));
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selected]);
+
+  // ── Districts load on selection ────────────────────────────────────────────
+  React.useEffect(() => {
+    if (!selected) {
+      setStateDetail(null);
+      setDistricts([]);
+      return;
+    }
+
+    let cancelled = false;
+    setDistrictsLoading(true);
+
+    fetchDistricts(selected)
+      .then((res) => {
+        if (cancelled) return;
+        setStateDetail(res.state);
+        setDistricts(res.districts);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setStateDetail(null);
+        setDistricts([]);
+      })
+      .finally(() => !cancelled && setDistrictsLoading(false));
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selected]);
+
+  const signal = React.useMemo(
+    () => states.find((s) => s.code === selected) ?? null,
+    [states, selected],
+  );
 
   const heroStats = [
-    { icon: MapIcon, value: String(NATIONAL_TOTALS.states), label: "States live" },
-    { icon: Users, value: compact(NATIONAL_TOTALS.farmersReached), label: "Farmers reached" },
-    { icon: Activity, value: inr(NATIONAL_TOTALS.districts), label: "Districts" },
+    { icon: MapIcon, value: totals ? String(totals.states) : "—", label: "States live" },
+    {
+      icon: Users,
+      value: totals ? compact(totals.farmersReached) : "—",
+      label: "Farmers reached",
+    },
+    { icon: Activity, value: totals ? inr(totals.districts) : "—", label: "Districts" },
   ];
 
   const bandStats = [
     {
-      value: compact(NATIONAL_TOTALS.diagnoses),
+      value: totals ? compact(totals.diagnoses) : "—",
       label: "Diagnoses",
       sublabel: "Farmer-submitted, last 30 days",
     },
     {
-      value: String(NATIONAL_TOTALS.districtsAtRisk),
+      value: totals ? String(totals.districtsAtRisk) : "—",
       label: "Above Threshold",
       sublabel: "Districts needing action now",
     },
     {
-      value: compact(NATIONAL_TOTALS.advisories7d),
+      value: totals ? compact(totals.advisories7d) : "—",
       label: "Advisories Pushed",
       sublabel: "Across all states this week",
     },
     {
-      value: String(NATIONAL_TOTALS.languages),
+      value: totals ? String(totals.languages) : "—",
       label: "Advisory Languages",
-      sublabel: `Across ${NATIONAL_TOTALS.agroZones} agro-climatic zones`,
+      sublabel: totals
+        ? `Across ${totals.agroZones} agro-climatic zones`
+        : "Across agro-climatic zones",
     },
   ];
 
@@ -85,8 +270,7 @@ const CommandCentre: React.FC = () => {
           <div
             className="absolute inset-0 opacity-[0.18]"
             style={{
-              backgroundImage:
-                "radial-gradient(circle, #5B532C 1.2px, transparent 1.2px)",
+              backgroundImage: "radial-gradient(circle, #5B532C 1.2px, transparent 1.2px)",
               backgroundSize: "22px 22px",
             }}
           />
@@ -117,12 +301,15 @@ const CommandCentre: React.FC = () => {
               </span>
             </h1>
 
-            <p className="text-base text-[#5B532C]/60 leading-relaxed mb-8 max-w-2xl">
+            <p className="text-base text-[#5B532C]/60 leading-relaxed mb-6 max-w-2xl">
               Every diagnosis a farmer makes becomes one anonymised data point. Together
               they form a live district-level picture of what is happening to India's
-              crops — and the registry through which states hand working advisory models
-              to each other.
+              crops — served over an open API that any state department can call.
             </p>
+
+            <div className="mb-8">
+              <EndpointStrip endpoint={endpointFor(metric, selected)} />
+            </div>
 
             <div className="flex items-center gap-8 sm:gap-12">
               {heroStats.map((s) => (
@@ -140,6 +327,29 @@ const CommandCentre: React.FC = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* ── API unreachable ───────────────────────────────────────────────── */}
+      {error && (
+        <section className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 pb-8">
+          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#D64545]/8 border border-[#D64545]/20">
+            <div className="w-10 h-10 rounded-xl bg-[#D64545]/12 flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-5 h-5 text-[#B3332E]" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-[#5B532C] mb-1">
+                Signal API unreachable
+              </h4>
+              <p className="text-sm text-[#5B532C]/65 leading-relaxed">
+                {error}. This page reads live from{" "}
+                <code className="font-semibold">{API_ROOT}/surveillance/states</code>, so
+                the backend needs to be running — start it with{" "}
+                <code className="font-semibold">npm start</code> in{" "}
+                <code className="font-semibold">backend/</code>.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── Signal band ───────────────────────────────────────────────────── */}
       <section className="bg-[#FDFCF8] border-y border-[#5B532C]/10">
@@ -187,8 +397,8 @@ const CommandCentre: React.FC = () => {
               transition={{ delay: 0.1 }}
               className="text-[#5B532C]/60 leading-relaxed lg:text-right"
             >
-              {METRIC_META[metric].description}. Each tile is one state — click to open
-              its districts.
+              {METRIC_META[metric].description}. Each tile is one state — click or press
+              Enter to open its districts.
             </motion.p>
           </div>
 
@@ -198,12 +408,14 @@ const CommandCentre: React.FC = () => {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-[#5B532C]">
-                    {signal ? signal.node.name : "All India"}
+                    {signal ? signal.name : "All India"}
                   </h3>
                   <p className="text-sm text-[#5B532C]/50">
                     {signal
-                      ? `${signal.node.zone} · ${signal.node.crops.slice(0, 3).join(", ")}`
-                      : `${NATIONAL_TOTALS.states} states · ${inr(NATIONAL_TOTALS.districts)} districts`}
+                      ? `${signal.zone} · ${signal.crops.slice(0, 3).join(", ")}`
+                      : totals
+                        ? `${totals.states} states · ${inr(totals.districts)} districts`
+                        : "Loading national signal…"}
                   </p>
                 </div>
 
@@ -224,12 +436,37 @@ const CommandCentre: React.FC = () => {
                 </div>
               </div>
 
-              <HexIndiaMap metric={metric} selected={selected} onSelect={setSelected} />
+              {nationalLoading ? (
+                <div className="h-[420px] flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-10 h-10 rounded-full border-2 border-[#63A361]/20 border-t-[#63A361] animate-spin mx-auto mb-3" />
+                    <p className="text-sm text-[#5B532C]/45">
+                      Fetching national signal from {API_ROOT}…
+                    </p>
+                  </div>
+                </div>
+              ) : states.length > 0 ? (
+                <HexIndiaMap
+                  states={states}
+                  metric={metric}
+                  selected={selected}
+                  onSelect={setSelected}
+                />
+              ) : (
+                <div className="h-[420px] flex items-center justify-center">
+                  <p className="text-sm text-[#5B532C]/45">No signal available.</p>
+                </div>
+              )}
             </div>
 
             {/* Escalation queue */}
             <div className="p-6 bg-[#FDFCF8] rounded-2xl border border-[#5B532C]/10 h-[620px]">
-              <AlertFeed filterState={selected} onSelectState={setSelected} />
+              <AlertFeed
+                alerts={alerts}
+                loading={alertsLoading}
+                filterState={selected}
+                onSelectState={setSelected}
+              />
             </div>
           </div>
 
@@ -242,7 +479,7 @@ const CommandCentre: React.FC = () => {
             >
               {[
                 {
-                  value: String(signal.outbreakIndex),
+                  value: String(signal.metrics.outbreak),
                   label: "Pressure index",
                   sublabel: SEVERITY_META[signal.severity].label,
                   color: SEVERITY_META[signal.severity].text,
@@ -256,14 +493,14 @@ const CommandCentre: React.FC = () => {
                 {
                   value: signal.topThreat,
                   label: "Dominant threat",
-                  sublabel: `${signal.node.crops.slice(0, 2).join(" & ")} belt`,
+                  sublabel: `${signal.crops.slice(0, 2).join(" & ")} belt`,
                   color: "#5B532C",
                   small: true,
                 },
                 {
-                  value: `${signal.node.farmHouseholdsLakh} L`,
+                  value: `${signal.farmHouseholdsLakh} L`,
                   label: "Farm households",
-                  sublabel: `Advisories in ${signal.node.language}`,
+                  sublabel: `Advisories in ${signal.language}`,
                   color: "#5B532C",
                 },
               ].map((c) => (
@@ -287,11 +524,13 @@ const CommandCentre: React.FC = () => {
       </section>
 
       {/* ── District drill-down ───────────────────────────────────────────── */}
-      {signal && (
+      {stateDetail && (
         <section className="pb-20">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <DistrictPanel
-              stateCode={signal.node.code}
+              state={stateDetail}
+              districts={districts}
+              loading={districtsLoading}
               metric={metric}
               onBack={() => setSelected(null)}
             />
@@ -302,7 +541,12 @@ const CommandCentre: React.FC = () => {
       {/* ── Model exchange ────────────────────────────────────────────────── */}
       <section className="py-20 bg-[#FDFCF8] border-t border-[#5B532C]/10">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <ModelExchange />
+          <ModelExchange
+            models={models}
+            totals={registryTotals}
+            states={states}
+            loading={registryLoading}
+          />
         </div>
       </section>
 
@@ -311,20 +555,15 @@ const CommandCentre: React.FC = () => {
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#FDE7B3]/25 border border-[#5B532C]/10">
             <div className="w-10 h-10 rounded-xl bg-[#FFC50F]/20 flex items-center justify-center flex-shrink-0">
-              <Info className="w-5 h-5 text-[#B08800]" />
+              <Info className="w-5 h-5 text-[#A57D00]" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-[#5B532C] mb-1">
-                About this data
-              </h4>
+              <h4 className="text-sm font-bold text-[#5B532C] mb-1">About this data</h4>
               <p className="text-sm text-[#5B532C]/60 leading-relaxed">
-                District names and agro-climatic zones are real. Every metric shown is
-                seeded reference data that models the shape of the live feed — it is not
-                an observation from ICAR, ISRO or any government source. The exported
-                schema{" "}
-                <span className="font-semibold text-[#5B532C]/80">agri-signal/v1</span> is
-                the contract the production feed fills once diagnoses are written to
-                persistent storage.
+                {provenance ||
+                  "District names and agro-climatic zones are real; metrics model the shape of the live feed and are not observations from ICAR, ISRO or any government source."}{" "}
+                The response schemas are the published contract and do not change when the
+                live feed is connected, so anything built against this API keeps working.
               </p>
             </div>
           </div>

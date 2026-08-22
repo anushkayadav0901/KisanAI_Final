@@ -1,43 +1,27 @@
 /**
- * nationalGrid.ts — National agricultural grid reference data
+ * nationalGrid.js — national agricultural grid reference data
  *
- * Powers the State Command Centre. Every state sits on a hex tile cartogram
- * of India: an approximate, area-neutral layout rather than a geographic
- * projection. That choice is deliberate — a cartogram makes no claim about
- * boundaries, so the surveillance view stays focused on agricultural signal.
+ * States are placed on a hex tile cartogram of India: an approximate,
+ * area-neutral layout rather than a geographic projection. A cartogram makes
+ * no claim about boundaries, so the surveillance view stays focused on
+ * agricultural signal.
  *
  * Agro-climatic zones follow the 15-zone NARP classification used by ICAR.
- * District names are real. The metrics layered on top are simulated — see
- * surveillanceEngine.ts.
+ * District names are real. Metrics layered on top are simulated — see
+ * surveillance.js.
  */
 
-import cityData from "./cityData.json";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-export interface StateNode {
-  code: string;
-  name: string;
-  /** Hex tile column (west to east) */
-  col: number;
-  /** Hex tile row (north to south) */
-  row: number;
-  /** NARP agro-climatic zone */
-  zone: string;
-  /** Dominant crops, ordered by cultivated area */
-  crops: string[];
-  /** Approximate farm households in lakh — order-of-magnitude reference */
-  farmHouseholdsLakh: number;
-  /** Primary advisory language for this state */
-  language: string;
-  districts: string[];
-}
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// ── District rosters ──────────────────────────────────────────────────────────
-// Seven states already ship real district lists with the market module; reuse
-// those instead of duplicating, and supply rosters for the remaining states.
+const cd = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "cityData.json"), "utf8"),
+);
 
-const cd = cityData as unknown as Record<string, string[]>;
-
-const DISTRICTS: Record<string, string[]> = {
+const DISTRICTS = {
   MH: cd["mahacities"] ?? [],
   AP: (cd["andra cities"] ?? []).slice(0, 26),
   PB: cd["punjab cities"] ?? [],
@@ -146,9 +130,7 @@ const DISTRICTS: Record<string, string[]> = {
   SK: ["East Sikkim", "North Sikkim", "South Sikkim", "West Sikkim"],
 };
 
-// ── State nodes ───────────────────────────────────────────────────────────────
-
-export const STATE_NODES: StateNode[] = [
+export const STATE_NODES = [
   { code: "JK", name: "Jammu & Kashmir", col: 3, row: 0, zone: "Western Himalayan", crops: ["Rice", "Wheat", "Mustard"], farmHouseholdsLakh: 14, language: "Urdu", districts: DISTRICTS.JK },
   { code: "HP", name: "Himachal Pradesh", col: 4, row: 1, zone: "Western Himalayan", crops: ["Potato", "Wheat", "Maize"], farmHouseholdsLakh: 9, language: "Hindi", districts: DISTRICTS.HP },
   { code: "UK", name: "Uttarakhand", col: 5, row: 1, zone: "Western Himalayan", crops: ["Rice", "Wheat", "Potato"], farmHouseholdsLakh: 8, language: "Hindi", districts: DISTRICTS.UK },
@@ -180,12 +162,12 @@ export const STATE_NODES: StateNode[] = [
   { code: "KL", name: "Kerala", col: 3, row: 8, zone: "West Coast Plains & Ghats", crops: ["Rice", "Banana", "Tea"], farmHouseholdsLakh: 18, language: "Malayalam", districts: DISTRICTS.KL },
 ];
 
-export const STATE_BY_CODE: Record<string, StateNode> = Object.fromEntries(
+export const STATE_BY_CODE = Object.fromEntries(
   STATE_NODES.map((s) => [s.code, s]),
 );
 
 /** Crop to the pests and diseases that actually threaten it in Indian conditions. */
-export const CROP_THREATS: Record<string, string[]> = {
+export const CROP_THREATS = {
   Rice: ["Bacterial Leaf Blight", "Rice Blast", "Brown Planthopper", "Sheath Blight", "False Smut"],
   Wheat: ["Yellow Rust", "Karnal Bunt", "Powdery Mildew", "Loose Smut", "Wheat Aphid"],
   Cotton: ["Pink Bollworm", "Whitefly", "Cotton Leaf Curl Virus", "Bacterial Blight"],
