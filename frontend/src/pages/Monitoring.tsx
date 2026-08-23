@@ -468,7 +468,7 @@ const Monitoring: React.FC = () => {
                     </div>
                   </div>
 
-                  <h3 className="text-3xl font-black text-[#5B532C] mb-3">
+                  <h3 className="text-3xl font-bold text-[#5B532C] mb-3">
                     {images.length > 1
                       ? `Deep Scanning ${images.length} Images`
                       : `Analyzing ${MONITORING_TYPES.find((t) => t.type === selectedType)?.title}`}
@@ -499,7 +499,7 @@ const Monitoring: React.FC = () => {
                     >
                       <div
                         className={cn(
-                          "w-10 h-10 rounded-2xl flex items-center justify-center font-black",
+                          "w-10 h-10 rounded-2xl flex items-center justify-center font-bold",
                           index === currentStep
                             ? "bg-[#63A361] text-white"
                             : index < currentStep
@@ -515,7 +515,7 @@ const Monitoring: React.FC = () => {
                       </div>
                       <span
                         className={cn(
-                          "text-sm font-black uppercase tracking-wider",
+                          "text-sm font-bold uppercase tracking-wider",
                           index === currentStep
                             ? "text-[#5B532C]"
                             : "text-[#5B532C]/40"
@@ -528,7 +528,7 @@ const Monitoring: React.FC = () => {
                 </div>
 
                 <div className="mt-12 text-center">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FDE7B3]/30 rounded-full text-[10px] font-black text-[#5B532C]/40 uppercase tracking-[0.2em]">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FDE7B3]/30 rounded-full text-[10px] font-bold text-[#5B532C]/40 uppercase tracking-[0.2em]">
                     <Search className="w-3 h-3" />
                     Initializing Web Crawl Subroutine
                   </div>

@@ -102,7 +102,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative overflow-hidden p-8 bg-gradient-to-br from-red-600 via-orange-600 to-red-700 rounded-[2.5rem] text-white shadow-2xl shadow-red-900/20"
+        className="relative overflow-hidden p-8 bg-gradient-to-br from-red-600 via-orange-600 to-red-700 rounded-2xl text-white shadow-2xl shadow-red-900/20"
       >
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-white/10 rounded-full blur-3xl opacity-50" />
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-60 h-60 bg-yellow-400/10 rounded-full blur-2xl opacity-50" />
@@ -123,25 +123,25 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           </div>
 
           <div className="flex-1 text-center md:text-left">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wide mb-4">
               <Zap className="w-3.5 h-3.5" />
               Thermal Spectrum Analysis
             </span>
-            <h2 className="text-4xl font-black mb-3 text-white">
+            <h2 className="text-4xl font-bold mb-3 text-white">
               Field <span className="text-yellow-300 italic">Thermography</span>
             </h2>
             <p className="text-white/90 text-lg max-w-xl font-medium leading-relaxed">
               Average surface temperature detected at
-              <span className="font-black text-yellow-300"> {result.realTimeMetrics.averageTemperature}°C</span>.
+              <span className="font-bold text-yellow-300"> {result.realTimeMetrics.averageTemperature}°C</span>.
               {result.analysisSummary}
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-2 px-10 py-8 bg-white/10 backdrop-blur-lg rounded-[2.5rem] border border-white/20 shadow-inner">
-            <div className="text-3xl font-black text-yellow-300 uppercase tracking-tighter">
+          <div className="flex flex-col items-center gap-2 px-10 py-8 bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 shadow-inner">
+            <div className="text-3xl font-bold text-yellow-300 uppercase tracking-tight">
               {result.waterStressZones}
             </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-white/70">
+            <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/70">
               Stress Band
             </div>
           </div>
@@ -154,38 +154,38 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.div
               whileHover={{ y: -5 }}
-              className="p-8 bg-white rounded-[2.5rem] border border-[#5B532C]/5 shadow-2xl shadow-[#5B532C]/5 relative overflow-hidden group"
+              className="p-8 bg-white rounded-2xl border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group"
             >
               <div className="absolute -top-1 -right-1 w-24 h-24 bg-red-50 rounded-full -mr-12 -mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Thermal Extremes</h4>
+              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-6">Thermal Extremes</h4>
               <div className="flex items-end gap-8">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <Flame className="w-4 h-4 text-orange-500" />
-                    <span className="text-sm font-black text-[#5B532C]">Hot Spots</span>
+                    <span className="text-sm font-bold text-[#5B532C]">Hot Spots</span>
                   </div>
-                  <div className="text-4xl font-black text-orange-600">{result.hotSpots}</div>
+                  <div className="text-4xl font-bold text-orange-600">{result.hotSpots}</div>
                 </div>
                 <div className="flex-1 border-l border-gray-100 pl-8">
                   <div className="flex items-center gap-2 mb-2">
                     <Snowflake className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm font-black text-[#5B532C]">Cold Spots</span>
+                    <span className="text-sm font-bold text-[#5B532C]">Cold Spots</span>
                   </div>
-                  <div className="text-4xl font-black text-blue-600">{result.coldSpots}</div>
+                  <div className="text-4xl font-bold text-blue-600">{result.coldSpots}</div>
                 </div>
               </div>
             </motion.div>
 
             <motion.div
               whileHover={{ y: -5 }}
-              className={`p-8 bg-white rounded-[2.5rem] border-2 ${getStatusColor(result.irrigationLeaks).border} shadow-2xl shadow-[#5B532C]/5 relative overflow-hidden group`}
+              className={`p-8 bg-white rounded-2xl border-2 ${getStatusColor(result.irrigationLeaks).border} shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group`}
             >
-              <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-6">Hydro-Thermal Integrity</h4>
+              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-6">Hydro-Thermal Integrity</h4>
               <div className="flex items-center gap-4 mb-2">
                 <div className={`w-10 h-10 ${getStatusColor(result.irrigationLeaks).bg} rounded-xl flex items-center justify-center`}>
                   <Droplets className={`w-6 h-6 ${getStatusColor(result.irrigationLeaks).icon}`} />
                 </div>
-                <div className={`text-2xl font-black ${getStatusColor(result.irrigationLeaks).text} uppercase`}>
+                <div className={`text-2xl font-bold ${getStatusColor(result.irrigationLeaks).text} uppercase`}>
                   {result.irrigationLeaks === 'none' ? 'Leaks: Clean' : result.irrigationLeaks}
                 </div>
               </div>
@@ -196,12 +196,12 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           </div>
 
           {/* Charts Card */}
-          <div className="p-10 bg-white rounded-[3rem] border border-[#5B532C]/5 shadow-2xl shadow-[#5B532C]/5">
+          <div className="p-10 bg-white rounded-[3rem] border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {/* Temp Bar */}
               <div>
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-lg font-black text-[#5B532C]">Heat Distribution</h3>
+                  <h3 className="text-lg font-bold text-[#5B532C]">Heat Distribution</h3>
                   <TrendingUp className="w-5 h-5 text-red-500" />
                 </div>
                 <div className="h-64">
@@ -221,8 +221,8 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
                 <div className="grid grid-cols-3 gap-2 mt-4">
                   {temperatureData.map((t, i) => (
                     <div key={i} className="text-center p-3 bg-gray-50 rounded-2xl">
-                      <div className="text-lg font-black text-[#5B532C]">{t.value}°</div>
-                      <div className="text-[8px] font-black text-gray-400 uppercase">{t.name}</div>
+                      <div className="text-lg font-bold text-[#5B532C]">{t.value}°</div>
+                      <div className="text-[8px] font-bold text-gray-400 uppercase">{t.name}</div>
                     </div>
                   ))}
                 </div>
@@ -231,7 +231,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
               {/* Radar Radar */}
               <div>
                 <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-lg font-black text-[#5B532C]">Stress Footprint</h3>
+                  <h3 className="text-lg font-bold text-[#5B532C]">Stress Footprint</h3>
                   <Activity className="w-5 h-5 text-purple-500" />
                 </div>
                 <div className="h-64">
@@ -253,13 +253,13 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
             </div>
           </div>
 
-          <div className="p-8 bg-[#FDE7B3]/10 rounded-[2.5rem] border border-[#FFC50F]/20 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="p-8 bg-[#FDE7B3]/10 rounded-2xl border border-[#FFC50F]/20 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-xs font-black text-[#5B532C] uppercase tracking-widest mb-4">Variation Analysis</h4>
+              <h4 className="text-xs font-bold text-[#5B532C] uppercase tracking-wide mb-4">Variation Analysis</h4>
               <p className="text-sm text-[#5B532C]/70 font-medium leading-relaxed italic">"{result.temperatureVariations}"</p>
             </div>
             <div>
-              <h4 className="text-xs font-black text-[#5B532C] uppercase tracking-widest mb-4">Growth Integrity</h4>
+              <h4 className="text-xs font-bold text-[#5B532C] uppercase tracking-wide mb-4">Growth Integrity</h4>
               <p className="text-sm text-[#5B532C]/70 font-medium leading-relaxed italic">"{result.cropHealthImpact}"</p>
             </div>
           </div>
@@ -268,14 +268,14 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
         {/* Right Sidebar */}
         <div className="space-y-8">
           <div className="p-8 bg-[#5B532C] rounded-[3rem] text-white shadow-2xl">
-            <h3 className="text-xl font-black mb-8 flex items-center gap-3">
+            <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
               <Shield className="w-6 h-6 text-[#FFC50F]" />
               Mitigation Strategy
             </h3>
             <div className="space-y-4">
               {result.mitigationStrategies.slice(0, 4).map((m, i) => (
                 <div key={i} className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
-                  <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center font-black">
+                  <div className="w-8 h-8 rounded-xl bg-orange-500 flex items-center justify-center font-bold">
                     {i + 1}
                   </div>
                   <p className="text-[11px] font-bold leading-relaxed">{m}</p>
@@ -287,7 +287,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           {/* CRAWL AREA */}
           <div className="p-8 bg-white rounded-[3rem] border border-[#5B532C]/10 shadow-xl shadow-gray-100 flex flex-col">
             <div className="flex items-center justify-between mb-8">
-              <h3 className="text-lg font-black text-[#5B532C]">Crawl Insights</h3>
+              <h3 className="text-lg font-bold text-[#5B532C]">Crawl Insights</h3>
               <div className="flex gap-1">
                 {[1, 2, 3].map(i => <div key={i} className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />)}
               </div>
@@ -305,8 +305,8 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
                     <Youtube className="w-5 h-5" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="text-xs font-black text-[#5B532C]">Thermal Guide</h4>
-                    <p className="text-[9px] text-red-500 font-bold uppercase tracking-widest">Video Guidance</p>
+                    <h4 className="text-xs font-bold text-[#5B532C]">Thermal Guide</h4>
+                    <p className="text-[9px] text-red-500 font-bold uppercase tracking-wide">Video Guidance</p>
                   </div>
                   <ExternalLink className="w-4 h-4 text-red-200" />
                 </div>
@@ -315,7 +315,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
               <div className="mt-4 p-5 bg-[#FDE7B3]/30 rounded-[2rem] border border-[#FFC50F]/20 border-dashed relative">
                 <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-white rounded-full mb-3">
                   <Search className="w-3 h-3 text-red-400" />
-                  <span className="text-[8px] font-black text-[#5B532C]/40 uppercase tracking-widest">Global Scan</span>
+                  <span className="text-[8px] font-bold text-[#5B532C]/40 uppercase tracking-wide">Global Scan</span>
                 </div>
                 <p className="text-[11px] text-[#5B532C] font-semibold italic leading-relaxed">
                   "Crawl data from ICAR confirms that {result.waterStressZones} stress signals in mid-day scans often correlate with root-zone moisture deficit. Recommended: Night-time irrigation cycle."
@@ -328,7 +328,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={onRetry}
-            className="w-full py-6 bg-white border-2 border-[#5B532C]/10 text-[#5B532C] font-black rounded-[2.5rem] flex items-center justify-center gap-3 shadow-xl uppercase tracking-widest text-xs"
+            className="w-full py-6 bg-white border-2 border-[#5B532C]/10 text-[#5B532C] font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl uppercase tracking-wide text-xs"
           >
             <RefreshCw className="w-4 h-4 text-red-500" />
             Recalibrate Scan

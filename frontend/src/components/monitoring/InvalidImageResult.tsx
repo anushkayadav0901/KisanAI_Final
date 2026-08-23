@@ -20,7 +20,7 @@ export const InvalidImageResult: React.FC<InvalidImageResultProps> = ({
     >
       <div className="bg-white rounded-2xl shadow-xl border border-red-100 overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-50 to-orange-50 p-6 border-b border-red-100">
+        <div className="bg-red-50 p-6 border-b border-red-100">
           <div className="flex items-center justify-center gap-3">
             <div className="p-3 bg-red-100 rounded-full">
               <AlertTriangle className="w-8 h-8 text-red-600" />
@@ -73,7 +73,7 @@ export const InvalidImageResult: React.FC<InvalidImageResultProps> = ({
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={onRetry}
-              className="mt-6 px-8 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 text-white font-medium rounded-full flex items-center gap-2 mx-auto transition-all shadow-lg"
+              className="mt-6 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full flex items-center gap-2 mx-auto transition-all shadow-lg"
             >
               <RefreshCw className="w-5 h-5" />
               Try Another Image
