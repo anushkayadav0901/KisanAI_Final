@@ -105,12 +105,21 @@ const ProductCard = memo(({ product }: { product: Product }) => {
             const orderRes = await fetch(`${API_BASE_URL}/payment/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: product.price * 100, receipt: `${product.id}` })
+                body: JSON.stringify({ amount: product.price, receipt: `${product.id}` })
             });
             if (!orderRes.ok) throw new Error('Order failed');
             const order = await orderRes.json();
             const orderId = order.id as string;
             const amount = order.amount as number;
+
+            // Demo mode: server has no Razorpay keys, the order is a mock.
+            // Skip checkout and complete the flow so the demo still lands on
+            // a verified success.
+            if ((order as { mock?: boolean }).mock) {
+                await new Promise((r) => setTimeout(r, 600));
+                alert(`Payment successful (demo mode) — ₹${product.price} for ${product.name}`);
+                return;
+            }
 
             const keyRes = await fetch(`${API_BASE_URL}/payment/key`);
             if (!keyRes.ok) throw new Error('Payment unavailable');
