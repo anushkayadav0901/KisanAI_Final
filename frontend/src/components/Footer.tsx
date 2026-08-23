@@ -30,6 +30,7 @@ export const Footer = () => {
               </div>
               <span className="text-xl font-bold text-white">Kisan AI</span>
             </Link>
+            <p className="text-white/40 text-xs mb-3 -mt-1 tracking-wide">Smart Farming Made Simple</p>
             <p className="text-white/50 text-sm leading-relaxed">
               A farmer photographs a sick crop; the whole country's defence gets
               smarter. One diagnosis at a time, district by district.
