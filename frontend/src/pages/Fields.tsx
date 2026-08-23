@@ -376,7 +376,7 @@ const Fields: React.FC = () => {
               <FieldMap
                 ring={ring}
                 onRingChange={setRing}
-                drawing={drawing}
+                drawing={drawing && !naming}
                 saved={fields}
                 highlightId={selected}
               />

@@ -36,9 +36,9 @@ const AlertRow: React.FC<{
   const meta = SEVERITY_META[alert.severity];
 
   const dispatch = () => {
-    toast.success(
-      `Advisory queued for ${compact(alert.farmersAtRisk)} farmers in ${alert.district}`,
-      { duration: 2600 },
+    toast(
+      `Demo — in deployment this queues the advisory for ${compact(alert.farmersAtRisk)} farmers in ${alert.district}`,
+      { duration: 3200, icon: "📡" },
     );
   };
 
@@ -47,7 +47,7 @@ const AlertRow: React.FC<{
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.25 }}
-      className="group p-4 bg-white rounded-2xl border border-[#5B532C]/10 hover:shadow-lg hover:shadow-[#5B532C]/5 transition-all duration-300"
+      className="group p-4 bg-white rounded-2xl border border-[#5B532C]/10 transition-colors"
     >
       <div className="flex items-start gap-3">
         <div

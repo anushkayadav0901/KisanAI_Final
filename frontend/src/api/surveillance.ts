@@ -25,9 +25,12 @@ export const API_ROOT = "/v1";
 
 /** Shown on the page so a reader can see exactly what is being called. */
 export function endpointFor(metric: string, state: string | null): string {
+  // The states feed returns every metric; the metric toggle is applied
+  // client-side, so the honest curl line is the plain states call.
+  void metric;
   return state
     ? `GET /v1/surveillance/districts?state=${state}`
-    : `GET /v1/surveillance/states?metric=${metric}`;
+    : "GET /v1/surveillance/states";
 }
 
 async function getJson<T>(path: string): Promise<T> {

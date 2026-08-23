@@ -49,9 +49,10 @@ const ModelRow: React.FC<{
 
   const adopt = () => {
     onAdopt(model.id);
-    toast.success(`${model.title} v${model.version} adopted — rules live in your state`, {
-      duration: 3200,
-    });
+    toast(
+      `Demo — adopting ${model.title} v${model.version} would wire its rules into this state's advisories`,
+      { duration: 3600, icon: "🤝" },
+    );
   };
 
   return (
@@ -59,7 +60,7 @@ const ModelRow: React.FC<{
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-white rounded-2xl border border-[#5B532C]/10 hover:shadow-xl hover:shadow-[#5B532C]/5 transition-all duration-300 overflow-hidden"
+      className="bg-white rounded-2xl border border-[#5B532C]/10 transition-colors overflow-hidden"
     >
       <div className="p-5">
         <div className="flex items-start justify-between gap-4">
