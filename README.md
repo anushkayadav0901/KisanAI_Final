@@ -11,7 +11,15 @@ Built for **Build with AI: Code for Communities**, Google Cloud + GDG India.
 
 ## Quick start
 
-Two services, two terminals.
+The fastest path is the stepped launcher (macOS and Windows/Git Bash). It installs
+dependencies, sets up `.env`, optionally pulls the local LLaVA model through Ollama,
+and starts every service:
+
+```bash
+./start.sh
+```
+
+Manual path — two services, two terminals.
 
 ```bash
 cd backend && npm install && npm start      # http://localhost:3000
@@ -61,7 +69,7 @@ everything is same-origin in both development and Docker.
 | Service | Port | Stack | Responsibility |
 |---|---|---|---|
 | `frontend/` | 5173 | React 18, TypeScript, Vite, Tailwind CSS 4 | UI, offline queue, service worker |
-| `backend/` | 3000 | Node, Express 5 (ESM) | Public `/v1` API, AI proxying, retrieval, consent, fields |
+| `backend/` | 3000 | Node, Express 5, strict TypeScript (runs via tsx) | Public `/v1` API, AI proxying, retrieval, consent, fields |
 | `yolo/` | 8000 | FastAPI, Ultralytics YOLO11n | Object detection on video frames |
 | `voice-service/` | 8001 | FastAPI, websockets | Gemini Live audio proxy |
 
@@ -262,7 +270,16 @@ Recharts, Leaflet.
 **AI** — Google Gemini (`gemini-2.0-flash` for vision and text,
 `gemini-2.5-flash-native-audio` for live speech-to-speech), Groq
 (`llama-3.1-8b-instant`, `openai/gpt-oss-20b`, `whisper-large-v3-turbo`), Ultralytics
-YOLO11n for object detection.
+YOLO11n for object detection, and **local vision via Ollama (LLaVA)** — when the local
+model is present it answers first and Gemini becomes the declared fallback.
+
+**Local-first vision policy.** Vision endpoints try Ollama before any cloud call. Every
+response names the provider that produced it; a degradation is carried in the response as
+`degraded: true` with a `fallbackReason`. There are no silent fallbacks and no fabricated
+results anywhere in the pipeline — if both providers fail the API says so explicitly.
+
+**Backend language.** The backend is written end-to-end in strict TypeScript
+(`strict` + `noUncheckedIndexedAccess`, no `any`). `npm run typecheck` must stay clean.
 
 **Retrieval** — Okapi BM25, implemented directly. No embedding model or vector database.
 
@@ -316,9 +333,10 @@ CNN and YOLO pipeline for soil, heatmap and drone imagery.
 ## Repository
 
 ```
-backend/          Express API, retrieval, consent, fields, surveillance
-  lib/            surveillance, retrieval, consent, fields, explainability, apiDocs
-  routes/         v1 (public API), ai, farming, weather, payment, ws
+start.sh          stepped launcher: deps, env, optional LLaVA pull, all services
+backend/          Express API in strict TypeScript, retrieval, consent, fields, surveillance
+  lib/            surveillance, retrieval, consent, fields, explainability, ollama, apiDocs
+  routes/         v1 (public API), ai + aiVision (local-first vision), farming, weather, payment, ws
   data/           national grid, advisory corpus
 frontend/
   src/pages/      Home, Monitoring, Consult, Market, Fields, Advisory, Consent, Command
