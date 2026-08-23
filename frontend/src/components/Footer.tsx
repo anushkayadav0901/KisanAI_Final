@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Sprout, ExternalLink, Database, ShieldCheck } from 'lucide-react';
+import { Sprout, ExternalLink } from 'lucide-react';
 
 const productLinks = [
   { label: "Crop Doctor", href: "/monitor", hint: "Photo diagnosis" },
@@ -88,27 +88,8 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Provenance & credits */}
-        <div className="pt-6 space-y-3">
-          <div className="flex items-start gap-2 text-xs text-white/40 leading-relaxed">
-            <Database className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-            <p>
-              District names and agro-climatic zones are real. Surveillance metrics
-              are simulated reference data, labelled as such everywhere they appear.
-              Advisory sources carry verification links to official portals.
-            </p>
-          </div>
-          <div className="flex items-start gap-2 text-xs text-white/40 leading-relaxed">
-            <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-            <p>
-              Stands on open source: React, Leaflet, Express, FastAPI, Ultralytics
-              YOLO. Diagnoses via Google Gemini API; live consults via Gemini Live;
-              transcription via Whisper. Public API licensed CC-BY 4.0.
-            </p>
-          </div>
-        </div>
-
-        <div className="pt-4 mt-4 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-2">
+        {/* Bottom bar */}
+        <div className="pt-8 mt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-2">
           <span className="text-xs text-white/35">© {currentYear} Kisan AI</span>
           <span className="text-xs text-white/35">
             Built for Build with AI: Code for Communities · Google Cloud × GDG India

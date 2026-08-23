@@ -126,9 +126,8 @@ export const Home: React.FC = () => {
                            bg-[#63A361] text-white shadow-xl shadow-[#63A361]/30
                            hover:bg-[#4a8a4d] transition-colors"
               >
-                <span className="relative flex items-center justify-center w-14 h-14 rounded-full bg-white/20">
-                  <span className="absolute inline-flex w-full h-full rounded-full bg-white/30 animate-ping opacity-60" />
-                  <Mic className="relative w-7 h-7" />
+                <span className="flex items-center justify-center w-14 h-14 rounded-full bg-white/20">
+                  <Mic className="w-7 h-7" />
                 </span>
                 <span className="text-left">
                   <span className="block text-lg font-bold leading-tight">

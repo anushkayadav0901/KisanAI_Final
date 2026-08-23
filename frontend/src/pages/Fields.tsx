@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import toast, { Toaster } from "react-hot-toast";
 import { FieldMap, type LngLat } from "../components/fields/FieldMap";
+import { simpleRing } from "../utils/ring";
 import Footer from "../components/Footer";
 
 interface Field {
@@ -204,7 +205,7 @@ const Fields: React.FC = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: name.trim() || `Field ${fields.length + 1}`,
-          ring,
+          ring: simpleRing(ring),
           crop: crop || null,
         }),
       });

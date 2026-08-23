@@ -17,6 +17,7 @@
 import React from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { simpleRing, isSimple } from "../../utils/ring";
 
 export type LngLat = [number, number];
 
@@ -130,7 +131,10 @@ export const FieldMap: React.FC<Props> = ({
     layer.clearLayers();
     if (ring.length === 0) return;
 
-    const latlngs = ring.map(([lng, lat]) => L.latLng(lat, lng));
+    // Show the shape the farmer intends: if click order self-crosses,
+    // preview the corrected corner order instead of a bow-tie.
+    const shown = simpleRing(ring);
+    const latlngs = shown.map(([lng, lat]) => L.latLng(lat, lng));
 
     if (ring.length >= 3) {
       L.polygon(latlngs, {
@@ -217,12 +221,14 @@ export const FieldMap: React.FC<Props> = ({
       </div>
 
       {drawing && (
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[500] px-4 py-2 bg-[#5B532C] text-white text-xs font-semibold rounded-full shadow-lg">
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-[500] px-4 py-2 bg-[#5B532C] text-white text-xs font-semibold rounded-full shadow-lg text-center">
           {ring.length === 0
-            ? "Tap each corner of your field"
+            ? "Tap each corner of your field — go around it in one direction"
             : ring.length < 3
               ? `${ring.length} corner${ring.length === 1 ? "" : "s"} — at least 3 needed`
-              : `${ring.length} corners — tap Finish when the shape looks right`}
+              : !isSimple(ring)
+                ? "Corners cross — they will be re-ordered into a clean shape"
+                : `${ring.length} corners — tap Finish when the shape looks right`}
         </div>
       )}
     </div>
