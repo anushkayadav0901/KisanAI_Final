@@ -20,23 +20,33 @@
  * because pesticide guidance varies by state, variety and season.
  */
 
-const verifyUrl = (q) =>
+const verifyUrl = (q: string): string =>
   `https://www.google.com/search?q=${encodeURIComponent(
     `${q} site:icar.org.in OR site:farmer.gov.in OR site:kvk.icar.gov.in`,
   )}`;
 
-/**
- * @typedef {Object} KnowledgeDoc
- * @property {string} id
- * @property {string} title
- * @property {string} crop
- * @property {string} topic
- * @property {{publisher:string, status:string, verify_at:string, updated:string}} source
- * @property {Array<{heading:string, text:string}>} sections
- */
+export interface KnowledgeDocSource {
+  publisher: string;
+  status: string;
+  verify_at: string;
+  updated: string;
+}
 
-/** @type {KnowledgeDoc[]} */
-export const CORPUS = [
+export interface KnowledgeDocSection {
+  heading: string;
+  text: string;
+}
+
+export interface KnowledgeDoc {
+  id: string;
+  title: string;
+  crop: string;
+  topic: string;
+  source: KnowledgeDocSource;
+  sections: KnowledgeDocSection[];
+}
+
+export const CORPUS: KnowledgeDoc[] = [
   {
     id: "kai-doc-wheat-yellow-rust",
     title: "Wheat Yellow Rust: identification and management",

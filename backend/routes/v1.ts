@@ -1,5 +1,5 @@
 /**
- * routes/v1.js — the public Agricultural Signal API
+ * routes/v1.ts — the public Agricultural Signal API
  *
  * Open data, no authentication. Any state department, researcher or third-party
  * application can call these endpoints directly. The Command Centre dashboard
@@ -30,6 +30,7 @@
  *   POST /v1/explain                    advisories with their reasoning chain
  */
 
+import type { NextFunction, Request, Response } from "express";
 import { Router } from "express";
 import {
   serialiseStates,
@@ -75,10 +76,72 @@ import {
 import { renderDocs } from "../lib/apiDocs.js";
 import { OPENAPI_SPEC } from "../lib/openapi.js";
 
+// ── Request/response body shapes ─────────────────────────────────────────────
+
+interface AdvisoryBody {
+  question?: unknown;
+  limit?: number | string;
+}
+
+type Principal = typeof DEMO_PRINCIPAL;
+
+interface ConsentCreateBody {
+  principal?: Principal;
+  consumer?: { id: string; name: string; type?: string };
+  purposeCode?: string;
+  dataTypes?: string[];
+  durationDays?: number | string;
+}
+
+interface RevokeBody {
+  reason?: string;
+}
+
+interface DataReadBody {
+  consentId?: string;
+  consumerId?: string;
+  purposeCode?: string;
+  dataTypes?: string[];
+}
+
+interface FieldCreateBody {
+  name?: string;
+  ring?: Array<[number, number]>;
+  crop?: string;
+  sownOn?: string;
+  owner?: string;
+}
+
+interface ExplainBody {
+  observations?: Record<string, unknown>;
+}
+
+// ── Error helpers ────────────────────────────────────────────────────────────
+
+function errStatus(err: unknown, fallback = 500): number {
+  if (typeof err === "object" && err !== null && "status" in err) {
+    const status = (err as { status?: unknown }).status;
+    if (typeof status === "number") return status;
+  }
+  return fallback;
+}
+
+function errMessage(err: unknown): string | undefined {
+  if (typeof err === "object" && err !== null && "message" in err) {
+    const message = (err as { message?: unknown }).message;
+    if (typeof message === "string") return message;
+  }
+  return undefined;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
 const router = Router();
 
 // Open, non-personal data is cacheable and publicly readable.
-router.use((_req, res, next) => {
+router.use((_req: Request, res: Response, next: NextFunction) => {
   res.set("Cache-Control", "public, max-age=300");
   res.set("X-Data-Licence", "CC-BY-4.0");
   next();
@@ -93,7 +156,7 @@ router.use((_req, res, next) => {
  * own rights. "public" would also permit an intermediary cache to hold personal
  * consent records. Both are unacceptable here, so these routes opt out.
  */
-function noStore(_req, res, next) {
+function noStore(_req: Request, res: Response, next: NextFunction): void {
   res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   res.set("Pragma", "no-cache");
   res.set("Expires", "0");
@@ -102,7 +165,7 @@ function noStore(_req, res, next) {
 
 // ── Discovery ─────────────────────────────────────────────────────────────────
 
-router.get("/", (req, res) => {
+router.get("/", (req: Request, res: Response): void => {
   const base = `${req.protocol}://${req.get("host")}/v1`;
   res.json({
     service: "Kisan AI — Agricultural Signal API",
@@ -134,41 +197,43 @@ router.get("/", (req, res) => {
   });
 });
 
-router.get("/openapi.json", (req, res) => {
+router.get("/openapi.json", (req: Request, res: Response): void => {
   res.json(OPENAPI_SPEC(`${req.protocol}://${req.get("host")}`));
 });
 
-router.get("/docs", (req, res) => {
+router.get("/docs", (req: Request, res: Response): void => {
   res.type("html").send(renderDocs(`${req.protocol}://${req.get("host")}`));
 });
 
 // ── Surveillance ──────────────────────────────────────────────────────────────
 
-router.get("/surveillance/states", (_req, res) => {
+router.get("/surveillance/states", (_req: Request, res: Response): void => {
   res.json(serialiseStates());
 });
 
-router.get("/surveillance/districts", (req, res) => {
+router.get("/surveillance/districts", (req: Request, res: Response): void => {
   const code = String(req.query.state ?? "").toUpperCase();
   if (!code) {
-    return res.status(400).json({
+    res.status(400).json({
       error: "missing_parameter",
       message: "Query parameter 'state' is required, e.g. ?state=PB",
     });
+    return;
   }
 
   const payload = serialiseDistricts(code);
   if (!payload) {
-    return res.status(404).json({
+    res.status(404).json({
       error: "unknown_state",
       message: `No state with code '${code}'. Call /v1/surveillance/states for valid codes.`,
     });
+    return;
   }
 
   res.json(payload);
 });
 
-router.get("/surveillance/alerts", (req, res) => {
+router.get("/surveillance/alerts", (req: Request, res: Response): void => {
   const code = req.query.state
     ? String(req.query.state).toUpperCase()
     : undefined;
@@ -177,24 +242,26 @@ router.get("/surveillance/alerts", (req, res) => {
 
 // ── Model exchange ────────────────────────────────────────────────────────────
 
-router.get("/models", (_req, res) => {
+router.get("/models", (_req: Request, res: Response): void => {
   res.json(serialiseRegistry());
 });
 
-router.get("/models/:id", (req, res) => {
-  const model = MODEL_REGISTRY.find((m) => m.id === req.params.id);
+router.get("/models/:id", (req: Request, res: Response): void => {
+  const id = String(req.params.id ?? "");
+  const model = MODEL_REGISTRY.find((m) => m.id === id);
   if (!model) {
-    return res.status(404).json({
+    res.status(404).json({
       error: "unknown_model",
-      message: `No model with id '${req.params.id}'. Call /v1/models for the registry.`,
+      message: `No model with id '${id}'. Call /v1/models for the registry.`,
     });
+    return;
   }
   res.json(serialiseModel(model));
 });
 
 // -- Knowledge corpus ---------------------------------------------------------
 
-router.get("/knowledge", (_req, res) => {
+router.get("/knowledge", (_req: Request, res: Response): void => {
   res.json({
     schema: "agri-knowledge/v1",
     generated: new Date().toISOString(),
@@ -211,13 +278,14 @@ router.get("/knowledge", (_req, res) => {
   });
 });
 
-router.get("/knowledge/search", (req, res) => {
+router.get("/knowledge/search", (req: Request, res: Response): void => {
   const q = String(req.query.q ?? "").trim();
   if (!q) {
-    return res.status(400).json({
+    res.status(400).json({
       error: "missing_parameter",
       message: "Query parameter 'q' is required, e.g. ?q=yellow rust wheat",
     });
+    return;
   }
 
   const limit = Math.min(Number(req.query.limit) || 5, 20);
@@ -235,47 +303,59 @@ router.get("/knowledge/search", (req, res) => {
 
 // -- Grounded advisory --------------------------------------------------------
 
-router.post("/advisory", async (req, res) => {
-  const question = String(req.body?.question ?? "").trim();
-  if (!question) {
-    return res.status(400).json({
-      error: "missing_parameter",
-      message: 'Body must contain {"question": "..."}',
-    });
-  }
+router.post(
+  "/advisory",
+  async (req: Request, res: Response): Promise<void> => {
+    const body = isRecord(req.body) ? req.body : {};
+    const question = String(body.question ?? "").trim();
+    if (!question) {
+      res.status(400).json({
+        error: "missing_parameter",
+        message: 'Body must contain {"question": "..."}',
+      });
+      return;
+    }
 
-  try {
-    const result = await answerGrounded(question, {
-      limit: Math.min(Number(req.body?.limit) || 5, 10),
-    });
-    res.json({ schema: "agri-advisory/v1", ...result });
-  } catch (err) {
-    console.error("[v1/advisory]", err);
-    res.status(err.status || 500).json({
-      error: "advisory_failed",
-      message: err.message,
-    });
-  }
-});
+    try {
+      const result = await answerGrounded(question, {
+        limit: Math.min(Number(body.limit) || 5, 10),
+      });
+      res.json({ schema: "agri-advisory/v1", ...result });
+    } catch (err: unknown) {
+      console.error("[v1/advisory]", err);
+      res.status(errStatus(err)).json({
+        error: "advisory_failed",
+        message: errMessage(err),
+      });
+    }
+  },
+);
 
 // -- Consent and data rights --------------------------------------------------
 // Seeded on first use so the consent screen has a realistic history to show.
 
 seedDemo();
 
-router.get("/consent/vocabulary", noStore, (_req, res) => {
-  res.json({
-    schema: CONSENT_SCHEMA,
-    profile: "DEPA-aligned",
-    // Purposes are a closed list. Free-text purpose lets a consumer stay
-    // technically within a grant while doing something the farmer never agreed
-    // to, so the vocabulary is published and fixed.
-    purposes: Object.entries(PURPOSES).map(([code, p]) => ({ code, ...p })),
-    dataTypes: Object.entries(DATA_TYPES).map(([code, d]) => ({ code, ...d })),
-  });
-});
+router.get(
+  "/consent/vocabulary",
+  noStore,
+  (_req: Request, res: Response): void => {
+    res.json({
+      schema: CONSENT_SCHEMA,
+      profile: "DEPA-aligned",
+      // Purposes are a closed list. Free-text purpose lets a consumer stay
+      // technically within a grant while doing something the farmer never agreed
+      // to, so the vocabulary is published and fixed.
+      purposes: Object.entries(PURPOSES).map(([code, p]) => ({ code, ...p })),
+      dataTypes: Object.entries(DATA_TYPES).map(([code, d]) => ({
+        code,
+        ...d,
+      })),
+    });
+  },
+);
 
-router.get("/consent", noStore, (req, res) => {
+router.get("/consent", noStore, (req: Request, res: Response): void => {
   const principal = String(req.query.principal ?? DEMO_PRINCIPAL.id);
   res.json({
     schema: CONSENT_SCHEMA,
@@ -285,53 +365,68 @@ router.get("/consent", noStore, (req, res) => {
   });
 });
 
-router.post("/consent", noStore, (req, res) => {
-  try {
-    const artefact = createConsent({
-      principal: req.body?.principal ?? DEMO_PRINCIPAL,
-      consumer: req.body?.consumer,
-      purposeCode: req.body?.purposeCode,
-      dataTypes: req.body?.dataTypes ?? [],
-      durationDays: Number(req.body?.durationDays) || 90,
-    });
-    res.status(201).json(artefact);
-  } catch (err) {
-    res.status(err.status || 400).json({
-      error: "consent_invalid",
-      message: err.message,
-    });
-  }
-});
+router.post(
+  "/consent",
+  noStore,
+  (req: Request, res: Response): void => {
+    const body = (isRecord(req.body) ? req.body : {}) as ConsentCreateBody;
+    try {
+      const artefact = createConsent({
+        principal: body.principal ?? DEMO_PRINCIPAL,
+        consumer: body.consumer ?? { id: "anonymous-consumer", name: "Unnamed consumer" },
+        purposeCode: body.purposeCode ?? "",
+        dataTypes: body.dataTypes ?? [],
+        durationDays: Number(body.durationDays) || 90,
+      });
+      res.status(201).json(artefact);
+    } catch (err: unknown) {
+      res.status(errStatus(err, 400)).json({
+        error: "consent_invalid",
+        message: errMessage(err),
+      });
+    }
+  },
+);
 
-router.post("/consent/:id/revoke", noStore, (req, res) => {
-  const artefact = revokeConsent(
-    req.params.id,
-    req.body?.reason || "Revoked by the farmer",
-  );
-  if (!artefact) {
-    return res.status(404).json({
-      error: "unknown_consent",
-      message: `No consent artefact with id '${req.params.id}'`,
-    });
-  }
-  res.json(artefact);
-});
+router.post(
+  "/consent/:id/revoke",
+  noStore,
+  (req: Request, res: Response): void => {
+    const body = (isRecord(req.body) ? req.body : {}) as RevokeBody;
+    const id = String(req.params.id ?? "");
+    const artefact = revokeConsent(id, body.reason || "Revoked by the farmer");
+    if (!artefact) {
+      res.status(404).json({
+        error: "unknown_consent",
+        message: `No consent artefact with id '${id}'`,
+      });
+      return;
+    }
+    res.json(artefact);
+  },
+);
 
-router.get("/consent/:id/audit", noStore, (req, res) => {
-  if (!getConsent(req.params.id)) {
-    return res.status(404).json({
-      error: "unknown_consent",
-      message: `No consent artefact with id '${req.params.id}'`,
+router.get(
+  "/consent/:id/audit",
+  noStore,
+  (req: Request, res: Response): void => {
+    const id = String(req.params.id ?? "");
+    if (!getConsent(id)) {
+      res.status(404).json({
+        error: "unknown_consent",
+        message: `No consent artefact with id '${id}'`,
+      });
+      return;
+    }
+    res.json({
+      schema: CONSENT_SCHEMA,
+      consentId: id,
+      entries: auditTrail(id),
     });
-  }
-  res.json({
-    schema: CONSENT_SCHEMA,
-    consentId: req.params.id,
-    entries: auditTrail(req.params.id),
-  });
-});
+  },
+);
 
-router.get("/consent/audit", noStore, (_req, res) => {
+router.get("/consent/audit", noStore, (_req: Request, res: Response): void => {
   res.json({ schema: CONSENT_SCHEMA, entries: auditTrail() });
 });
 
@@ -342,20 +437,22 @@ router.get("/consent/audit", noStore, (_req, res) => {
  * Revoke a consent, call this again with the same artefact, and it returns 403
  * with the reason. Nothing else in the system can bypass this check.
  */
-router.post("/data/read", noStore, (req, res) => {
-  const { consentId, consumerId, purposeCode, dataTypes } = req.body ?? {};
+router.post("/data/read", noStore, (req: Request, res: Response): void => {
+  const body = (isRecord(req.body) ? req.body : {}) as DataReadBody;
+  const { consentId, consumerId, purposeCode, dataTypes } = body;
 
   if (!consentId) {
-    return res.status(400).json({
+    res.status(400).json({
       error: "missing_parameter",
       message: 'Body must contain {"consentId": "..."}',
     });
+    return;
   }
 
   const decision = authorise({ consentId, consumerId, purposeCode, dataTypes });
 
-  if (!decision.allowed) {
-    return res.status(403).json({
+  if (!decision.allowed || !decision.artefact) {
+    res.status(403).json({
       error: "consent_denied",
       message: decision.reason,
       consentId,
@@ -363,17 +460,22 @@ router.post("/data/read", noStore, (req, res) => {
       // exactly that rather than being left to guess at a generic 403.
       authority: "data principal",
     });
+    return;
   }
 
   const artefact = decision.artefact;
   const granted = dataTypes ?? artefact.dataTypes;
 
   // Representative payload shaped by what the artefact actually permits.
-  const payload = {};
-  if (granted.includes("identity.anonymous_id")) payload.anonymous_id = "anon-7f3c91";
-  if (granted.includes("identity.name")) payload.name = artefact.dataPrincipal.name;
-  if (granted.includes("location.district")) payload.district = artefact.dataPrincipal.district;
-  if (granted.includes("location.precise")) payload.coordinates = { lat: 30.901, lon: 75.857 };
+  const payload: Record<string, unknown> = {};
+  if (granted.includes("identity.anonymous_id"))
+    payload.anonymous_id = "anon-7f3c91";
+  if (granted.includes("identity.name"))
+    payload.name = artefact.dataPrincipal.name;
+  if (granted.includes("location.district"))
+    payload.district = artefact.dataPrincipal.district;
+  if (granted.includes("location.precise"))
+    payload.coordinates = { lat: 30.901, lon: 75.857 };
   if (granted.includes("diagnosis.result")) {
     payload.diagnoses = [
       { date: "2026-08-14", crop: "Wheat", finding: "Yellow Rust", healthScore: 62 },
@@ -387,7 +489,9 @@ router.post("/data/read", noStore, (req, res) => {
     payload.images = ["(image payload withheld in this demo response)"];
   }
   if (granted.includes("advisory.history")) {
-    payload.advisories = [{ date: "2026-08-15", topic: "Yellow rust spray window" }];
+    payload.advisories = [
+      { date: "2026-08-15", topic: "Yellow rust spray window" },
+    ];
   }
 
   res.json({
@@ -402,13 +506,14 @@ router.post("/data/read", noStore, (req, res) => {
 
 // -- Field boundaries ---------------------------------------------------------
 
-router.get("/fields", noStore, (req, res) => {
+router.get("/fields", noStore, (req: Request, res: Response): void => {
   const owner = req.query.owner ? String(req.query.owner) : undefined;
 
   // GeoJSON on request: every GIS tool, Earth Engine included, reads it
   // directly, with no conversion step on the consumer's side.
   if (String(req.query.format).toLowerCase() === "geojson") {
-    return res.json(asFeatureCollection(owner));
+    res.json(asFeatureCollection(owner));
+    return;
   }
 
   const fields = listFields(owner);
@@ -422,54 +527,64 @@ router.get("/fields", noStore, (req, res) => {
   });
 });
 
-router.post("/fields", noStore, (req, res) => {
+router.post("/fields", noStore, (req: Request, res: Response): void => {
+  const body = (isRecord(req.body) ? req.body : {}) as FieldCreateBody;
   try {
     const field = createField({
-      name: req.body?.name,
-      ring: req.body?.ring,
-      crop: req.body?.crop,
-      sownOn: req.body?.sownOn,
-      owner: req.body?.owner,
+      name: body.name,
+      ring: body.ring ?? [],
+      crop: body.crop,
+      sownOn: body.sownOn,
+      owner: body.owner,
     });
     res.status(201).json(field);
-  } catch (err) {
-    res.status(err.status || 400).json({
+  } catch (err: unknown) {
+    res.status(errStatus(err, 400)).json({
       error: "invalid_field",
-      message: err.message,
+      message: errMessage(err),
     });
   }
 });
 
-router.get("/fields/:id/vegetation", noStore, (req, res) => {
-  const data = fieldVegetation(req.params.id);
-  if (!data) {
-    return res.status(404).json({
-      error: "unknown_field",
-      message: `No field with id '${req.params.id}'`,
-    });
-  }
-  res.json(data);
-});
+router.get(
+  "/fields/:id/vegetation",
+  noStore,
+  (req: Request, res: Response): void => {
+    const id = String(req.params.id ?? "");
+    const data = fieldVegetation(id);
+    if (!data) {
+      res.status(404).json({
+        error: "unknown_field",
+        message: `No field with id '${id}'`,
+      });
+      return;
+    }
+    res.json(data);
+  },
+);
 
-router.delete("/fields/:id", noStore, (req, res) => {
-  if (!getField(req.params.id)) {
-    return res.status(404).json({
+router.delete("/fields/:id", noStore, (req: Request, res: Response): void => {
+  const id = String(req.params.id ?? "");
+  if (!getField(id)) {
+    res.status(404).json({
       error: "unknown_field",
-      message: `No field with id '${req.params.id}'`,
+      message: `No field with id '${id}'`,
     });
+    return;
   }
-  deleteField(req.params.id);
-  res.json({ deleted: req.params.id });
+  deleteField(id);
+  res.json({ deleted: id });
 });
 
 // -- Explainability -----------------------------------------------------------
 
-router.get("/explain/rules", (_req, res) => {
+router.get("/explain/rules", (_req: Request, res: Response): void => {
   res.json(ruleCatalogue());
 });
 
-router.post("/explain", (req, res) => {
-  const facts = req.body?.observations ?? req.body ?? {};
+router.post("/explain", (req: Request, res: Response): void => {
+  const body = (isRecord(req.body) ? req.body : {}) as ExplainBody;
+  const facts: Record<string, unknown> = body.observations ?? (body as unknown as Record<string, unknown>);
   res.json(explainAdvisories(facts));
 });
 

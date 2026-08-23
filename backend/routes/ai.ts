@@ -1,33 +1,85 @@
 /**
- * routes/ai.js — all /api/ai/* REST endpoints
+ * routes/ai.ts — all /api/ai/* REST endpoints
  *
  * Endpoints:
+ *   GET  /api/ai/local-vision/health — Ollama availability + resolved model
  *   POST /api/ai/chat              — Groq LLM proxy (streaming SSE supported)
  *   POST /api/ai/transcribe        — Groq Whisper voice transcription
  *   POST /api/ai/gemini            — Gemini passthrough (caller builds the body)
- *   POST /api/ai/vision-commentary — Gemini vision: live or detailed scene analysis
- *   POST /api/ai/analyze-frame     — Gemini vision: crop health frame analysis
+ *   POST /api/ai/vision-commentary — Local LLaVA first, Gemini fallback
+ *   POST /api/ai/analyze-frame     — Crop health frame analysis (same policy)
+ *
+ * Fallback policy: NO silent fallbacks and NO fabricated results. Every vision
+ * response names its `provider`; when a degradation happened it says why via
+ * `degraded` + `fallbackReason`. If every configured provider fails, the route
+ * returns an explicit error instead of invented JSON.
  */
 
-import { Router } from "express";
-import { GROQ_API_KEY, GROQ_CHAT_URL, GROQ_TRANSCRIBE_URL } from "../config.js";
+import { Router, type Request, type Response } from "express";
+import {
+  GROQ_API_KEY,
+  GROQ_CHAT_URL,
+  GROQ_TRANSCRIBE_URL,
+  LOCAL_VISION_FIRST,
+} from "../config.js";
 import {
   callGemini,
   parseGeminiJson,
   passthroughGemini,
 } from "../lib/gemini.js";
+import {
+  isOllamaAvailable,
+  ollamaStatus,
+  ollamaVision,
+  parseLooseJson,
+} from "../lib/ollama.js";
 
 const router = Router();
 
+// ── Shared types & helpers ────────────────────────────────────────────────────
+
+type VisionProvider = "ollama" | "gemini";
+type ProviderChoice = "auto" | VisionProvider;
+
+interface VisionRequestBody {
+  image?: string;
+  mode?: string;
+  /** Force a provider; default: local-first when enabled, else gemini only */
+  provider?: ProviderChoice;
+}
+
+class ProviderError extends Error {
+  constructor(
+    public readonly provider: VisionProvider,
+    message: string,
+    public readonly status = 502,
+  ) {
+    super(`[${provider}] ${message}`);
+    this.name = "ProviderError";
+  }
+}
+
+function errStatus(err: unknown): number {
+  if (err instanceof Error) {
+    const status = (err as { status?: unknown }).status;
+    if (typeof status === "number") return status;
+  }
+  return 500;
+}
+
+function errMsg(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
 // ── Groq: Kimi K2.5 web search ───────────────────────────────────────────────
 
-router.post("/search", async (req, res) => {
+router.post("/search", async (req: Request, res: Response) => {
   if (!GROQ_API_KEY) {
     return res.status(500).json({ error: "GROQ_API_KEY not configured" });
   }
 
   try {
-    const { query, context } = req.body;
+    const { query, context } = req.body as { query?: string; context?: string };
     if (!query) return res.status(400).json({ error: "query is required" });
 
     const systemPrompt = `You are an agricultural search assistant. Given a farming/crop query, provide detailed, factual search results with links and references. Focus on Indian agriculture context. Return structured JSON only.`;
@@ -50,6 +102,11 @@ Return ONLY valid JSON with this structure:
   "relatedQueries": ["related search 1", "related search 2"]
 }`;
 
+    interface GroqChatResponse {
+      choices?: Array<{ message?: { content?: string } }>;
+      error?: { message?: string };
+    }
+
     const response = await fetch(GROQ_CHAT_URL, {
       method: "POST",
       headers: {
@@ -68,21 +125,17 @@ Return ONLY valid JSON with this structure:
     });
 
     if (!response.ok) {
-      const errData = await response
-        .json()
-        .catch(() => ({ error: { message: response.statusText } }));
+      const errData = (await response.json().catch(() => ({
+        error: { message: response.statusText },
+      }))) as GroqChatResponse;
       return res.status(response.status).json(errData);
     }
 
-    const data = await response.json();
-    const text = data.choices?.[0]?.message?.content || "";
+    const data = (await response.json()) as GroqChatResponse;
+    const text = data.choices?.[0]?.message?.content ?? "";
 
     try {
-      // Parse JSON from response
-      let cleaned = text
-        .trim()
-        .replace(/^```json\s*|\s*```$/gm, "")
-        .trim();
+      let cleaned = text.trim().replace(/^```json\s*|\s*```$/gm, "").trim();
       const firstBrace = cleaned.indexOf("{");
       const lastBrace = cleaned.lastIndexOf("}");
       if (firstBrace !== -1 && lastBrace !== -1) {
@@ -94,19 +147,21 @@ Return ONLY valid JSON with this structure:
     }
   } catch (err) {
     console.error("[ai/search]", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg(err) });
   }
 });
 
 // ── Groq: Chat completions ────────────────────────────────────────────────────
 
-router.post("/chat", async (req, res) => {
+router.post("/chat", async (req: Request, res: Response) => {
   if (!GROQ_API_KEY) {
     return res.status(500).json({ error: "GROQ_API_KEY not configured" });
   }
 
   try {
-    const body = { model: "llama-3.1-8b-instant", ...req.body };
+    const body = { model: "llama-3.1-8b-instant", ...req.body } as Record<string, unknown> & {
+      stream?: boolean;
+    };
 
     const response = await fetch(GROQ_CHAT_URL, {
       method: "POST",
@@ -125,13 +180,13 @@ router.post("/chat", async (req, res) => {
     }
 
     // Pipe SSE stream directly when the client requests streaming
-    if (body.stream) {
+    if (body.stream === true && response.body) {
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
       res.setHeader("Connection", "keep-alive");
 
       const reader = response.body.getReader();
-      const pump = async () => {
+      const pump = async (): Promise<void> => {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
@@ -141,7 +196,7 @@ router.post("/chat", async (req, res) => {
           res.write(value);
         }
       };
-      pump().catch((err) => {
+      pump().catch((err: unknown) => {
         console.error("[ai/chat] stream error:", err);
         res.end();
       });
@@ -150,20 +205,27 @@ router.post("/chat", async (req, res) => {
     }
   } catch (err) {
     console.error("[ai/chat]", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg(err) });
   }
 });
 
 // ── Groq: Voice transcription ─────────────────────────────────────────────────
 
-router.post("/transcribe", async (req, res) => {
+router.post("/transcribe", async (req: Request, res: Response) => {
   if (!GROQ_API_KEY) {
     return res.status(500).json({ error: "GROQ_API_KEY not configured" });
   }
 
   try {
     const { audioData, model, language, prompt, response_format, temperature } =
-      req.body;
+      req.body as {
+        audioData?: string;
+        model?: string;
+        language?: string;
+        prompt?: string;
+        response_format?: string;
+        temperature?: number;
+      };
     if (!audioData) {
       return res.status(400).json({ error: "audioData is required" });
     }
@@ -194,146 +256,41 @@ router.post("/transcribe", async (req, res) => {
     res.json(await response.json());
   } catch (err) {
     console.error("[ai/transcribe]", err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: errMsg(err) });
   }
 });
 
 // ── Gemini: Raw passthrough ───────────────────────────────────────────────────
 
-router.post("/gemini", async (req, res) => {
+router.post("/gemini", async (req: Request, res: Response) => {
   try {
-    const model = req.query.model || req.body._model;
-    const body = { ...req.body };
+    const model =
+      (req.query.model !== undefined ? String(req.query.model) : undefined) ??
+      (req.body as { _model?: string })._model;
+    const body = { ...req.body } as Record<string, unknown>;
     delete body._model; // don't forward internal field to Gemini
     const data = await passthroughGemini(body, model);
     res.json(data);
   } catch (err) {
     console.error("[ai/gemini]", err);
-    res.status(err.status || 500).json({ error: err.message });
+    res.status(errStatus(err)).json({ error: errMsg(err) });
   }
 });
 
-// ── Gemini: Live vision commentary ───────────────────────────────────────────
+// ── Local vision health ───────────────────────────────────────────────────────
 
-const VISION_PROMPTS = {
-  detailed: `Analyze this image in detail. You are a versatile AI vision system capable of describing anything you see.
-
-Return ONLY valid JSON:
-{
-  "objects": ["list", "of", "detected", "objects"],
-  "scene": "Brief description of the overall scene (2-3 sentences)",
-  "details": "Detailed description of what's visible — colours, arrangements, activities, etc.",
-  "confidence": number (0-100)
-}`,
-
-  live: `You are a live AI vision system providing real-time commentary on what you see.
-
-Return ONLY valid JSON:
-{
-  "observation": "A natural, flowing 1-2 sentence description of what you see. Be specific but conversational.",
-  "alert": boolean (true if something noteworthy or concerning)
-}`,
-};
-
-const VISION_FALLBACKS = {
-  detailed: {
-    objects: ["unidentified objects"],
-    scene: "Scene analysis in progress",
-    details: "The AI is processing the visual information.",
-    confidence: 45,
-  },
-  live: {
-    observation: "Scanning the environment… analysing details.",
-    alert: false,
-  },
-};
-
-router.post("/vision-commentary", async (req, res) => {
-  try {
-    const { image, mode = "live" } = req.body;
-    if (!image) return res.status(400).json({ error: "No image provided" });
-
-    const prompt = VISION_PROMPTS[mode] ?? VISION_PROMPTS.live;
-    const maxOutputTokens = mode === "detailed" ? 1024 : 256;
-
-    const text = await callGemini({
-      prompt,
-      imageB64: image,
-      generationConfig: { maxOutputTokens, temperature: 0.4 },
-    });
-
-    try {
-      res.json(parseGeminiJson(text));
-    } catch {
-      res.json(VISION_FALLBACKS[mode] ?? VISION_FALLBACKS.live);
-    }
-  } catch (err) {
-    console.error("[ai/vision-commentary]", err);
-    res.status(err.status || 500).json({ error: err.message });
-  }
+router.get("/local-vision/health", async (_req: Request, res: Response) => {
+  await isOllamaAvailable(0); // force refresh
+  res.json({
+    ...ollamaStatus(),
+    fallback: "gemini",
+    localFirst: LOCAL_VISION_FIRST,
+  });
 });
 
-// ── Gemini: Crop health frame analysis ───────────────────────────────────────
+// Vision endpoints (local LLaVA first, Gemini fallback) live in ./aiVision.ts
+import { visionRouter } from "./aiVision.js";
 
-const FRAME_ANALYSIS_PROMPT = `Analyze this crop image for pest and disease detection.
-Return ONLY valid JSON with this exact structure:
-{
-  "crop_count": number,
-  "healthy_crops": number,
-  "diseased_crops": number,
-  "pest_detections": number,
-  "health_score": number (0-100),
-  "summary": "Brief analysis summary",
-  "recommendations": ["3 actionable recommendations"],
-  "issues": ["detected issues or empty array"]
-}
-
-Guidelines:
-- Count approximate number of visible plants/crops
-- Estimate how many appear healthy vs diseased
-- Look for visible pests, spots, discoloration, wilting
-- Health score: 80-100 = excellent, 60-79 = good, 40-59 = fair, below 40 = poor
-- If image is unclear, indicate that
-- Return ONLY the JSON object, no markdown, no explanations`;
-
-const FRAME_ANALYSIS_FALLBACK = {
-  crop_count: 5,
-  healthy_crops: 4,
-  diseased_crops: 0,
-  pest_detections: 0,
-  health_score: 85,
-  summary: "Analysis completed. Crops appear generally healthy.",
-  recommendations: [
-    "Continue regular monitoring",
-    "Maintain current irrigation schedule",
-    "Watch for early signs of stress",
-  ],
-  issues: [],
-};
-
-router.post("/analyze-frame", async (req, res) => {
-  try {
-    const { image } = req.body;
-    if (!image) return res.status(400).json({ error: "No image provided" });
-
-    // Strip data-URI prefix if present
-    const imageB64 = image.includes(",") ? image.split(",")[1] : image;
-
-    const text = await callGemini({
-      prompt: FRAME_ANALYSIS_PROMPT,
-      imageB64,
-      generationConfig: { temperature: 0.2, maxOutputTokens: 1024 },
-    });
-
-    try {
-      res.json(parseGeminiJson(text));
-    } catch {
-      res.json(FRAME_ANALYSIS_FALLBACK);
-    }
-  } catch (err) {
-    console.error("[ai/analyze-frame]", err);
-    res.status(err.status || 500).json({ error: err.message });
-  }
-});
+router.use(visionRouter);
 
 export default router;

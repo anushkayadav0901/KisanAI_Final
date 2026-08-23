@@ -1,5 +1,5 @@
 /**
- * lib/groundedAdvisory.js — retrieval-grounded advisory generation
+ * lib/groundedAdvisory.ts — retrieval-grounded advisory generation
  *
  * The contract this module enforces: the model may only use the passages it is
  * given, and every claim it makes must name the passage it came from. If
@@ -12,9 +12,80 @@
  * cannot recover from spraying the wrong chemical on a confident guess.
  */
 
-import { BM25Index, chunkDocument, assessGrounding, GATE } from "./retrieval.js";
-import { CORPUS } from "../data/knowledge/corpus.js";
+import {
+  BM25Index,
+  chunkDocument,
+  assessGrounding,
+  GATE,
+  type GroundingAssessment,
+} from "./retrieval.js";
+import { CORPUS, type KnowledgeDoc } from "../data/knowledge/corpus.js";
 import { callGemini, parseGeminiJson } from "./gemini.js";
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+export interface RetrievedPassage {
+  passageId: string;
+  docId: string;
+  docTitle: string;
+  heading: string;
+  crop: string | null;
+  topic: string;
+  text: string;
+  score: number;
+  coverage: number;
+  matchedTerms: string[];
+  source: KnowledgeDoc["source"];
+}
+
+export interface GateInfo {
+  decision: "refused" | "answered";
+  [key: string]: unknown;
+}
+
+export interface AdvisoryCitation {
+  n: number | undefined;
+  passageId: string;
+  docId: string;
+  docTitle: string;
+  heading: string;
+  text: string;
+  score: number;
+  matchedTerms: string[];
+  source: KnowledgeDoc["source"];
+}
+
+export interface ConsideredPassage {
+  passageId: string;
+  docTitle: string;
+  heading: string;
+  score: number;
+  matchedTerms: string[];
+}
+
+export interface GroundedAdvisory {
+  answerable: boolean;
+  answer: string;
+  missing: string;
+  citations: AdvisoryCitation[];
+  confidence: string;
+  escalate: boolean;
+  grounded: boolean;
+  retrieved: number;
+  query: string;
+  gate: GateInfo;
+  suggestion?: string;
+  consideredPassages?: ConsideredPassage[];
+}
+
+interface RawModelAnswer {
+  answerable?: unknown;
+  answer?: unknown;
+  missing?: unknown;
+  confidence?: unknown;
+  escalate?: unknown;
+  citations?: unknown;
+}
 
 // ── Index construction ────────────────────────────────────────────────────────
 // Built once at module load. The corpus is small enough that rebuilding costs
@@ -35,7 +106,9 @@ export const CORPUS_STATS = {
     "a verification link to official portals.",
 };
 
-const DOC_BY_ID = Object.fromEntries(CORPUS.map((d) => [d.id, d]));
+const DOC_BY_ID: Record<string, KnowledgeDoc> = Object.fromEntries(
+  CORPUS.map((d) => [d.id, d]),
+);
 
 // ── Retrieval ─────────────────────────────────────────────────────────────────
 
@@ -43,30 +116,37 @@ const DOC_BY_ID = Object.fromEntries(CORPUS.map((d) => [d.id, d]));
 const RELEVANCE_FLOOR = 2.0;
 
 /** Raw hits plus the gate decision, for callers that need both. */
-export function retrieveWithAssessment(query, { limit = 5 } = {}) {
+export function retrieveWithAssessment(
+  query: string,
+  { limit = 5 }: { limit?: number } = {},
+): { hits: ReturnType<BM25Index["search"]>; assessment: GroundingAssessment } {
   const hits = INDEX.search(query, { limit, minScore: RELEVANCE_FLOOR });
   return { hits, assessment: assessGrounding(hits) };
 }
 
-export function retrieve(query, { limit = 5 } = {}) {
+export function retrieve(
+  query: string,
+  { limit = 5 }: { limit?: number } = {},
+): RetrievedPassage[] {
   const hits = INDEX.search(query, { limit, minScore: RELEVANCE_FLOOR });
 
-  return hits.map((hit) => {
+  return hits.map((hit): RetrievedPassage | null => {
     const doc = DOC_BY_ID[hit.passage.docId];
+    if (!doc) return null;
     return {
       passageId: hit.passage.id,
       docId: hit.passage.docId,
       docTitle: hit.passage.meta.docTitle,
-      heading: hit.passage.meta.heading,
-      crop: hit.passage.meta.crop,
-      topic: hit.passage.meta.topic,
+      heading: hit.passage.meta.heading ?? "",
+      crop: hit.passage.meta.crop ?? null,
+      topic: hit.passage.meta.topic ?? "",
       text: hit.passage.text,
       score: Number(hit.score.toFixed(3)),
       coverage: Number(hit.coverage.toFixed(2)),
       matchedTerms: hit.matchedTerms,
       source: doc.source,
     };
-  });
+  }).filter((p): p is RetrievedPassage => p !== null);
 }
 
 // ── Grounded generation ───────────────────────────────────────────────────────
@@ -92,7 +172,7 @@ Return ONLY valid JSON:
 
 Set "escalate" to true when the situation warrants confirmation from a Krishi Vigyan Kendra or laboratory rather than acting on this advisory alone.`;
 
-function buildPrompt(question, passages) {
+function buildPrompt(question: string, passages: RetrievedPassage[]): string {
   const sources = passages
     .map(
       (p, i) =>
@@ -110,7 +190,7 @@ ${question}`;
 }
 
 /** Returned when retrieval is too weak to ground an answer. No model call is made. */
-function refusal(question, assessment) {
+function refusal(question: string, assessment: GroundingAssessment): GroundedAdvisory {
   return {
     answerable: false,
     answer: "",
@@ -135,10 +215,12 @@ function refusal(question, assessment) {
 /**
  * Answers a question strictly from the corpus.
  *
- * @param {string} question
- * @param {{limit?: number}} [opts]
+ * @throws if the Gemini call itself fails (network, key, API error).
  */
-export async function answerGrounded(question, opts = {}) {
+export async function answerGrounded(
+  question: string,
+  opts: { limit?: number } = {},
+): Promise<GroundedAdvisory> {
   const limit = opts.limit ?? 5;
   const { assessment } = retrieveWithAssessment(question, { limit });
 
@@ -154,9 +236,9 @@ export async function answerGrounded(question, opts = {}) {
     generationConfig: { temperature: 0.15, maxOutputTokens: 1200 },
   });
 
-  let parsed;
+  let parsed: RawModelAnswer;
   try {
-    parsed = parseGeminiJson(text);
+    parsed = parseGeminiJson<RawModelAnswer>(text);
   } catch {
     // A malformed model response is treated as a failure to ground, not as an
     // opportunity to pass raw text through as if it were an advisory.
@@ -170,12 +252,22 @@ export async function answerGrounded(question, opts = {}) {
 
   // Attach the full passage behind each citation so the client can show the
   // farmer exactly what the advisory was built from.
-  const cited = (parsed.citations ?? [])
-    .map((c) => {
-      const p = passages.find((x) => x.passageId === c.passageId) ?? passages[(c.n ?? 1) - 1];
+  interface RawCitation {
+    n?: unknown;
+    passageId?: unknown;
+  }
+
+  const cited: AdvisoryCitation[] = ((parsed.citations as RawCitation[] | undefined) ?? [])
+    .map((c): AdvisoryCitation | null => {
+      const byId =
+        typeof c.passageId === "string"
+          ? passages.find((x) => x.passageId === c.passageId)
+          : undefined;
+      const idx = (typeof c.n === "number" ? c.n : 1) - 1;
+      const p = byId ?? (idx >= 0 ? passages[idx] : undefined);
       if (!p) return null;
       return {
-        n: c.n,
+        n: typeof c.n === "number" ? c.n : undefined,
         passageId: p.passageId,
         docId: p.docId,
         docTitle: p.docTitle,
@@ -186,13 +278,13 @@ export async function answerGrounded(question, opts = {}) {
         source: p.source,
       };
     })
-    .filter(Boolean);
+    .filter((c): c is AdvisoryCitation => c !== null);
 
   return {
     answerable: parsed.answerable !== false,
-    answer: parsed.answer ?? "",
-    missing: parsed.missing ?? "",
-    confidence: parsed.confidence ?? "medium",
+    answer: typeof parsed.answer === "string" ? parsed.answer : "",
+    missing: typeof parsed.missing === "string" ? parsed.missing : "",
+    confidence: typeof parsed.confidence === "string" ? parsed.confidence : "medium",
     escalate: parsed.escalate === true,
     citations: cited,
     grounded: true,

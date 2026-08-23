@@ -185,6 +185,7 @@ const LiveMonitoring: React.FC = () => {
   const [detections, setDetections] = useState<YOLODetection[]>([]);
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [yoloOnline, setYoloOnline] = useState<boolean | null>(null);
+  const [llavaOnline, setLlavaOnline] = useState<boolean>(false);
   const [location, setLocation] = useState<LocationInfo | null>(null);
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [comprehensiveReport, setComprehensiveReport] =
@@ -216,6 +217,12 @@ const LiveMonitoring: React.FC = () => {
   const aiConnectedRef = useRef(false);
   const lastFrameSentRef = useRef<number>(0);
   const prevYoloOnlineRef = useRef<boolean | null>(null);
+  const llavaOnlineRef = useRef(false);
+  const llavaBusyRef = useRef(false);
+
+  useEffect(() => {
+    llavaOnlineRef.current = llavaOnline;
+  }, [llavaOnline]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -443,6 +450,53 @@ const LiveMonitoring: React.FC = () => {
   const filteredLog =
     logFilter === "all" ? log : log.filter((e) => e.type === logFilter);
 
+  // ─── Local vision (Ollama / LLaVA) ──────────────────────────────────────────
+
+  const checkLocalVision = useCallback(async () => {
+    try {
+      const r = await fetch(`${API_BASE}/ai/local-vision/health`, {
+        signal: AbortSignal.timeout(4000),
+      });
+      if (!r.ok) throw new Error(String(r.status));
+      const d = await r.json();
+      setLlavaOnline(Boolean(d.available));
+      return Boolean(d.available);
+    } catch {
+      setLlavaOnline(false);
+      return false;
+    }
+  }, []);
+
+  // Fire-and-forget: describe the current frame on the local model and log it.
+  const describeLocal = useCallback(
+    async (b64: string) => {
+      if (llavaBusyRef.current || !llavaOnlineRef.current) return;
+      llavaBusyRef.current = true;
+      try {
+        const r = await fetch(`${API_BASE}/ai/vision-commentary`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: b64, mode: "live" }),
+          signal: AbortSignal.timeout(45000),
+        });
+        if (!r.ok) throw new Error(String(r.status));
+        const d = await r.json();
+        setLlavaOnline(true);
+        if (d.observation && typeof d.observation === "string") {
+          addLog({
+            message: `[local] ${d.observation}`,
+            type: d.alert ? "alert" : "observation",
+          });
+        }
+      } catch {
+        setLlavaOnline(false);
+      } finally {
+        llavaBusyRef.current = false;
+      }
+    },
+    [addLog],
+  );
+
   // ─── Canvas / YOLO ──────────────────────────────────────────────────────────
 
   const drawBoxes = useCallback(
@@ -596,12 +650,15 @@ const LiveMonitoring: React.FC = () => {
           setYoloOnline(false);
         }
       }
+      if (frameCountRef.current % 10 === 0) {
+        describeLocal(b64);
+      }
     } catch {
       /* ignore */
     } finally {
       processingRef.current = false;
     }
-  }, [sendFrame, yoloOnline]);
+  }, [sendFrame, yoloOnline, describeLocal]);
 
   // ─── Duration timer ─────────────────────────────────────────────────────────
 
@@ -705,6 +762,7 @@ const LiveMonitoring: React.FC = () => {
       return;
     }
     connectAI();
+    checkLocalVision();
     setMode("live");
     frameIntervalRef.current = setInterval(processFrame, FRAME_MS);
   };
@@ -975,20 +1033,32 @@ const LiveMonitoring: React.FC = () => {
                     {aiStatus.label}
                   </div>
 
-                  {/* YOLO status — top left */}
-                  <div
-                    className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${
-                      yoloOnline
-                        ? "bg-[#63A361] text-white"
-                        : "bg-[#FFC50F]/80 text-[#5B532C]"
-                    }`}
-                  >
-                    {yoloOnline ? (
-                      <Wifi className="w-3 h-3" />
-                    ) : (
-                      <WifiOff className="w-3 h-3" />
-                    )}
-                    {yoloOnline ? "YOLO" : "YOLO Off"}
+                  {/* YOLO + local vision status — top left */}
+                  <div className="absolute top-3 left-3 flex items-center gap-2">
+                    <div
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${
+                        yoloOnline
+                          ? "bg-[#63A361] text-white"
+                          : "bg-[#FFC50F]/80 text-[#5B532C]"
+                      }`}
+                    >
+                      {yoloOnline ? (
+                        <Wifi className="w-3 h-3" />
+                      ) : (
+                        <WifiOff className="w-3 h-3" />
+                      )}
+                      {yoloOnline ? "YOLO" : "YOLO Off"}
+                    </div>
+                    <div
+                      className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${
+                        llavaOnline
+                          ? "bg-[#63A361] text-white"
+                          : "bg-[#5B532C]/50 text-white"
+                      }`}
+                    >
+                      <Zap className="w-3 h-3" />
+                      {llavaOnline ? "LLaVA Local" : "LLaVA Off"}
+                    </div>
                   </div>
 
                   {/* Analysis overlay — bottom */}

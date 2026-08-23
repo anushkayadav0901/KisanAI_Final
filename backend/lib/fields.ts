@@ -19,10 +19,80 @@ import crypto from "crypto";
 
 export const FIELD_SCHEMA = "agri-field/v1";
 
-/** @type {Map<string, object>} */
-const FIELDS = new Map();
+// ── Domain types ──────────────────────────────────────────────────────────────
 
-const newId = () => `field-${crypto.randomBytes(5).toString("hex")}`;
+export type LatLng = [number, number];
+
+export interface PolygonGeometry {
+  type: "Polygon";
+  coordinates: LatLng[][];
+}
+
+export interface NdviPoint {
+  date: string;
+  ndvi: number;
+}
+
+export interface FieldRecord {
+  schema: string;
+  id: string;
+  name: string;
+  owner: string;
+  crop: string | null;
+  sownOn: string | null;
+  geometry: PolygonGeometry;
+  centroid: LatLng;
+  areaHectares: number;
+  createdAt: string;
+}
+
+export interface CreateFieldInput {
+  name?: string;
+  ring: LatLng[];
+  crop?: string | null;
+  sownOn?: string | null;
+  owner?: string;
+}
+
+export interface VegetationSource {
+  status: "placeholder";
+  producer: string;
+  note: string;
+  plannedProducer: string;
+}
+
+export interface VegetationReport {
+  schema: string;
+  fieldId: string;
+  fieldName: string;
+  areaHectares: number;
+  centroid: LatLng;
+  source: VegetationSource;
+  cadenceDays: number;
+  ndviSeries: NdviPoint[];
+}
+
+export interface FieldFeature {
+  type: "Feature";
+  id: string;
+  geometry: PolygonGeometry;
+  properties: {
+    name: string;
+    crop: string | null;
+    sownOn: string | null;
+    areaHectares: number;
+    createdAt: string;
+  };
+}
+
+export interface FieldFeatureCollection {
+  type: "FeatureCollection";
+  features: FieldFeature[];
+}
+
+const FIELDS = new Map<string, FieldRecord>();
+
+const newId = (): string => `field-${crypto.randomBytes(5).toString("hex")}`;
 
 // ── Geometry ──────────────────────────────────────────────────────────────────
 
@@ -34,16 +104,16 @@ const newId = () => `field-${crypto.randomBytes(5).toString("hex")}`;
  * and a farmer checking the number against their own records would immediately
  * see it was nonsense.
  */
-export function polygonAreaHectares(ring) {
+export function polygonAreaHectares(ring: LatLng[]): number {
   if (!ring || ring.length < 3) return 0;
 
   const R = 6378137; // WGS84 equatorial radius, metres
-  const rad = (d) => (d * Math.PI) / 180;
+  const rad = (d: number): number => (d * Math.PI) / 180;
 
   let total = 0;
   for (let i = 0; i < ring.length; i++) {
-    const [lon1, lat1] = ring[i];
-    const [lon2, lat2] = ring[(i + 1) % ring.length];
+    const [lon1, lat1] = ring[i]!;
+    const [lon2, lat2] = ring[(i + 1) % ring.length]!;
     total += (rad(lon2) - rad(lon1)) * (2 + Math.sin(rad(lat1)) + Math.sin(rad(lat2)));
   }
 
@@ -51,7 +121,7 @@ export function polygonAreaHectares(ring) {
   return Number((areaM2 / 10000).toFixed(3));
 }
 
-function centroid(ring) {
+function centroid(ring: LatLng[]): LatLng {
   const lon = ring.reduce((a, p) => a + p[0], 0) / ring.length;
   const lat = ring.reduce((a, p) => a + p[1], 0) / ring.length;
   return [Number(lon.toFixed(6)), Number(lat.toFixed(6))];
@@ -69,16 +139,16 @@ function centroid(ring) {
  *
  * Seeded from the field id so a given field always shows the same curve.
  */
-function placeholderNdvi(fieldId, points = 12) {
+function placeholderNdvi(fieldId: string, points = 12): NdviPoint[] {
   let seed = 0;
   for (const ch of fieldId) seed = (seed * 31 + ch.charCodeAt(0)) >>> 0;
-  const rnd = () => {
+  const rnd = (): number => {
     seed = (seed * 1664525 + 1013904223) >>> 0;
     return seed / 4294967296;
   };
 
   const peak = 0.68 + rnd() * 0.16;
-  const series = [];
+  const series: NdviPoint[] = [];
   const today = Date.now();
 
   for (let i = points - 1; i >= 0; i--) {
@@ -96,7 +166,7 @@ function placeholderNdvi(fieldId, points = 12) {
 
 // ── CRUD ──────────────────────────────────────────────────────────────────────
 
-export function createField({ name, ring, crop, sownOn, owner }) {
+export function createField({ name, ring, crop, sownOn, owner }: CreateFieldInput): FieldRecord {
   if (!Array.isArray(ring) || ring.length < 3) {
     throw Object.assign(new Error("A field needs at least 3 boundary points"), {
       status: 400,
@@ -119,9 +189,9 @@ export function createField({ name, ring, crop, sownOn, owner }) {
 
   const id = newId();
   // GeoJSON rings must close: first point repeated at the end.
-  const closed = [...ring, ring[0]];
+  const closed = [...ring, ring[0]!];
 
-  const field = {
+  const field: FieldRecord = {
     schema: FIELD_SCHEMA,
     id,
     name: name || "Unnamed field",
@@ -138,18 +208,18 @@ export function createField({ name, ring, crop, sownOn, owner }) {
   return field;
 }
 
-export function listFields(owner) {
+export function listFields(owner?: string): FieldRecord[] {
   const all = [...FIELDS.values()];
   return (owner ? all.filter((f) => f.owner === owner) : all).sort((a, b) =>
     b.createdAt.localeCompare(a.createdAt),
   );
 }
 
-export function getField(id) {
+export function getField(id: string): FieldRecord | null {
   return FIELDS.get(id) ?? null;
 }
 
-export function deleteField(id) {
+export function deleteField(id: string): boolean {
   return FIELDS.delete(id);
 }
 
@@ -160,7 +230,7 @@ export function deleteField(id) {
  * and what would replace it. A consumer can branch on `source.status` rather
  * than having to trust the values.
  */
-export function fieldVegetation(id) {
+export function fieldVegetation(id: string): VegetationReport | null {
   const field = FIELDS.get(id);
   if (!field) return null;
 
@@ -184,10 +254,10 @@ export function fieldVegetation(id) {
 }
 
 /** As GeoJSON FeatureCollection — the format every GIS tool already reads. */
-export function asFeatureCollection(owner) {
+export function asFeatureCollection(owner?: string): FieldFeatureCollection {
   return {
     type: "FeatureCollection",
-    features: listFields(owner).map((f) => ({
+    features: listFields(owner).map((f): FieldFeature => ({
       type: "Feature",
       id: f.id,
       geometry: f.geometry,

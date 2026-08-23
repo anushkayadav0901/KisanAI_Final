@@ -19,16 +19,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const cd = JSON.parse(
   fs.readFileSync(path.join(__dirname, "cityData.json"), "utf8"),
-);
+) as Record<string, unknown>;
+
+function cityList(key: string): string[] {
+  const value: unknown = cd[key];
+  return Array.isArray(value) ? (value as string[]) : [];
+}
 
 const DISTRICTS = {
-  MH: cd["mahacities"] ?? [],
-  AP: (cd["andra cities"] ?? []).slice(0, 26),
-  PB: cd["punjab cities"] ?? [],
-  KA: cd["karnataka cities"] ?? [],
-  KL: cd["kerala cities"] ?? [],
-  TN: cd["tamilnadu cities"] ?? [],
-  TG: (cd["telangana cities"] ?? []).slice(0, 33),
+  MH: cityList("mahacities"),
+  AP: cityList("andra cities").slice(0, 26),
+  PB: cityList("punjab cities"),
+  KA: cityList("karnataka cities"),
+  KL: cityList("kerala cities"),
+  TN: cityList("tamilnadu cities"),
+  TG: cityList("telangana cities").slice(0, 33),
 
   UP: [
     "Agra", "Aligarh", "Prayagraj", "Bareilly", "Ballia", "Bijnor", "Bulandshahr",
@@ -130,7 +135,19 @@ const DISTRICTS = {
   SK: ["East Sikkim", "North Sikkim", "South Sikkim", "West Sikkim"],
 };
 
-export const STATE_NODES = [
+export interface StateNode {
+  code: string;
+  name: string;
+  col: number;
+  row: number;
+  zone: string;
+  crops: string[];
+  farmHouseholdsLakh: number;
+  language: string;
+  districts: string[];
+}
+
+export const STATE_NODES: StateNode[] = [
   { code: "JK", name: "Jammu & Kashmir", col: 3, row: 0, zone: "Western Himalayan", crops: ["Rice", "Wheat", "Mustard"], farmHouseholdsLakh: 14, language: "Urdu", districts: DISTRICTS.JK },
   { code: "HP", name: "Himachal Pradesh", col: 4, row: 1, zone: "Western Himalayan", crops: ["Potato", "Wheat", "Maize"], farmHouseholdsLakh: 9, language: "Hindi", districts: DISTRICTS.HP },
   { code: "UK", name: "Uttarakhand", col: 5, row: 1, zone: "Western Himalayan", crops: ["Rice", "Wheat", "Potato"], farmHouseholdsLakh: 8, language: "Hindi", districts: DISTRICTS.UK },
@@ -162,12 +179,12 @@ export const STATE_NODES = [
   { code: "KL", name: "Kerala", col: 3, row: 8, zone: "West Coast Plains & Ghats", crops: ["Rice", "Banana", "Tea"], farmHouseholdsLakh: 18, language: "Malayalam", districts: DISTRICTS.KL },
 ];
 
-export const STATE_BY_CODE = Object.fromEntries(
+export const STATE_BY_CODE: Record<string, StateNode> = Object.fromEntries(
   STATE_NODES.map((s) => [s.code, s]),
 );
 
 /** Crop to the pests and diseases that actually threaten it in Indian conditions. */
-export const CROP_THREATS = {
+export const CROP_THREATS: Record<string, string[]> = {
   Rice: ["Bacterial Leaf Blight", "Rice Blast", "Brown Planthopper", "Sheath Blight", "False Smut"],
   Wheat: ["Yellow Rust", "Karnal Bunt", "Powdery Mildew", "Loose Smut", "Wheat Aphid"],
   Cotton: ["Pink Bollworm", "Whitefly", "Cotton Leaf Curl Virus", "Bacterial Blight"],

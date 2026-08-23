@@ -11,6 +11,58 @@
  * top later without changing the interface below.
  */
 
+// ── Domain types ──────────────────────────────────────────────────────────────
+
+export interface PassageMeta {
+  heading?: string;
+  docTitle: string;
+  crop?: string | null;
+  topic?: string;
+  publisher: string;
+  section: number;
+}
+
+export interface Passage {
+  id: string;
+  docId: string;
+  text: string;
+  meta: PassageMeta;
+}
+
+export interface DocumentSection {
+  heading: string;
+  text: string;
+}
+
+export interface AdvisoryDocument {
+  id: string;
+  title: string;
+  crop?: string | null;
+  topic?: string;
+  source: { publisher: string };
+  sections: DocumentSection[];
+}
+
+export interface SearchHit {
+  passage: Passage;
+  score: number;
+  matchedTerms: string[];
+  coverage: number;
+}
+
+export interface GroundingAssessment {
+  grounded: boolean;
+  reason?: string;
+  topScore?: number;
+  coverage?: number;
+}
+
+export interface GateConfig {
+  minMatchedTerms: number;
+  minCoverage: number;
+  minTopScore: number;
+}
+
 // ── Tokenisation ──────────────────────────────────────────────────────────────
 
 /**
@@ -26,7 +78,7 @@ const STOPWORDS = new Set([
   "if", "then", "than", "there", "here", "what", "which", "who", "how",
 ]);
 
-export function tokenise(text) {
+export function tokenise(text: unknown): string[] {
   return String(text)
     .toLowerCase()
     .replace(/[^\p{L}\p{N}\s-]/gu, " ")
@@ -39,7 +91,7 @@ export function tokenise(text) {
  * agricultural vocabulary ("blight"/"blights" matters, "rust"/"rusty" does
  * not), so this only handles plurals and common verb endings.
  */
-function stem(token) {
+function stem(token: string): string {
   if (token.length <= 4) return token;
   return token
     .replace(/ies$/, "y")
@@ -48,7 +100,7 @@ function stem(token) {
     .replace(/(ing|ed)$/, "");
 }
 
-const normalise = (text) => tokenise(text).map(stem);
+const normalise = (text: unknown): string[] => tokenise(text).map(stem);
 
 // ── Index ─────────────────────────────────────────────────────────────────────
 
@@ -56,12 +108,18 @@ const K1 = 1.5; // term-frequency saturation
 const B = 0.75; // length normalisation
 
 export class BM25Index {
-  constructor(passages) {
-    /** @type {Array<{id:string, docId:string, text:string, meta:object}>} */
+  passages: Passage[];
+  termFreqs: Map<string, number>[];
+  lengths: number[];
+  avgLength: number;
+  docFreq: Map<string, number>;
+  N: number;
+
+  constructor(passages: Passage[]) {
     this.passages = passages;
 
     this.termFreqs = passages.map((p) => {
-      const counts = new Map();
+      const counts = new Map<string, number>();
       for (const term of normalise(`${p.meta?.heading ?? ""} ${p.text}`)) {
         counts.set(term, (counts.get(term) ?? 0) + 1);
       }
@@ -85,24 +143,24 @@ export class BM25Index {
     this.N = passages.length;
   }
 
-  idf(term) {
+  idf(term: string): number {
     const df = this.docFreq.get(term) ?? 0;
     // BM25 probabilistic IDF, floored so very common terms cannot go negative.
     return Math.max(0.05, Math.log(1 + (this.N - df + 0.5) / (df + 0.5)));
   }
 
-  /**
-   * @returns {Array<{passage:object, score:number, matchedTerms:string[], coverage:number}>}
-   */
-  search(query, { limit = 5, minScore = 1.0 } = {}) {
+  search(
+    query: string,
+    { limit = 5, minScore = 1.0 }: { limit?: number; minScore?: number } = {},
+  ): SearchHit[] {
     const queryTerms = [...new Set(normalise(query))];
     if (queryTerms.length === 0) return [];
 
-    const scored = this.passages.map((passage, i) => {
-      const counts = this.termFreqs[i];
-      const len = this.lengths[i];
+    const scored = this.passages.map((passage, i): SearchHit => {
+      const counts = this.termFreqs[i]!;
+      const len = this.lengths[i]!;
       let score = 0;
-      const matchedTerms = [];
+      const matchedTerms: string[] = [];
 
       for (const term of queryTerms) {
         const tf = counts.get(term);
@@ -129,7 +187,7 @@ export class BM25Index {
   }
 
   /** Query terms after normalisation — exposed so callers can report coverage. */
-  queryTerms(query) {
+  queryTerms(query: string): string[] {
     return [...new Set(normalise(query))];
   }
 }
@@ -152,18 +210,18 @@ export class BM25Index {
  * Returns the decision plus its reasoning, so an API consumer can see why a
  * question was refused rather than being told only that it was.
  */
-export const GATE = {
+export const GATE: GateConfig = {
   minMatchedTerms: 2,
   minCoverage: 0.4,
   minTopScore: 6.0,
 };
 
-export function assessGrounding(hits) {
+export function assessGrounding(hits: SearchHit[]): GroundingAssessment {
   if (hits.length === 0) {
     return { grounded: false, reason: "no passage matched the question at all" };
   }
 
-  const top = hits[0];
+  const top = hits[0]!;
 
   if (top.matchedTerms.length < GATE.minMatchedTerms) {
     return {
@@ -206,10 +264,13 @@ export function assessGrounding(hits) {
  * from the middle of it. Anything unusually long is split further on sentence
  * boundaries so a citation stays quotable.
  */
-export function chunkDocument(doc, { maxChars = 900 } = {}) {
-  const passages = [];
+export function chunkDocument(
+  doc: AdvisoryDocument,
+  { maxChars = 900 }: { maxChars?: number } = {},
+): Passage[] {
+  const passages: Passage[] = [];
 
-  doc.sections.forEach((section, sIdx) => {
+  doc.sections.forEach((section: DocumentSection, sIdx: number) => {
     const base = {
       docId: doc.id,
       meta: {
@@ -231,7 +292,7 @@ export function chunkDocument(doc, { maxChars = 900 } = {}) {
     let buffer = "";
     let part = 1;
 
-    const flush = () => {
+    const flush = (): void => {
       if (!buffer.trim()) return;
       passages.push({
         id: `${doc.id}#${sIdx + 1}.${part}`,

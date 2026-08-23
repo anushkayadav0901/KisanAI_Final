@@ -15,6 +15,94 @@
 
 export const EXPLAIN_SCHEMA = "agri-explain/v1";
 
+// ── Domain types ──────────────────────────────────────────────────────────────
+
+export type Urgency = "high" | "medium" | "low";
+
+/**
+ * Observations for a field. Known keys are typed; anything else a caller adds
+ * flows through untouched and is echoed back in `observations`.
+ */
+export interface AdvisoryFacts {
+  soilMoisturePct?: number;
+  rainForecastMm3d?: number;
+  cropStage?: string;
+  crop?: string;
+  pest?: string;
+  lastSprayClass?: string;
+  zincStatus?: string;
+  minTempC?: number;
+  humidityPct?: number;
+  [key: string]: unknown;
+}
+
+export interface ExplainInput {
+  label: string;
+  value: string;
+  threshold: string;
+  met: boolean;
+}
+
+export interface RuleDetail {
+  inputs: ExplainInput[];
+  rule: string;
+  because: string;
+}
+
+export interface Rule {
+  id: string;
+  title: string;
+  urgency: Urgency;
+  needs: string[];
+  criticalStages?: string[];
+  when: (f: AdvisoryFacts) => boolean;
+  explain: (f: AdvisoryFacts) => RuleDetail;
+}
+
+export interface FiredAdvisory {
+  id: string;
+  title: string;
+  urgency: Urgency;
+  inputs: ExplainInput[];
+  rule: string;
+  because: string;
+  chain: string[];
+}
+
+export interface SkippedRule {
+  id: string;
+  title: string;
+  missingInputs: string[];
+  reason: string;
+}
+
+export interface ExplanationReport {
+  schema: string;
+  generated: string;
+  method: string;
+  observations: AdvisoryFacts;
+  advisories: FiredAdvisory[];
+  notEvaluated: SkippedRule[];
+  summary: {
+    rulesTotal: number;
+    rulesFired: number;
+    rulesSkipped: number;
+  };
+}
+
+export interface RuleCatalogueEntry {
+  id: string;
+  title: string;
+  urgency: Urgency;
+  requiredInputs: string[];
+}
+
+export interface RuleCatalogue {
+  schema: string;
+  method: string;
+  rules: RuleCatalogueEntry[];
+}
+
 // ── Rules ─────────────────────────────────────────────────────────────────────
 
 /**
@@ -23,7 +111,7 @@ export const EXPLAIN_SCHEMA = "agri-explain/v1";
  * decision and its justification cannot drift apart — the same values that
  * satisfied the predicate are the ones shown.
  */
-const RULES = [
+const RULES: Rule[] = [
   {
     id: "irrigate.critical-stage-deficit",
     title: "Irrigate within 48 hours",
@@ -31,14 +119,14 @@ const RULES = [
     needs: ["soilMoisturePct", "rainForecastMm3d", "cropStage"],
     criticalStages: ["crown root initiation", "tillering", "flowering", "grain filling", "panicle initiation"],
     when: (f) =>
-      f.soilMoisturePct < 25 &&
-      f.rainForecastMm3d < 5 &&
-      RULES[0].criticalStages.includes(String(f.cropStage).toLowerCase()),
+      f.soilMoisturePct! < 25 &&
+      f.rainForecastMm3d! < 5 &&
+      RULES[0]!.criticalStages!.includes(String(f.cropStage).toLowerCase()),
     explain: (f) => ({
       inputs: [
         { label: "Soil moisture", value: `${f.soilMoisturePct}%`, threshold: "below 25%", met: true },
         { label: "Rain forecast, 3 days", value: `${f.rainForecastMm3d} mm`, threshold: "below 5 mm", met: true },
-        { label: "Crop stage", value: f.cropStage, threshold: "a critical stage", met: true },
+        { label: "Crop stage", value: String(f.cropStage), threshold: "a critical stage", met: true },
       ],
       rule: "Moisture below 25% with no meaningful rain due, at a stage where water stress causes disproportionate yield loss.",
       because:
@@ -50,7 +138,7 @@ const RULES = [
     title: "Do not irrigate yet",
     urgency: "low",
     needs: ["soilMoisturePct", "rainForecastMm3d"],
-    when: (f) => f.rainForecastMm3d >= 15 && f.soilMoisturePct >= 20,
+    when: (f) => f.rainForecastMm3d! >= 15 && f.soilMoisturePct! >= 20,
     explain: (f) => ({
       inputs: [
         { label: "Rain forecast, 3 days", value: `${f.rainForecastMm3d} mm`, threshold: "15 mm or more", met: true },
@@ -68,12 +156,12 @@ const RULES = [
     needs: ["crop", "minTempC", "humidityPct"],
     when: (f) =>
       String(f.crop).toLowerCase() === "wheat" &&
-      f.minTempC >= 8 &&
-      f.minTempC <= 15 &&
-      f.humidityPct >= 80,
+      f.minTempC! >= 8 &&
+      f.minTempC! <= 15 &&
+      f.humidityPct! >= 80,
     explain: (f) => ({
       inputs: [
-        { label: "Crop", value: f.crop, threshold: "wheat", met: true },
+        { label: "Crop", value: String(f.crop), threshold: "wheat", met: true },
         { label: "Night temperature", value: `${f.minTempC}°C`, threshold: "8–15°C", met: true },
         { label: "Humidity", value: `${f.humidityPct}%`, threshold: "80% or above", met: true },
       ],
@@ -93,9 +181,9 @@ const RULES = [
       String(f.lastSprayClass).toLowerCase() === "pyrethroid",
     explain: (f) => ({
       inputs: [
-        { label: "Crop", value: f.crop, threshold: "rice", met: true },
-        { label: "Pest reported", value: f.pest, threshold: "brown planthopper", met: true },
-        { label: "Previous spray class", value: f.lastSprayClass, threshold: "pyrethroid", met: true },
+        { label: "Crop", value: String(f.crop), threshold: "rice", met: true },
+        { label: "Pest reported", value: String(f.pest), threshold: "brown planthopper", met: true },
+        { label: "Previous spray class", value: String(f.lastSprayClass), threshold: "pyrethroid", met: true },
       ],
       rule: "Pyrethroids kill planthopper predators more effectively than the planthopper, which drives resurgence.",
       because:
@@ -112,8 +200,8 @@ const RULES = [
       String(f.zincStatus).toLowerCase() === "low",
     explain: (f) => ({
       inputs: [
-        { label: "Crop", value: f.crop, threshold: "rice or wheat", met: true },
-        { label: "Soil zinc", value: f.zincStatus, threshold: "low", met: true },
+        { label: "Crop", value: String(f.crop), threshold: "rice or wheat", met: true },
+        { label: "Soil zinc", value: String(f.zincStatus), threshold: "low", met: true },
       ],
       rule: "Zinc-responsive crop on a soil card reading low zinc.",
       because:
@@ -124,7 +212,7 @@ const RULES = [
 
 // ── Evaluation ────────────────────────────────────────────────────────────────
 
-const URGENCY_ORDER = { high: 0, medium: 1, low: 2 };
+const URGENCY_ORDER: Record<Urgency, number> = { high: 0, medium: 1, low: 2 };
 
 /**
  * Runs the rule set against a set of observations.
@@ -134,9 +222,9 @@ const URGENCY_ORDER = { high: 0, medium: 1, low: 2 };
  * reading for your field" is useful information, and hiding it would overstate
  * how much the system actually looked at.
  */
-export function explainAdvisories(facts = {}) {
-  const fired = [];
-  const notEvaluated = [];
+export function explainAdvisories(facts: AdvisoryFacts = {}): ExplanationReport {
+  const fired: FiredAdvisory[] = [];
+  const notEvaluated: SkippedRule[] = [];
 
   for (const rule of RULES) {
     const missing = rule.needs.filter(
@@ -191,11 +279,11 @@ export function explainAdvisories(facts = {}) {
 }
 
 /** The rule set as documentation — what the system is able to conclude at all. */
-export function ruleCatalogue() {
+export function ruleCatalogue(): RuleCatalogue {
   return {
     schema: EXPLAIN_SCHEMA,
     method: "deterministic threshold rules evaluated in code, not model output",
-    rules: RULES.map((r) => ({
+    rules: RULES.map((r): RuleCatalogueEntry => ({
       id: r.id,
       title: r.title,
       urgency: r.urgency,

@@ -6,7 +6,9 @@
  * anyone at this end being involved. That is the point of publishing it.
  */
 
-export const OPENAPI_SPEC = (origin) => ({
+export const OPENAPI_SPEC = (
+  origin: string,
+): Record<string, unknown> => ({
   openapi: "3.0.3",
   info: {
     title: "Kisan AI — Agricultural Signal API",

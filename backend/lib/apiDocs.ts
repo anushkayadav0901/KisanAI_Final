@@ -9,7 +9,16 @@
  * reader can confirm the API works rather than taking the page's word for it.
  */
 
-const ENDPOINTS = [
+export interface DocEndpoint {
+  method: "GET" | "POST";
+  path: string;
+  tag: string;
+  summary: string;
+  detail?: string;
+  body?: Record<string, unknown>;
+}
+
+const ENDPOINTS: DocEndpoint[] = [
   {
     method: "GET",
     path: "/v1/surveillance/states",
@@ -118,10 +127,10 @@ const ENDPOINTS = [
   },
 ];
 
-const esc = (s) =>
+const esc = (s: unknown): string =>
   String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-export function renderDocs(origin) {
+export function renderDocs(origin: string): string {
   const rows = ENDPOINTS.map(
     (e, i) => `
     <article class="ep">

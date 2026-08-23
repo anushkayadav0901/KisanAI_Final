@@ -1,5 +1,5 @@
 /**
- * routes/ws.js — WebSocket /gemini-live endpoint
+ * routes/ws.ts — WebSocket /gemini-live endpoint
  *
  * Sets up the Gemini Live crop-health WebSocket server.
  * Call setupGeminiLive(httpServer) from index.js after the HTTP
@@ -12,6 +12,7 @@
  *                     { type: "error",    message: "..." }
  */
 
+import type { Server as HttpServer } from "node:http";
 import WebSocket, { WebSocketServer } from "ws";
 import { GEMINI_API_KEY, GEMINI_REST_URL } from "../config.js";
 import { parseGeminiJson } from "../lib/gemini.js";
@@ -64,9 +65,38 @@ const ANALYSIS_FALLBACK = {
 // Rate limiting — one Gemini call per client per N milliseconds
 const RATE_LIMIT_MS = 2000;
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+interface FrameMessage {
+  type: string;
+  data?: string;
+}
+
+interface GeminiRestResponse {
+  error?: { message?: string };
+  candidates?: Array<{
+    content?: {
+      parts?: Array<{ text?: string }>;
+    };
+  }>;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isGeminiRestResponse(value: unknown): value is GeminiRestResponse {
+  return isRecord(value);
+}
+
+function asFrameMessage(parsed: unknown): FrameMessage | null {
+  if (!isRecord(parsed) || typeof parsed.type !== "string") return null;
+  return parsed as unknown as FrameMessage;
+}
+
 // ── Gemini call ───────────────────────────────────────────────────────────────
 
-async function analyseFrame(imageB64) {
+async function analyseFrame(imageB64: string): Promise<unknown> {
   const body = {
     contents: [
       {
@@ -90,7 +120,11 @@ async function analyseFrame(imageB64) {
     body: JSON.stringify(body),
   });
 
-  const data = await response.json();
+  const data: unknown = await response.json();
+
+  if (!isGeminiRestResponse(data)) {
+    throw new Error("Gemini returned an unexpected response shape");
+  }
 
   if (data.error) {
     throw new Error(`Gemini API error: ${data.error.message}`);
@@ -104,7 +138,7 @@ async function analyseFrame(imageB64) {
 
 // ── Wire up WebSocket server ──────────────────────────────────────────────────
 
-function wrapAnalysis(analysis) {
+function wrapAnalysis(analysis: unknown): string {
   return JSON.stringify({
     type: "analysis",
     data: {
@@ -115,29 +149,30 @@ function wrapAnalysis(analysis) {
   });
 }
 
-export function setupGeminiLive(httpServer) {
+export function setupGeminiLive(httpServer: HttpServer): WebSocketServer {
+  void httpServer;
   const wss = new WebSocketServer({
     noServer: true,
     perMessageDeflate: false,
   });
 
-  wss.on("connection", (ws) => {
+  wss.on("connection", (ws: WebSocket) => {
     ws.send(JSON.stringify({ type: "ready", message: "Kisan AI ready" }));
 
     let lastAnalysisAt = 0;
     let frameCount = 0;
     let analysisCount = 0;
 
-    ws.on("message", async (raw) => {
-      let message;
+    ws.on("message", async (raw: WebSocket.RawData): Promise<void> => {
+      let parsed: unknown;
       try {
-        message = JSON.parse(raw.toString());
+        parsed = JSON.parse(raw.toString()) as unknown;
       } catch {
         return;
       }
 
-      if (message.type !== "frame" || !message.data) return;
-
+      const message = asFrameMessage(parsed);
+      if (!message || message.type !== "frame" || !message.data) return;
       frameCount++;
 
       // Per-client rate limit
@@ -183,13 +218,16 @@ export function setupGeminiLive(httpServer) {
  *   6. Gemini replies with `setupComplete` → forwarded to client
  *   7. Client then streams audio; Gemini streams audio back
  */
-export function setupGeminiVoiceLiveProxy(httpServer) {
+export function setupGeminiVoiceLiveProxy(
+  httpServer: HttpServer,
+): WebSocketServer {
+  void httpServer;
   const wss = new WebSocketServer({
     noServer: true,
     perMessageDeflate: false,
   });
 
-  wss.on("connection", (clientSocket) => {
+  wss.on("connection", (clientSocket: WebSocket) => {
     if (!GEMINI_API_KEY) {
       clientSocket.send(
         JSON.stringify({
@@ -206,7 +244,10 @@ export function setupGeminiVoiceLiveProxy(httpServer) {
     const upstreamSocket = new WebSocket(upstreamUrl);
 
     // Buffer client messages until Gemini upstream is open
-    const pendingClientMessages = [];
+    const pendingClientMessages: Array<{
+      data: WebSocket.RawData;
+      isBinary: boolean;
+    }> = [];
     let upstreamOpen = false;
 
     upstreamSocket.on("open", () => {
@@ -219,13 +260,13 @@ export function setupGeminiVoiceLiveProxy(httpServer) {
       pendingClientMessages.length = 0;
     });
 
-    upstreamSocket.on("message", (data, isBinary) => {
+    upstreamSocket.on("message", (data: WebSocket.RawData, isBinary: boolean) => {
       if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.send(data, { binary: isBinary });
       }
     });
 
-    upstreamSocket.on("error", (err) => {
+    upstreamSocket.on("error", (err: Error) => {
       console.error("[voice-live] upstream error", err.message || err);
       if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.send(
@@ -239,8 +280,8 @@ export function setupGeminiVoiceLiveProxy(httpServer) {
       }
     });
 
-    upstreamSocket.on("close", (code, reasonBuffer) => {
-      const reason = reasonBuffer?.toString?.() || "Upstream closed";
+    upstreamSocket.on("close", (code: number, reasonBuffer: Buffer) => {
+      const reason = reasonBuffer?.toString() || "Upstream closed";
       console.log(`[voice-live] upstream closed ${code} ${reason}`);
       if (clientSocket.readyState === WebSocket.OPEN) {
         clientSocket.close(code || 1011, reason.slice(0, 100));
@@ -249,7 +290,7 @@ export function setupGeminiVoiceLiveProxy(httpServer) {
 
     // --- Client → Upstream (with buffering) ---
 
-    clientSocket.on("message", (data, isBinary) => {
+    clientSocket.on("message", (data: WebSocket.RawData, isBinary: boolean) => {
       if (upstreamOpen && upstreamSocket.readyState === WebSocket.OPEN) {
         upstreamSocket.send(data, { binary: isBinary });
       } else {

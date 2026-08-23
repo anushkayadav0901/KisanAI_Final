@@ -15,17 +15,112 @@
  * source.
  */
 
-import { STATE_NODES, CROP_THREATS } from "../data/nationalGrid.js";
+import { STATE_NODES, CROP_THREATS, type StateNode } from "../data/nationalGrid.js";
 
 export const SIGNAL_SCHEMA = "agri-signal/v1";
 export const ALERT_SCHEMA = "agri-alert/v1";
 export const MODEL_SCHEMA = "agri-model/v1";
 
+// ── Domain types ──────────────────────────────────────────────────────────────
+
+export type Severity = "severe" | "high" | "elevated" | "guarded" | "low";
+
+export interface DistrictSignal {
+  id: string;
+  district: string;
+  stateCode: string;
+  stateName: string;
+  outbreakIndex: number;
+  severity: Severity;
+  diagnoses: number;
+  farmersReached: number;
+  advisories7d: number;
+  topCrop: string;
+  topThreat: string;
+  threatShare: number;
+  trend: number[];
+  weekDelta: number;
+  soilStress: number;
+  waterStress: number;
+}
+
+export interface StateMetrics {
+  outbreak: number;
+  reach: number;
+  soil: number;
+  water: number;
+}
+
+export interface StateSignal {
+  node: StateNode;
+  outbreakIndex: number;
+  severity: Severity;
+  diagnoses: number;
+  farmersReached: number;
+  advisories7d: number;
+  districtsMonitored: number;
+  districtsAtRisk: number;
+  topThreat: string;
+  weekDelta: number;
+  metrics: StateMetrics;
+  districts: DistrictSignal[];
+}
+
+export interface NationalTotals {
+  states: number;
+  districts: number;
+  diagnoses: number;
+  farmersReached: number;
+  advisories7d: number;
+  districtsAtRisk: number;
+  languages: number;
+  agroZones: number;
+}
+
+export interface AgriAlert {
+  id: string;
+  district: string;
+  stateCode: string;
+  stateName: string;
+  crop: string;
+  threat: string;
+  severity: Severity;
+  outbreakIndex: number;
+  minutesAgo: number;
+  farmersAtRisk: number;
+  trigger: string;
+}
+
+export interface RegistryModel {
+  id: string;
+  title: string;
+  version: string;
+  originState: string;
+  originCode: string;
+  crop: string;
+  threat: string;
+  adoptedBy: string[];
+  forks: number;
+  accuracy: number;
+  validations: number;
+  license: string;
+  schema: string;
+  updatedDaysAgo: number;
+  summary: string;
+}
+
+export interface RegistryTotals {
+  models: number;
+  adoptions: number;
+  forks: number;
+  validations: number;
+}
+
 // ── Deterministic PRNG ────────────────────────────────────────────────────────
 // A fixed seed keeps the feed stable: the same district always returns the same
 // figure, so a consumer polling the API sees a coherent series rather than noise.
 
-function hashString(str) {
+function hashString(str: string): number {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
     h ^= str.charCodeAt(i);
@@ -34,7 +129,7 @@ function hashString(str) {
   return h >>> 0;
 }
 
-function mulberry32(seed) {
+function mulberry32(seed: number): () => number {
   let a = seed;
   return () => {
     a |= 0;
@@ -45,11 +140,11 @@ function mulberry32(seed) {
   };
 }
 
-const rngFor = (key) => mulberry32(hashString(key));
+const rngFor = (key: string): (() => number) => mulberry32(hashString(key));
 
 // ── Severity banding ──────────────────────────────────────────────────────────
 
-export function severityOf(index) {
+export function severityOf(index: number): Severity {
   if (index >= 78) return "severe";
   if (index >= 60) return "high";
   if (index >= 42) return "elevated";
@@ -65,14 +160,15 @@ export function severityOf(index) {
  * bollworm in the cotton belt, fall armyworm on southern maize — rather than
  * uniform noise.
  */
-const PRESSURE_BIAS = {
+const PRESSURE_BIAS: Record<string, number> = {
   PB: 26, HR: 22, RJ: 14, MP: 18, MH: 24, TG: 20, GJ: 16,
   UP: 12, BR: 10, WB: 8, AP: 14, KA: 18, TN: 6, AS: 10, OD: 8,
 };
 
-const pick = (arr, r) => arr[Math.floor(r * arr.length) % arr.length];
+const pick = <T>(arr: T[], r: number): T =>
+  arr[Math.floor(r * arr.length) % arr.length]!;
 
-function buildDistrict(state, district) {
+function buildDistrict(state: StateNode, district: string): DistrictSignal {
   const rnd = rngFor(`${state.code}:${district}:v3`);
 
   const bias = PRESSURE_BIAS[state.code] ?? 6;
@@ -94,7 +190,7 @@ function buildDistrict(state, district) {
 
   // 14-day history that lands on the current index, with a plausible drift.
   const drift = (rnd() - 0.42) * 2.6;
-  const trend = [];
+  const trend: number[] = [];
   for (let i = 13; i >= 0; i--) {
     const wobble = (rngFor(`${state.code}:${district}:d${i}`)() - 0.5) * 9;
     trend.push(
@@ -126,16 +222,17 @@ function buildDistrict(state, district) {
   };
 }
 
-function buildState(node) {
+function buildState(node: StateNode): StateSignal {
   const districts = node.districts.map((d) => buildDistrict(node, d));
-  const sum = (fn) => districts.reduce((acc, d) => acc + fn(d), 0);
-  const avg = (fn) =>
+  const sum = (fn: (d: DistrictSignal) => number): number =>
+    districts.reduce((acc, d) => acc + fn(d), 0);
+  const avg = (fn: (d: DistrictSignal) => number): number =>
     districts.length ? Math.round(sum(fn) / districts.length) : 0;
 
   const outbreakIndex = avg((d) => d.outbreakIndex);
 
   // The dominant threat is whichever one the most districts are reporting.
-  const threatCounts = new Map();
+  const threatCounts = new Map<string, number>();
   districts.forEach((d) =>
     threatCounts.set(d.topThreat, (threatCounts.get(d.topThreat) ?? 0) + 1),
   );
@@ -166,15 +263,15 @@ function buildState(node) {
   };
 }
 
-export const NATIONAL_SIGNAL = STATE_NODES.map(buildState);
+export const NATIONAL_SIGNAL: StateSignal[] = STATE_NODES.map(buildState);
 
-export const SIGNAL_BY_CODE = Object.fromEntries(
+export const SIGNAL_BY_CODE: Record<string, StateSignal> = Object.fromEntries(
   NATIONAL_SIGNAL.map((s) => [s.node.code, s]),
 );
 
-const ALL_DISTRICTS = NATIONAL_SIGNAL.flatMap((s) => s.districts);
+const ALL_DISTRICTS: DistrictSignal[] = NATIONAL_SIGNAL.flatMap((s) => s.districts);
 
-export const NATIONAL_TOTALS = {
+export const NATIONAL_TOTALS: NationalTotals = {
   states: NATIONAL_SIGNAL.length,
   districts: ALL_DISTRICTS.length,
   diagnoses: ALL_DISTRICTS.reduce((a, d) => a + d.diagnoses, 0),
@@ -192,12 +289,12 @@ export const NATIONAL_TOTALS = {
  * the rule that produced it so a consumer can show why it exists — an alert
  * nobody can explain is an alert nobody acts on.
  */
-export const ALERTS = ALL_DISTRICTS.filter((d) => d.outbreakIndex >= 58)
+export const ALERTS: AgriAlert[] = ALL_DISTRICTS.filter((d) => d.outbreakIndex >= 58)
   .sort((a, b) => b.outbreakIndex - a.outbreakIndex)
   .slice(0, 40)
   .map((d, i) => {
     const rnd = rngFor(`alert:${d.id}`);
-    let trigger;
+    let trigger: string;
     if (d.weekDelta >= 18) {
       trigger = `Outbreak index rose ${d.weekDelta}% in 7 days, above the 15% escalation rule`;
     } else if (d.outbreakIndex >= 78) {
@@ -228,7 +325,7 @@ export const ALERTS = ALL_DISTRICTS.filter((d) => d.outbreakIndex >= 58)
  * a versioned advisory model, other states subscribe to or fork it. Thresholds,
  * crop calendars and package-of-practices encoded as data, not code.
  */
-export const MODEL_REGISTRY = [
+export const MODEL_REGISTRY: RegistryModel[] = [
   {
     id: "kai.pb.wheat-yellow-rust",
     title: "Wheat Yellow Rust — Early Warning",
@@ -339,7 +436,7 @@ export const MODEL_REGISTRY = [
   },
 ];
 
-export const REGISTRY_TOTALS = {
+export const REGISTRY_TOTALS: RegistryTotals = {
   models: MODEL_REGISTRY.length,
   adoptions: MODEL_REGISTRY.reduce((a, m) => a + m.adoptedBy.length, 0),
   forks: MODEL_REGISTRY.reduce((a, m) => a + m.forks, 0),
@@ -350,12 +447,140 @@ export const REGISTRY_TOTALS = {
 // snake_case on the wire: this is an open-data endpoint, and that is the
 // convention Indian government data portals publish in.
 
+export interface SignalTotalsPayload {
+  states: number;
+  districts: number;
+  diagnoses_30d: number;
+  farmers_reached: number;
+  advisories_7d: number;
+  districts_at_risk: number;
+  advisory_languages: number;
+  agro_climatic_zones: number;
+}
+
+export interface SerialisedState {
+  code: string;
+  name: string;
+  agro_climatic_zone: string;
+  primary_crops: string[];
+  advisory_language: string;
+  farm_households_lakh: number;
+  grid: { col: number; row: number };
+  metrics: StateMetrics;
+  severity: Severity;
+  districts_monitored: number;
+  districts_at_risk: number;
+  top_threat: string;
+  diagnoses_30d: number;
+  farmers_reached: number;
+  advisories_7d: number;
+  week_delta_pct: number;
+}
+
+export interface StatesFeed {
+  schema: string;
+  generated: string;
+  provenance: string;
+  license: string;
+  totals: SignalTotalsPayload;
+  states: SerialisedState[];
+}
+
+export interface SerialisedDistrict {
+  id: string;
+  district: string;
+  outbreak_index: number;
+  severity: Severity;
+  top_crop: string;
+  top_threat: string;
+  threat_share_pct: number;
+  diagnoses_30d: number;
+  farmers_reached: number;
+  advisories_7d: number;
+  soil_stress: number;
+  water_stress: number;
+  week_delta_pct: number;
+  trend_14d: number[];
+}
+
+export interface DistrictsFeed {
+  schema: string;
+  generated: string;
+  provenance: string;
+  license: string;
+  state: {
+    code: string;
+    name: string;
+    agro_climatic_zone: string;
+    advisory_language: string;
+    farm_households_lakh: number;
+    primary_crops: string[];
+    districts_monitored: number;
+    districts_at_risk: number;
+    top_threat: string;
+    severity: Severity;
+    metrics: StateMetrics;
+  };
+  districts: SerialisedDistrict[];
+}
+
+export interface SerialisedAlert {
+  id: string;
+  district: string;
+  state_code: string;
+  state_name: string;
+  crop: string;
+  threat: string;
+  severity: Severity;
+  outbreak_index: number;
+  minutes_ago: number;
+  farmers_at_risk: number;
+  trigger: string;
+}
+
+export interface AlertsFeed {
+  schema: string;
+  generated: string;
+  provenance: string;
+  scope: string;
+  count: number;
+  alerts: SerialisedAlert[];
+}
+
+export interface SerialisedModel {
+  $schema: string;
+  id: string;
+  version: string;
+  title: string;
+  publisher: { state: string; code: string; authority: string };
+  scope: { crop: string; threat: string };
+  summary: string;
+  license: string;
+  validation: { field_validations: number; reported_accuracy_pct: number };
+  adoption: { subscribed_states: string[]; forks: number };
+  updated_days_ago: number;
+  interoperability: { profile: string; transport: string; auth: string };
+}
+
+export interface RegistryFeed {
+  schema: string;
+  generated: string;
+  license: string;
+  totals: {
+    published_models: number;
+    state_adoptions: number;
+    forks: number;
+    field_validations: number;
+  };
+  models: SerialisedModel[];
+}
+
 const PROVENANCE =
   "Simulated reference data. District names and agro-climatic zones are real; " +
   "metrics model the shape of the live feed and are not observations from " +
   "ICAR, ISRO or any government source.";
 
-export function serialiseStates() {
+export function serialiseStates(): StatesFeed {
   return {
     schema: SIGNAL_SCHEMA,
     generated: new Date().toISOString(),
@@ -371,7 +596,7 @@ export function serialiseStates() {
       advisory_languages: NATIONAL_TOTALS.languages,
       agro_climatic_zones: NATIONAL_TOTALS.agroZones,
     },
-    states: NATIONAL_SIGNAL.map((s) => ({
+    states: NATIONAL_SIGNAL.map((s): SerialisedState => ({
       code: s.node.code,
       name: s.node.name,
       agro_climatic_zone: s.node.zone,
@@ -392,7 +617,7 @@ export function serialiseStates() {
   };
 }
 
-export function serialiseDistricts(code) {
+export function serialiseDistricts(code: string): DistrictsFeed | null {
   const signal = SIGNAL_BY_CODE[code];
   if (!signal) return null;
 
@@ -414,7 +639,7 @@ export function serialiseDistricts(code) {
       severity: signal.severity,
       metrics: signal.metrics,
     },
-    districts: signal.districts.map((d) => ({
+    districts: signal.districts.map((d): SerialisedDistrict => ({
       id: d.id,
       district: d.district,
       outbreak_index: d.outbreakIndex,
@@ -433,7 +658,7 @@ export function serialiseDistricts(code) {
   };
 }
 
-export function serialiseAlerts(code) {
+export function serialiseAlerts(code?: string): AlertsFeed {
   const pool = code ? ALERTS.filter((a) => a.stateCode === code) : ALERTS;
   return {
     schema: ALERT_SCHEMA,
@@ -441,7 +666,7 @@ export function serialiseAlerts(code) {
     provenance: PROVENANCE,
     scope: code ?? "national",
     count: pool.length,
-    alerts: pool.map((a) => ({
+    alerts: pool.map((a): SerialisedAlert => ({
       id: a.id,
       district: a.district,
       state_code: a.stateCode,
@@ -458,7 +683,7 @@ export function serialiseAlerts(code) {
 }
 
 /** The artefact a state publishes and another state consumes. */
-export function serialiseModel(m) {
+export function serialiseModel(m: RegistryModel): SerialisedModel {
   return {
     $schema: `https://kisan.ai/schema/${m.schema}.json`,
     id: m.id,
@@ -486,7 +711,7 @@ export function serialiseModel(m) {
   };
 }
 
-export function serialiseRegistry() {
+export function serialiseRegistry(): RegistryFeed {
   return {
     schema: MODEL_SCHEMA,
     generated: new Date().toISOString(),

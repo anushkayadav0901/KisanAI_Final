@@ -1,5 +1,5 @@
 /**
- * farmingVideos.js — YouTube success story video fetcher
+ * farmingVideos.ts — YouTube success story video fetcher
  *
  * Approach: Directly scrapes YouTube search results page via HTTP fetch.
  * Parses the embedded ytInitialData JSON to extract real video IDs, titles,
@@ -27,10 +27,111 @@ const VIDEO_CACHE_TTL = 12 * 60 * 60;
 // YouTube search URL
 const YT_SEARCH_URL = "https://www.youtube.com/results";
 
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+/** A video scraped directly from YouTube search results. */
+export interface ScrapedVideo {
+    id: string;
+    title: string;
+    channel: string;
+    views: string;
+    duration: string;
+    viewCount: number;
+}
+
+export interface FeaturedVideo {
+    id: string;
+    title?: string;
+    channel?: string;
+    duration?: string;
+    views?: string;
+    summary: string;
+    keyTakeaways: string[];
+    embedUrl: string;
+    thumbnail: string;
+}
+
+export interface RelatedVideo {
+    id: string;
+    title?: string;
+    channel?: string;
+    duration?: string;
+    embedUrl: string;
+    thumbnail: string;
+}
+
+export interface SuccessVideosResult {
+    featuredVideo: FeaturedVideo | null;
+    relatedVideos: RelatedVideo[];
+}
+
+interface VideoSummary {
+    summary: string;
+    keyTakeaways: string[];
+}
+
+interface StaticVideo {
+    id: string;
+    title?: string;
+    channel?: string;
+    duration?: string;
+    views?: string;
+    thumbnail?: string;
+    summary?: string;
+    keyTakeaways?: string[];
+}
+
+interface FarmingDataJson {
+    videos?: Record<string, { featured: StaticVideo; related?: StaticVideo[] }>;
+}
+
+interface GroqChatResponse {
+    choices?: Array<{
+        message?: { content?: string };
+    }>;
+}
+
+interface YtTextRun {
+    text: string;
+}
+
+interface YtRuns {
+    runs?: YtTextRun[];
+}
+
+interface YtVideoRenderer {
+    videoId?: string;
+    title?: YtRuns;
+    ownerText?: YtRuns;
+    viewCountText?: { simpleText?: string; runs?: YtTextRun[] };
+    lengthText?: {
+        simpleText?: string;
+        accessibility?: { accessibilityData?: { label?: string } };
+    };
+}
+
+interface YtItem {
+    videoRenderer?: YtVideoRenderer;
+}
+
+interface YtInitialData {
+    contents?: {
+        twoColumnSearchResultsRenderer?: {
+            primaryContents?: {
+                sectionListRenderer?: {
+                    contents?: Array<{
+                        itemSectionRenderer?: { contents?: YtItem[] };
+                    }>;
+                };
+            };
+        };
+    };
+}
+
 /**
  * Map a technique ID to the data key (for static fallback).
  */
-function resolveKey(technique) {
+function resolveKey(technique: string): string {
     const t = technique?.toLowerCase().replace(/\s+/g, "_") || "";
     if (t.includes("organic")) return "organic_farming";
     if (t.includes("rain") || t.includes("water")) return "rainwater_farming";
@@ -42,29 +143,37 @@ function resolveKey(technique) {
 /**
  * Load video data from static JSON (fallback).
  */
-async function loadStaticVideos(key) {
+async function loadStaticVideos(key: string): Promise<SuccessVideosResult | null> {
     try {
         const raw = await readFile(DATA_PATH, "utf-8");
-        const data = JSON.parse(raw);
+        const data = JSON.parse(raw) as FarmingDataJson;
         const entry = data.videos?.[key] || data.videos?.["default"];
         if (!entry) return null;
 
         const featured = entry.featured;
+        if (!featured?.id) return null;
+
+        const featuredResult: FeaturedVideo = {
+            ...featured,
+            embedUrl: `https://www.youtube.com/embed/${featured.id}?rel=0&modestbranding=1`,
+            thumbnail: `https://img.youtube.com/vi/${featured.id}/hqdefault.jpg`,
+            summary: featured.summary || "",
+            keyTakeaways: featured.keyTakeaways || [],
+        };
+
+        const relatedResults: RelatedVideo[] = (entry.related || []).map((v) => ({
+            ...v,
+            embedUrl: `https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1`,
+            thumbnail:
+                v.thumbnail || `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`,
+        }));
+
         return {
-            featuredVideo: {
-                ...featured,
-                embedUrl: `https://www.youtube.com/embed/${featured.id}?rel=0&modestbranding=1`,
-                thumbnail: `https://img.youtube.com/vi/${featured.id}/hqdefault.jpg`,
-            },
-            relatedVideos: (entry.related || []).map((v) => ({
-                ...v,
-                embedUrl: `https://www.youtube.com/embed/${v.id}?rel=0&modestbranding=1`,
-                thumbnail:
-                    v.thumbnail || `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`,
-            })),
+            featuredVideo: featuredResult,
+            relatedVideos: relatedResults,
         };
     } catch (err) {
-        console.error("[farmingVideos] static data error:", err.message);
+        console.error("[farmingVideos] static data error:", err instanceof Error ? err.message : err);
         return null;
     }
 }
@@ -72,11 +181,8 @@ async function loadStaticVideos(key) {
 /**
  * Scrape YouTube search results directly via HTTP fetch.
  * Extracts video data from the ytInitialData JSON embedded in the page.
- *
- * @param {string} query — search query
- * @returns {Promise<object[]>} — array of { id, title, channel, views, duration }
  */
-async function scrapeYouTubeSearch(query) {
+async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
     try {
         const searchUrl = `${YT_SEARCH_URL}?search_query=${encodeURIComponent(query)}`;
 
@@ -106,7 +212,7 @@ async function scrapeYouTubeSearch(query) {
             return [];
         }
 
-        const ytData = JSON.parse(dataMatch[1]);
+        const ytData = JSON.parse(dataMatch[1]) as YtInitialData;
 
         // Navigate to the video results
         const contents =
@@ -114,7 +220,7 @@ async function scrapeYouTubeSearch(query) {
                 ?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer?.contents ||
             [];
 
-        const videos = [];
+        const videos: ScrapedVideo[] = [];
 
         for (const item of contents) {
             const renderer = item.videoRenderer;
@@ -139,7 +245,7 @@ async function scrapeYouTubeSearch(query) {
             // Parse view count for sorting
             let viewCount = 0;
             const viewMatch = viewsText.match(/([\d,.]+)\s*(K|M|lakh|crore)?/i);
-            if (viewMatch) {
+            if (viewMatch?.[1]) {
                 viewCount = parseFloat(viewMatch[1].replace(/,/g, ""));
                 const multiplier = viewMatch[2]?.toLowerCase();
                 if (multiplier === "k") viewCount *= 1000;
@@ -166,7 +272,7 @@ async function scrapeYouTubeSearch(query) {
         );
         return videos;
     } catch (err) {
-        console.error("[farmingVideos] YouTube scrape error:", err.message);
+        console.error("[farmingVideos] YouTube scrape error:", err instanceof Error ? err.message : err);
         return [];
     }
 }
@@ -174,12 +280,8 @@ async function scrapeYouTubeSearch(query) {
 /**
  * Generate a farmer-friendly summary for a video using Groq llama
  * (NOT compound-beta, to avoid rate limits).
- *
- * @param {string} title — video title
- * @param {string} technique — farming technique
- * @returns {Promise<{ summary: string, keyTakeaways: string[] }>}
  */
-async function generateVideoSummary(title, technique) {
+async function generateVideoSummary(title: string, technique: string): Promise<VideoSummary | null> {
     if (!GROQ_API_KEY) {
         return {
             summary: `Watch this success story about ${technique.replace(/_/g, " ")} farming to learn practical tips from an experienced farmer.`,
@@ -231,7 +333,7 @@ Write a JSON response (no markdown):
 
         if (!response.ok) return null;
 
-        const data = await response.json();
+        const data = (await response.json()) as GroqChatResponse;
         const content = data.choices?.[0]?.message?.content?.trim();
         if (!content) return null;
 
@@ -240,9 +342,9 @@ Write a JSON response (no markdown):
         const last = clean.lastIndexOf("}");
         if (first !== -1 && last !== -1) clean = clean.substring(first, last + 1);
 
-        return JSON.parse(clean);
+        return JSON.parse(clean) as VideoSummary;
     } catch (err) {
-        console.error("[farmingVideos] summary generation error:", err.message);
+        console.error("[farmingVideos] summary generation error:", err instanceof Error ? err.message : err);
         return null;
     }
 }
@@ -257,15 +359,12 @@ Write a JSON response (no markdown):
  *   2. Scrape YouTube search for real videos
  *   3. Generate AI summary for the top video
  *   4. Fallback to static curated data
- *
- * @param {string} technique
- * @returns {Promise<{ featuredVideo: object, relatedVideos: object[] }>}
  */
-export async function getSuccessVideos(technique) {
+export async function getSuccessVideos(technique: string): Promise<SuccessVideosResult> {
     const cacheKey = `videos:${technique}`;
 
     // 1. Check cache
-    const cached = cacheGet(cacheKey);
+    const cached = cacheGet<SuccessVideosResult>(cacheKey);
     if (cached) {
         console.log(`[farmingVideos] Cache hit for "${cacheKey}"`);
         return cached;
@@ -275,7 +374,7 @@ export async function getSuccessVideos(technique) {
 
     // Map technique IDs to specific, focused search terms
     // This ensures we search for the exact farming type the user selected
-    const searchTermMap = {
+    const searchTermMap: Record<string, string> = {
         integrated_farming: "fish farming",
         organic_farming: "organic farming",
         rainwater_farming: "rainwater harvesting farming",
@@ -301,7 +400,7 @@ export async function getSuccessVideos(technique) {
         `${searchTerm} profit India farmer`,
     ];
 
-    let allVideos = [];
+    let allVideos: ScrapedVideo[] = [];
     for (const query of searchQueries) {
         const videos = await scrapeYouTubeSearch(query);
         allVideos.push(...videos);
@@ -309,7 +408,7 @@ export async function getSuccessVideos(technique) {
     }
 
     // Deduplicate by video ID
-    const seen = new Set();
+    const seen = new Set<string>();
     allVideos = allVideos.filter((v) => {
         if (seen.has(v.id)) return false;
         seen.add(v.id);
@@ -318,12 +417,14 @@ export async function getSuccessVideos(technique) {
 
     if (allVideos.length > 0) {
         const featured = allVideos[0];
+        if (!featured) throw new Error("farmingVideos: empty video list");
+
         const related = allVideos.slice(1, 3);
 
         // 3. Generate summary for the featured video
         const summaryData = await generateVideoSummary(featured.title, technique);
 
-        const result = {
+        const result: SuccessVideosResult = {
             featuredVideo: {
                 id: featured.id,
                 title: featured.title,

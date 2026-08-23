@@ -22,6 +22,92 @@ import crypto from "crypto";
 
 export const CONSENT_SCHEMA = "agri-consent/v1";
 
+// ── Domain types ──────────────────────────────────────────────────────────────
+
+export type ConsentStatus = "active" | "revoked" | "expired";
+
+export interface DataPrincipal {
+  id: string;
+  name: string;
+  state?: string;
+  district?: string;
+}
+
+export interface DataConsumer {
+  id: string;
+  name: string;
+  type?: string;
+}
+
+export interface PurposeInfo {
+  label: string;
+  text: string;
+  typicalConsumer: string;
+}
+
+export interface ConsentArtefact {
+  schema: string;
+  profile: string;
+  id: string;
+  version: string;
+  dataPrincipal: DataPrincipal;
+  dataProvider: { id: string; name: string };
+  dataConsumer: DataConsumer;
+  purpose: { code: PurposeCode } & PurposeInfo;
+  dataTypes: string[];
+  granularity: Record<string, string>;
+  validity: { from: string; to: string };
+  status: ConsentStatus;
+  revocable: boolean;
+  createdAt: string;
+  revokedAt: string | null;
+  accessCount: number;
+  signature?: string;
+  revocationReason?: string;
+}
+
+export interface AuditEntry {
+  at: string;
+  consentId: string;
+  action: string;
+  consumer: string;
+  purpose?: string | null;
+  dataTypes?: string[] | null;
+  result: string;
+  note: string;
+}
+
+export interface CreateConsentInput {
+  principal: DataPrincipal;
+  consumer: DataConsumer;
+  purposeCode: string;
+  dataTypes: string[];
+  durationDays?: number;
+  granularity?: Record<string, string>;
+}
+
+export interface AuthoriseInput {
+  consentId: string | null;
+  consumerId?: string | null;
+  purposeCode?: string | null;
+  dataTypes?: string[] | null;
+}
+
+export interface AuthoriseDecision {
+  allowed: boolean;
+  reason: string;
+  artefact: ConsentArtefact | null;
+}
+
+export interface ConsentStats {
+  total: number;
+  active: number;
+  revoked: number;
+  expired: number;
+  auditEntries: number;
+  deniedAttempts: number;
+}
+
 // ── Vocabulary ────────────────────────────────────────────────────────────────
 
 /**
@@ -61,6 +147,8 @@ export const PURPOSES = {
     typicalConsumer: "FPO, buyer platform",
   },
 };
+
+export type PurposeCode = keyof typeof PURPOSES;
 
 /**
  * Data types carry a sensitivity grade so the consent screen can show a farmer
@@ -110,18 +198,18 @@ export const DATA_TYPES = {
   },
 };
 
+export type DataTypeKey = keyof typeof DATA_TYPES;
+
 // ── Store ─────────────────────────────────────────────────────────────────────
 
-/** @type {Map<string, object>} consent artefacts by id */
-const CONSENTS = new Map();
-/** @type {Array<object>} append-only audit trail */
-const AUDIT = [];
+const CONSENTS = new Map<string, ConsentArtefact>();
+const AUDIT: AuditEntry[] = [];
 
-const now = () => new Date().toISOString();
-const newId = (prefix) =>
+const now = (): string => new Date().toISOString();
+const newId = (prefix: string): string =>
   `${prefix}-${crypto.randomBytes(6).toString("hex")}`;
 
-function record(entry) {
+function record(entry: Omit<AuditEntry, "at">): void {
   AUDIT.push({ at: now(), ...entry });
   // Keep the in-process trail bounded; a real deployment writes append-only.
   if (AUDIT.length > 2000) AUDIT.splice(0, AUDIT.length - 2000);
@@ -134,7 +222,7 @@ function record(entry) {
  * copy cannot quietly widen its scope — the signature covers the fields that
  * define what was actually agreed.
  */
-function sign(artefact) {
+function sign(artefact: ConsentArtefact): string {
   const material = JSON.stringify({
     id: artefact.id,
     principal: artefact.dataPrincipal.id,
@@ -158,14 +246,15 @@ export function createConsent({
   dataTypes,
   durationDays = 90,
   granularity = {},
-}) {
-  if (!PURPOSES[purposeCode]) {
+}: CreateConsentInput): ConsentArtefact {
+  const purposeDef = PURPOSES[purposeCode as PurposeCode];
+  if (!purposeDef) {
     throw Object.assign(new Error(`Unknown purpose code '${purposeCode}'`), {
       status: 400,
     });
   }
 
-  const unknown = dataTypes.filter((t) => !DATA_TYPES[t]);
+  const unknown = dataTypes.filter((t) => !DATA_TYPES[t as DataTypeKey]);
   if (unknown.length) {
     throw Object.assign(
       new Error(`Unknown data types: ${unknown.join(", ")}`),
@@ -176,7 +265,7 @@ export function createConsent({
   const from = new Date();
   const to = new Date(from.getTime() + durationDays * 86400000);
 
-  const artefact = {
+  const artefact: ConsentArtefact = {
     schema: CONSENT_SCHEMA,
     profile: "DEPA-aligned consent artefact",
     id: newId("consent"),
@@ -184,7 +273,7 @@ export function createConsent({
     dataPrincipal: principal,
     dataProvider: { id: "kisan-ai", name: "Kisan AI" },
     dataConsumer: consumer,
-    purpose: { code: purposeCode, ...PURPOSES[purposeCode] },
+    purpose: { code: purposeCode as PurposeCode, ...purposeDef },
     dataTypes,
     granularity: {
       identity: dataTypes.includes("identity.name") ? "identified" : "anonymised",
@@ -215,11 +304,11 @@ export function createConsent({
   return artefact;
 }
 
-export function getConsent(id) {
+export function getConsent(id: string): ConsentArtefact | null {
   return CONSENTS.get(id) ?? null;
 }
 
-export function listConsents(principalId) {
+export function listConsents(principalId?: string): ConsentArtefact[] {
   const all = [...CONSENTS.values()];
   const scoped = principalId
     ? all.filter((c) => c.dataPrincipal.id === principalId)
@@ -228,14 +317,17 @@ export function listConsents(principalId) {
   return scoped.map(refreshStatus).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 }
 
-function refreshStatus(artefact) {
+function refreshStatus(artefact: ConsentArtefact): ConsentArtefact {
   if (artefact.status === "active" && new Date(artefact.validity.to) < new Date()) {
     artefact.status = "expired";
   }
   return artefact;
 }
 
-export function revokeConsent(id, reason = "Revoked by the farmer") {
+export function revokeConsent(
+  id: string,
+  reason = "Revoked by the farmer",
+): ConsentArtefact | null {
   const artefact = CONSENTS.get(id);
   if (!artefact) return null;
 
@@ -265,10 +357,15 @@ export function revokeConsent(id, reason = "Revoked by the farmer") {
  * trail, including denials — a farmer should be able to see that someone tried
  * to read their data after they revoked, not only the reads that succeeded.
  */
-export function authorise({ consentId, consumerId, purposeCode, dataTypes }) {
-  const artefact = CONSENTS.get(consentId);
+export function authorise({
+  consentId,
+  consumerId,
+  purposeCode,
+  dataTypes,
+}: AuthoriseInput): AuthoriseDecision {
+  const artefact = consentId === null ? undefined : CONSENTS.get(consentId);
 
-  const deny = (reason) => {
+  const deny = (reason: string): AuthoriseDecision => {
     record({
       consentId: consentId ?? "(none)",
       action: "access_denied",
@@ -287,7 +384,7 @@ export function authorise({ consentId, consumerId, purposeCode, dataTypes }) {
 
   if (artefact.status === "revoked") {
     return deny(
-      `Consent was revoked by the farmer on ${new Date(artefact.revokedAt).toLocaleString("en-IN")}`,
+      `Consent was revoked by the farmer on ${new Date(artefact.revokedAt!).toLocaleString("en-IN")}`,
     );
   }
   if (artefact.status === "expired") {
@@ -312,10 +409,10 @@ export function authorise({ consentId, consumerId, purposeCode, dataTypes }) {
 
   artefact.accessCount += 1;
   record({
-    consentId,
+    consentId: consentId ?? "(none)",
     action: "accessed",
     consumer: artefact.dataConsumer.name,
-    purpose: artefact.purpose.code,
+    purpose: purposeCode,
     dataTypes: requested,
     result: "allowed",
     note: `Read ${requested.length} data ${requested.length === 1 ? "type" : "types"}`,
@@ -324,7 +421,7 @@ export function authorise({ consentId, consumerId, purposeCode, dataTypes }) {
   return { allowed: true, reason: "Consent valid", artefact };
 }
 
-export function auditTrail(consentId) {
+export function auditTrail(consentId?: string): AuditEntry[] {
   const entries = consentId
     ? AUDIT.filter((e) => e.consentId === consentId)
     : AUDIT;
@@ -338,14 +435,14 @@ export function auditTrail(consentId) {
  * whether the feature works. This seeds one realistic history so the screen has
  * something to show, including a consent that was already revoked.
  */
-export const DEMO_PRINCIPAL = {
+export const DEMO_PRINCIPAL: DataPrincipal = {
   id: "farmer-demo-001",
   name: "Demo Farmer",
   state: "PB",
   district: "Ludhiana",
 };
 
-export function seedDemo() {
+export function seedDemo(): void {
   if (CONSENTS.size > 0) return;
 
   createConsent({
@@ -390,7 +487,7 @@ export function seedDemo() {
   });
 }
 
-export const CONSENT_STATS = () => {
+export const CONSENT_STATS = (): ConsentStats => {
   const all = listConsents();
   return {
     total: all.length,
