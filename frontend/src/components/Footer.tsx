@@ -1,44 +1,18 @@
 import { Link } from 'react-router-dom';
-import {
-  Sprout,
-  Mail,
-  Phone,
-  MapPin,
-  Heart,
-  ArrowUpRight
-} from 'lucide-react';
+import { Sprout, ExternalLink, Database, ShieldCheck } from 'lucide-react';
 
-const footerLinks = {
-  product: [
-    { label: "Disease Detection", href: "/monitor" },
-    { label: "Market Insights", href: "/market" },
-    { label: "Weather AI", href: "/consult" },
-    { label: "Smart Farming", href: "/farming" },
-  ],
-  company: [
-    { label: "About Us", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Press", href: "#" },
-    { label: "Contact", href: "#" },
-  ],
-  resources: [
-    { label: "Blog", href: "#" },
-    { label: "Help Center", href: "#" },
-    { label: "Community", href: "#" },
-    { label: "API", href: "#" },
-  ],
-  legal: [
-    { label: "Privacy", href: "#" },
-    { label: "Terms", href: "#" },
-    { label: "Cookies", href: "#" },
-  ]
-};
+const productLinks = [
+  { label: "Crop Doctor", href: "/monitor", hint: "Photo diagnosis" },
+  { label: "Voice Advisory", href: "/consult", hint: "20 languages" },
+  { label: "My Fields", href: "/fields", hint: "Draw your plot" },
+  { label: "State Command Centre", href: "/command", hint: "29-state surveillance" },
+];
 
-const socialLinks = [
-  { label: "X", icon: "𝕏" },
-  { label: "LinkedIn", icon: "in" },
-  { label: "Facebook", icon: "f" },
-  { label: "Instagram", icon: "ig" },
+const networkLinks = [
+  { label: "Open Data API", href: "/v1/docs", hint: "24 routes · no auth" },
+  { label: "API Specification", href: "/v1/openapi.json", hint: "OpenAPI 3.0" },
+  { label: "Advisory Sources", href: "/advisory", hint: "Every claim cited" },
+  { label: "Data Rights", href: "/consent", hint: "Consent enforced" },
 ];
 
 export const Footer = () => {
@@ -46,112 +20,98 @@ export const Footer = () => {
 
   return (
     <footer className="bg-[#5B532C]">
-      <div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        {/* Top Section */}
-        <div className="grid lg:grid-cols-2 gap-12 pb-12 border-b border-white/10">
+      <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="grid md:grid-cols-3 gap-10 pb-10 border-b border-white/10">
           {/* Brand */}
-          <div className="max-w-sm">
-            <Link to="/" className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-[#63A361] rounded-xl flex items-center justify-center">
-                <Sprout className="w-7 h-7 text-white" />
+          <div>
+            <Link to="/" className="flex items-center gap-3 mb-4">
+              <div className="w-11 h-11 bg-[#63A361] rounded-xl flex items-center justify-center">
+                <Sprout className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold text-white">Kisaan Saathi</span>
+              <span className="text-xl font-bold text-white">Kisan AI</span>
             </Link>
-            <p className="text-white/50 leading-relaxed mb-6">
-              AI-driven insights for better yields, disease detection, and market intelligence. Made in India.
+            <p className="text-white/50 text-sm leading-relaxed">
+              A farmer photographs a sick crop; the whole country's defence gets
+              smarter. One diagnosis at a time, district by district.
             </p>
-            {/* Contact Info */}
-            <div className="space-y-3">
-              <a href="mailto:hello@kisana.ai" className="flex items-center gap-3 text-sm text-white/50 hover:text-[#63A361] transition-colors group">
-                <Mail className="w-4 h-4" />
-                <span>hello@kisana.ai</span>
-                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </a>
-              <a href="tel:+9118001234567" className="flex items-center gap-3 text-sm text-white/50 hover:text-[#63A361] transition-colors group">
-                <Phone className="w-4 h-4" />
-                <span>+91 1800-123-4567</span>
-                <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </a>
-              <div className="flex items-center gap-3 text-sm text-white/50">
-                <MapPin className="w-4 h-4" />
-                <span>Bangalore, Karnataka, India</span>
-              </div>
+            {/* Google AI credit — rule: mandatory Google AI integration */}
+            <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-xs font-semibold text-white/80">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#63A361] animate-pulse" />
+              Built with Google AI — Gemini vision &amp; live voice
             </div>
           </div>
 
-          {/* Links Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
-            <div>
-              <h4 className="text-sm font-bold text-white mb-4">Product</h4>
-              <ul className="space-y-3">
-                {footerLinks.product.map((link) => (
-                  <li key={link.label}>
-                    <Link to={link.href} className="text-sm text-white/50 hover:text-[#63A361] transition-colors">
+          {/* Product */}
+          <div>
+            <h4 className="text-sm font-bold text-white mb-4">For Farmers</h4>
+            <ul className="space-y-3">
+              {productLinks.map((link) => (
+                <li key={link.href}>
+                  <Link to={link.href} className="group flex items-baseline gap-2">
+                    <span className="text-sm text-white/70 group-hover:text-[#63A361] transition-colors">
                       {link.label}
+                    </span>
+                    <span className="text-xs text-white/30">{link.hint}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* The open network */}
+          <div>
+            <h4 className="text-sm font-bold text-white mb-4">The Open Network</h4>
+            <ul className="space-y-3">
+              {networkLinks.map((link) =>
+                link.href.startsWith("/v1") ? (
+                  <li key={link.href}>
+                    <a href={link.href} target="_blank" rel="noreferrer" className="group flex items-baseline gap-2">
+                      <span className="text-sm text-white/70 group-hover:text-[#63A361] transition-colors inline-flex items-center gap-1">
+                        {link.label} <ExternalLink className="w-3 h-3 opacity-40" />
+                      </span>
+                      <span className="text-xs text-white/30">{link.hint}</span>
+                    </a>
+                  </li>
+                ) : (
+                  <li key={link.href}>
+                    <Link to={link.href} className="group flex items-baseline gap-2">
+                      <span className="text-sm text-white/70 group-hover:text-[#63A361] transition-colors">
+                        {link.label}
+                      </span>
+                      <span className="text-xs text-white/30">{link.hint}</span>
                     </Link>
                   </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-white mb-4">Company</h4>
-              <ul className="space-y-3">
-                {footerLinks.company.map((link) => (
-                  <li key={link.label}>
-                    <Link to={link.href} className="text-sm text-white/50 hover:text-[#63A361] transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-white mb-4">Resources</h4>
-              <ul className="space-y-3">
-                {footerLinks.resources.map((link) => (
-                  <li key={link.label}>
-                    <Link to={link.href} className="text-sm text-white/50 hover:text-[#63A361] transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-sm font-bold text-white mb-4">Legal</h4>
-              <ul className="space-y-3">
-                {footerLinks.legal.map((link) => (
-                  <li key={link.label}>
-                    <Link to={link.href} className="text-sm text-white/50 hover:text-[#63A361] transition-colors">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                ),
+              )}
+            </ul>
           </div>
         </div>
 
-        {/* Bottom Section */}
-        <div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-white/40">
-            <span>© {currentYear} Kisaan Saathi.</span>
-            <Heart className="w-4 h-4 text-[#63A361] fill-[#63A361]" />
-            <span>Made in India</span>
+        {/* Provenance & credits */}
+        <div className="pt-6 space-y-3">
+          <div className="flex items-start gap-2 text-xs text-white/40 leading-relaxed">
+            <Database className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+            <p>
+              District names and agro-climatic zones are real. Surveillance metrics
+              are simulated reference data, labelled as such everywhere they appear.
+              Advisory sources carry verification links to official portals.
+            </p>
           </div>
+          <div className="flex items-start gap-2 text-xs text-white/40 leading-relaxed">
+            <ShieldCheck className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+            <p>
+              Stands on open source: React, Leaflet, Express, FastAPI, Ultralytics
+              YOLO. Diagnoses via Google Gemini API; live consults via Gemini Live;
+              transcription via Whisper. Public API licensed CC-BY 4.0.
+            </p>
+          </div>
+        </div>
 
-          {/* Social Links */}
-          <div className="flex items-center gap-2">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href="#"
-                className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/50 hover:bg-[#63A361] hover:text-white text-sm font-bold transition-colors"
-              >
-                {social.icon}
-              </a>
-            ))}
-          </div>
+        <div className="pt-4 mt-4 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-2">
+          <span className="text-xs text-white/35">© {currentYear} Kisan AI</span>
+          <span className="text-xs text-white/35">
+            Built for Build with AI: Code for Communities · Google Cloud × GDG India
+          </span>
         </div>
       </div>
     </footer>
