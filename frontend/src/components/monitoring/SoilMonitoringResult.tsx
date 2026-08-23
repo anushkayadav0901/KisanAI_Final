@@ -80,7 +80,7 @@ export const SoilMonitoringResult: React.FC<Props> = ({
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Premium Header Status */}
+      {                           }
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -90,7 +90,7 @@ export const SoilMonitoringResult: React.FC<Props> = ({
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-60 h-60 bg-[#FFC50F]/10 rounded-full blur-2xl" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-          {/* Analysis Badge & Image */}
+          {                            }
           <div className="relative">
             <div className="w-40 h-40 rounded-[2rem] overflow-hidden border-4 border-white/10 shadow-2xl bg-white/5 backdrop-blur-md">
               <img
@@ -131,7 +131,7 @@ export const SoilMonitoringResult: React.FC<Props> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          {/* Top Row Metrics */}
+          {                     }
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <motion.div
               className={`p-6 bg-white rounded-[2rem] border-2 ${getStatusColor(result.moistureLevel).border} shadow-xl shadow-gray-50 flex flex-col items-center text-center`}
@@ -167,7 +167,7 @@ export const SoilMonitoringResult: React.FC<Props> = ({
             </motion.div>
           </div>
 
-          {/* Composition Chart */}
+          {                       }
           <div className="p-10 bg-white rounded-[3rem] border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10">
             <div className="flex items-center justify-between mb-10">
               <h3 className="text-xl font-bold text-[#5B532C]">Nutrient & Component Profile</h3>
@@ -201,9 +201,9 @@ export const SoilMonitoringResult: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Right Sidebar: Actions & Guidance */}
+        {                                       }
         <div className="space-y-8">
-          {/* Prevention & Optimization */}
+          {                               }
           <div className="p-8 bg-[#63A361] rounded-[3rem] text-white shadow-lg shadow-[#5B532C]/10">
             <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
               <Shield className="w-6 h-6 text-[#FFC50F]" />
@@ -221,7 +221,7 @@ export const SoilMonitoringResult: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* CRAWL RESULTS */}
+          {                   }
           <div className="p-8 bg-white rounded-[3rem] border border-[#5B532C]/10 shadow-xl shadow-gray-100">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-lg font-bold text-[#5B532C]">Soil Wisdom</h3>

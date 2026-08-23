@@ -22,7 +22,7 @@ export const Footer = () => {
     <footer className="bg-[#5B532C]">
       <div className="px-4 py-12 mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-10 pb-10 border-b border-white/10">
-          {/* Brand */}
+          {           }
           <div>
             <Link to="/" className="flex items-center gap-3 mb-4">
               <div className="w-11 h-11 bg-[#63A361] rounded-xl flex items-center justify-center">
@@ -35,14 +35,14 @@ export const Footer = () => {
               A farmer photographs a sick crop; the whole country's defence gets
               smarter. One diagnosis at a time, district by district.
             </p>
-            {/* Google AI credit — rule: mandatory Google AI integration */}
+            {                                                              }
             <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-xs font-semibold text-white/80">
               <span className="w-1.5 h-1.5 rounded-full bg-[#63A361] animate-pulse" />
               Built with Google AI — Gemini vision &amp; live voice
             </div>
           </div>
 
-          {/* Product */}
+          {             }
           <div>
             <h4 className="text-sm font-bold text-white mb-4">For Farmers</h4>
             <ul className="space-y-3">
@@ -59,7 +59,7 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* The open network */}
+          {                      }
           <div>
             <h4 className="text-sm font-bold text-white mb-4">The Open Network</h4>
             <ul className="space-y-3">
@@ -88,7 +88,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom bar */}
+        {                }
         <div className="pt-8 mt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-2">
           <span className="text-xs text-white/35">© {currentYear} Kisan AI</span>
           <span className="text-xs text-white/35">

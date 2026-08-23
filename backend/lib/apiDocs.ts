@@ -1,14 +1,3 @@
-/**
- * lib/apiDocs.js — the interactive API console served at /v1/docs
- *
- * Deliberately self-contained: no CDN scripts, no external stylesheets. It has
- * to work on a conference wifi that blocks half the internet, and it has to
- * work when someone opens it from a laptop with no network beyond the host.
- *
- * Every endpoint has a live "Send" button that performs the real request, so a
- * reader can confirm the API works rather than taking the page's word for it.
- */
-
 export interface DocEndpoint {
   method: "GET" | "POST";
   path: string;

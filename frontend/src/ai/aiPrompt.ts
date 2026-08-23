@@ -1,8 +1,3 @@
-/**
- * Kisan AI Prompt Configuration
- * Agricultural assistant with structured response format and enhanced context
- */
-
 interface KisanAIContext {
    userInput: string;
    userLocation?: string;

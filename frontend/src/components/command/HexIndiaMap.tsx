@@ -1,15 +1,3 @@
-/**
- * HexIndiaMap — hex tile cartogram of India's agricultural states.
- *
- * Each state is one tile, positioned to approximate its place in the country
- * without drawing a boundary. A cartogram is the honest choice here: it carries
- * the signal without asserting anything about borders, and it stays readable at
- * any size.
- *
- * Tile positions arrive from the API (`grid.col` / `grid.row`) rather than a
- * bundled layout file, so onboarding a new state is a server-side change.
- */
-
 import React from "react";
 import { motion } from "framer-motion";
 import {
@@ -20,7 +8,7 @@ import {
   type StateSignal,
 } from "../../data/surveillance";
 
-const R = 30; // hex circumradius
+const R = 30;
 const HEX_W = Math.sqrt(3) * R;
 const ROW_H = 1.5 * R;
 const PAD_X = 34;
@@ -89,7 +77,6 @@ export const HexIndiaMap: React.FC<Props> = ({
               animate={{ opacity: isDimmed ? 0.28 : 1, scale: 1 }}
               transition={{ delay: i * 0.012, duration: 0.35, ease: "easeOut" }}
               style={{ cursor: "pointer", transformOrigin: `${cx}px ${cy}px` }}
-              // Keyboard reachable: an officer should not need a mouse.
               tabIndex={0}
               role="button"
               aria-pressed={isSelected}
@@ -106,7 +93,7 @@ export const HexIndiaMap: React.FC<Props> = ({
               onMouseEnter={() => setHovered(signal)}
               onMouseLeave={() => setHovered(null)}
             >
-              {/* Soft halo on states above the escalation threshold */}
+              {                                                        }
               {isCritical && !isDimmed && (
                 <motion.path
                   d={hexPath(cx, cy, R - 1)}
@@ -165,7 +152,7 @@ export const HexIndiaMap: React.FC<Props> = ({
         })}
       </svg>
 
-      {/* Hover / focus readout — fixed height so the layout never jumps */}
+      {                                                                    }
       <div className="mt-2 h-[52px] flex items-center">
         {hovered ? (
           <motion.div
@@ -202,7 +189,7 @@ export const HexIndiaMap: React.FC<Props> = ({
         )}
       </div>
 
-      {/* Legend */}
+      {            }
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 pt-4 border-t border-[#5B532C]/10">
         <span className="text-xs font-semibold uppercase tracking-wider text-[#63A361]">
           {METRIC_META[metric].short}

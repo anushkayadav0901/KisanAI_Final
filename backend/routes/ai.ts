@@ -1,20 +1,3 @@
-/**
- * routes/ai.ts — all /api/ai/* REST endpoints
- *
- * Endpoints:
- *   GET  /api/ai/local-vision/health — Ollama availability + resolved model
- *   POST /api/ai/chat              — Groq LLM proxy (streaming SSE supported)
- *   POST /api/ai/transcribe        — Groq Whisper voice transcription
- *   POST /api/ai/gemini            — Gemini passthrough (caller builds the body)
- *   POST /api/ai/vision-commentary — Local LLaVA first, Gemini fallback
- *   POST /api/ai/analyze-frame     — Crop health frame analysis (same policy)
- *
- * Fallback policy: NO silent fallbacks and NO fabricated results. Every vision
- * response names its `provider`; when a degradation happened it says why via
- * `degraded` + `fallbackReason`. If every configured provider fails, the route
- * returns an explicit error instead of invented JSON.
- */
-
 import { Router, type Request, type Response } from "express";
 import {
   GROQ_API_KEY,
@@ -36,15 +19,12 @@ import {
 
 const router = Router();
 
-// ── Shared types & helpers ────────────────────────────────────────────────────
-
 type VisionProvider = "ollama" | "gemini";
 type ProviderChoice = "auto" | VisionProvider;
 
 interface VisionRequestBody {
   image?: string;
   mode?: string;
-  /** Force a provider; default: local-first when enabled, else gemini only */
   provider?: ProviderChoice;
 }
 
@@ -70,8 +50,6 @@ function errStatus(err: unknown): number {
 function errMsg(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
-
-// ── Groq: Kimi K2.5 web search ───────────────────────────────────────────────
 
 router.post("/search", async (req: Request, res: Response) => {
   if (!GROQ_API_KEY) {
@@ -151,8 +129,6 @@ Return ONLY valid JSON with this structure:
   }
 });
 
-// ── Groq: Chat completions ────────────────────────────────────────────────────
-
 router.post("/chat", async (req: Request, res: Response) => {
   if (!GROQ_API_KEY) {
     return res.status(500).json({ error: "GROQ_API_KEY not configured" });
@@ -179,7 +155,6 @@ router.post("/chat", async (req: Request, res: Response) => {
       return res.status(response.status).json(errData);
     }
 
-    // Pipe SSE stream directly when the client requests streaming
     if (body.stream === true && response.body) {
       res.setHeader("Content-Type", "text/event-stream");
       res.setHeader("Cache-Control", "no-cache");
@@ -208,8 +183,6 @@ router.post("/chat", async (req: Request, res: Response) => {
     res.status(500).json({ error: errMsg(err) });
   }
 });
-
-// ── Groq: Voice transcription ─────────────────────────────────────────────────
 
 router.post("/transcribe", async (req: Request, res: Response) => {
   if (!GROQ_API_KEY) {
@@ -260,15 +233,13 @@ router.post("/transcribe", async (req: Request, res: Response) => {
   }
 });
 
-// ── Gemini: Raw passthrough ───────────────────────────────────────────────────
-
 router.post("/gemini", async (req: Request, res: Response) => {
   try {
     const model =
       (req.query.model !== undefined ? String(req.query.model) : undefined) ??
       (req.body as { _model?: string })._model;
     const body = { ...req.body } as Record<string, unknown>;
-    delete body._model; // don't forward internal field to Gemini
+    delete body._model;
     const data = await passthroughGemini(body, model);
     res.json(data);
   } catch (err) {
@@ -277,10 +248,8 @@ router.post("/gemini", async (req: Request, res: Response) => {
   }
 });
 
-// ── Local vision health ───────────────────────────────────────────────────────
-
 router.get("/local-vision/health", async (_req: Request, res: Response) => {
-  await isOllamaAvailable(0); // force refresh
+  await isOllamaAvailable(0);
   res.json({
     ...ollamaStatus(),
     fallback: "gemini",
@@ -288,7 +257,6 @@ router.get("/local-vision/health", async (_req: Request, res: Response) => {
   });
 });
 
-// Vision endpoints (local LLaVA first, Gemini fallback) live in ./aiVision.ts
 import { visionRouter } from "./aiVision.js";
 
 router.use(visionRouter);

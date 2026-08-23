@@ -1,23 +1,8 @@
-/**
- * lib/gemini.ts — shared Gemini REST API helper
- *
- * Centralises the repetitive fetch → parse → extract pipeline that
- * was previously copy-pasted across four route handlers.
- *
- * Usage:
- *   import { callGemini, parseGeminiJson } from "../lib/gemini.js";
- *
- *   const text = await callGemini({ prompt, imageB64 });
- *   const result = parseGeminiJson(text);           // when expecting JSON back
- */
-
 import {
   GEMINI_API_KEY,
   GEMINI_REST_URL,
   GEMINI_API_BASE,
 } from "../config.js";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface GeminiGenerationConfig {
   temperature?: number;
@@ -27,13 +12,9 @@ export interface GeminiGenerationConfig {
 }
 
 export interface GeminiCallOptions {
-  /** System/user text prompt */
   prompt: string;
-  /** Base64-encoded JPEG/PNG (no data-URI prefix) */
   imageB64?: string;
-  /** Image MIME type (default: "image/jpeg") */
   mimeType?: string;
-  /** Override generation settings */
   generationConfig?: GeminiGenerationConfig;
 }
 
@@ -70,14 +51,6 @@ function httpError(message: string, status: number, extra?: Partial<HttpError>):
   return err;
 }
 
-// ── Core fetch helper ─────────────────────────────────────────────────────────
-
-/**
- * Call the Gemini generateContent REST API.
- *
- * @throws if the API key is missing, the HTTP request fails,
- *         or Gemini returns an error or empty response.
- */
 export async function callGemini({
   prompt,
   imageB64,
@@ -134,13 +107,6 @@ export async function callGemini({
   return text;
 }
 
-// ── JSON extraction helper ────────────────────────────────────────────────────
-
-/**
- * Strip markdown fences and extract the first JSON object from a Gemini response.
- *
- * @throws SyntaxError if no valid JSON object can be extracted
- */
 export function parseGeminiJson<T = Record<string, unknown>>(text: string): T {
   const cleaned = text.replace(/```json\s*|\s*```/g, "").trim();
   const match = cleaned.match(/\{[\s\S]*\}/);
@@ -148,13 +114,6 @@ export function parseGeminiJson<T = Record<string, unknown>>(text: string): T {
   return JSON.parse(jsonStr) as T;
 }
 
-// ── Passthrough helper ────────────────────────────────────────────────────────
-
-/**
- * Thin passthrough: forward an arbitrary request body to Gemini and return
- * the raw response JSON. Used by the /api/ai/gemini endpoint which lets the
- * frontend craft the full Gemini request.
- */
 export async function passthroughGemini(
   body: unknown,
   model?: string,

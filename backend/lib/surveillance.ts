@@ -1,27 +1,8 @@
-/**
- * lib/surveillance.js — national crop-health signal layer
- *
- * Aggregates farmer-side diagnoses into district and state level signals, and
- * serves them through the public /v1 API.
- *
- * IMPORTANT — data provenance:
- * The numbers produced here are SIMULATED reference data, generated from a
- * deterministic seed so every request returns identical values. They model the
- * shape of the real feed, not real observations. When the diagnosis pipeline
- * writes to persistent storage, only the internals of `buildDistrict` change —
- * the exported payload shapes are the published contract and stay fixed.
- *
- * Nothing here claims to be an observation from ICAR, ISRO or any government
- * source.
- */
-
 import { STATE_NODES, CROP_THREATS, type StateNode } from "../data/nationalGrid.js";
 
 export const SIGNAL_SCHEMA = "agri-signal/v1";
 export const ALERT_SCHEMA = "agri-alert/v1";
 export const MODEL_SCHEMA = "agri-model/v1";
-
-// ── Domain types ──────────────────────────────────────────────────────────────
 
 export type Severity = "severe" | "high" | "elevated" | "guarded" | "low";
 
@@ -116,10 +97,6 @@ export interface RegistryTotals {
   validations: number;
 }
 
-// ── Deterministic PRNG ────────────────────────────────────────────────────────
-// A fixed seed keeps the feed stable: the same district always returns the same
-// figure, so a consumer polling the API sees a coherent series rather than noise.
-
 function hashString(str: string): number {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
@@ -142,8 +119,6 @@ function mulberry32(seed: number): () => number {
 
 const rngFor = (key: string): (() => number) => mulberry32(hashString(key));
 
-// ── Severity banding ──────────────────────────────────────────────────────────
-
 export function severityOf(index: number): Severity {
   if (index >= 78) return "severe";
   if (index >= 60) return "high";
@@ -152,14 +127,6 @@ export function severityOf(index: number): Severity {
   return "low";
 }
 
-// ── Signal generation ─────────────────────────────────────────────────────────
-
-/**
- * Some states carry a deliberate hotspot so the feed reflects genuinely
- * recurring Indian outbreak patterns — wheat rust in the north-west, pink
- * bollworm in the cotton belt, fall armyworm on southern maize — rather than
- * uniform noise.
- */
 const PRESSURE_BIAS: Record<string, number> = {
   PB: 26, HR: 22, RJ: 14, MP: 18, MH: 24, TG: 20, GJ: 16,
   UP: 12, BR: 10, WB: 8, AP: 14, KA: 18, TN: 6, AS: 10, OD: 8,
@@ -179,8 +146,6 @@ function buildDistrict(state: StateNode, district: string): DistrictSignal {
   const threats = CROP_THREATS[topCrop] ?? ["Unclassified Stress"];
   const topThreat = pick(threats, rnd());
 
-  // Diagnoses scale with the state's farm-household base, so Uttar Pradesh
-  // reads heavier than Sikkim without either number being arbitrary.
   const scale = Math.sqrt(state.farmHouseholdsLakh) * 0.9 + 1;
   const diagnoses = Math.round(
     (40 + rnd() * 320) * scale * (0.5 + outbreakIndex / 120),
@@ -188,7 +153,6 @@ function buildDistrict(state: StateNode, district: string): DistrictSignal {
   const farmersReached = Math.round(diagnoses * (5 + rnd() * 9));
   const advisories7d = Math.round(farmersReached * (0.28 + rnd() * 0.34));
 
-  // 14-day history that lands on the current index, with a plausible drift.
   const drift = (rnd() - 0.42) * 2.6;
   const trend: number[] = [];
   for (let i = 13; i >= 0; i--) {
@@ -231,7 +195,6 @@ function buildState(node: StateNode): StateSignal {
 
   const outbreakIndex = avg((d) => d.outbreakIndex);
 
-  // The dominant threat is whichever one the most districts are reporting.
   const threatCounts = new Map<string, number>();
   districts.forEach((d) =>
     threatCounts.set(d.topThreat, (threatCounts.get(d.topThreat) ?? 0) + 1),
@@ -282,13 +245,6 @@ export const NATIONAL_TOTALS: NationalTotals = {
   agroZones: new Set(STATE_NODES.map((s) => s.zone)).size,
 };
 
-// ── Alerts ────────────────────────────────────────────────────────────────────
-
-/**
- * An alert fires when a district crosses an escalation rule. Each alert carries
- * the rule that produced it so a consumer can show why it exists — an alert
- * nobody can explain is an alert nobody acts on.
- */
 export const ALERTS: AgriAlert[] = ALL_DISTRICTS.filter((d) => d.outbreakIndex >= 58)
   .sort((a, b) => b.outbreakIndex - a.outbreakIndex)
   .slice(0, 40)
@@ -318,13 +274,6 @@ export const ALERTS: AgriAlert[] = ALL_DISTRICTS.filter((d) => d.outbreakIndex >
     };
   });
 
-// ── Cross-state model exchange ────────────────────────────────────────────────
-
-/**
- * The registry that makes this a network rather than an app: a state publishes
- * a versioned advisory model, other states subscribe to or fork it. Thresholds,
- * crop calendars and package-of-practices encoded as data, not code.
- */
 export const MODEL_REGISTRY: RegistryModel[] = [
   {
     id: "kai.pb.wheat-yellow-rust",
@@ -442,10 +391,6 @@ export const REGISTRY_TOTALS: RegistryTotals = {
   forks: MODEL_REGISTRY.reduce((a, m) => a + m.forks, 0),
   validations: MODEL_REGISTRY.reduce((a, m) => a + m.validations, 0),
 };
-
-// ── Public payload serialisers ────────────────────────────────────────────────
-// snake_case on the wire: this is an open-data endpoint, and that is the
-// convention Indian government data portals publish in.
 
 export interface SignalTotalsPayload {
   states: number;
@@ -682,7 +627,6 @@ export function serialiseAlerts(code?: string): AlertsFeed {
   };
 }
 
-/** The artefact a state publishes and another state consumes. */
 export function serialiseModel(m: RegistryModel): SerialisedModel {
   return {
     $schema: `https://kisan.ai/schema/${m.schema}.json`,

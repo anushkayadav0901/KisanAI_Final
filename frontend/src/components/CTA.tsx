@@ -31,7 +31,7 @@ const entryPoints = [
 export const CTA = () => {
   return (
     <section className="py-24 bg-[#63A361] relative overflow-hidden">
-      {/* Background Pattern */}
+      {                        }
       <div
         className="absolute inset-0 opacity-[0.08]"
         style={{
@@ -57,7 +57,7 @@ export const CTA = () => {
           </p>
         </div>
 
-        {/* Entry points */}
+        {                  }
         <div className="grid sm:grid-cols-3 gap-4 mt-10">
               {entryPoints.map((entry) => (
               <Link

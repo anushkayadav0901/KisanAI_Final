@@ -1,6 +1,5 @@
 import { generateModernFarmingPrompt } from "./modernFarmingPrompt";
 
-// Backend API URL - NO VITE_ PREFIX!
 const API_BASE_URL = import.meta.env.PROD 
   ? '/api'
   : 'http://localhost:3000/api';
@@ -135,7 +134,6 @@ export interface ModernFarmingResponse {
   };
 }
 
-// Validate if the query is relevant to farming
 const isFarmingRelated = (technique: string, farmSize: string): boolean => {
   const farmingKeywords = [
     'organic', 'farming', 'agriculture', 'crop', 'soil', 'irrigation', 'harvest',
@@ -194,7 +192,6 @@ export const getModernFarmingAnalysis = async (request: ModernFarmingRequest): P
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      // Use backend proxy instead of direct Groq API
       const response = await fetch(`${API_BASE_URL}/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

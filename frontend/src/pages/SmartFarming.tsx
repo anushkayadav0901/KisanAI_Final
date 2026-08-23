@@ -51,7 +51,7 @@ import {
   PolarRadiusAxis,
   Radar,
 } from "recharts"
-import { toast, Toaster } from "react-hot-toast"
+import { toast } from "react-hot-toast"
 import { cn } from "../utils/cn"
 import { loadResult, saveResult, clearFeature } from "../utils/storage"
 
@@ -70,7 +70,6 @@ const budgetOptions = [
   { value: "high", label: "Large Scale (> ₹20L)" },
 ] as const
 
-// Icon resolver for guide sections
 const sectionIcons: Record<string, React.ElementType> = {
   layers: Layers,
   droplets: Droplets,
@@ -91,7 +90,6 @@ const SmartFarming: React.FC = () => {
   const [showResults, setShowResults] = useState<boolean>(false)
   const [formCollapsed, setFormCollapsed] = useState(true)
 
-  // Farming data
   const [subsidyData, setSubsidyData] = useState<SubsidyResponse | null>(null)
   const [videoData, setVideoData] = useState<VideoResponse | null>(null)
   const [insightsData, setInsightsData] = useState<InsightsResponse | null>(null)
@@ -99,12 +97,10 @@ const SmartFarming: React.FC = () => {
   const [videoLoading, setVideoLoading] = useState(false)
   const [insightsLoading, setInsightsLoading] = useState(false)
 
-  // UI state
   const [expandedSubsidy, setExpandedSubsidy] = useState<string | null>(null)
   const [showVideoSummary, setShowVideoSummary] = useState(false)
   const [, setExpandedInsight] = useState<number | null>(0)
 
-  // ── Hydrate from localStorage ──
   useEffect(() => {
     const cached = loadResult<{
       inputs: { technique: string; farmSize: string; budget: ModernFarmingRequest["budget"]; custom?: string }
@@ -127,7 +123,6 @@ const SmartFarming: React.FC = () => {
     if (cachedIns) setInsightsData(cachedIns)
   }, [])
 
-  // ── Chart data ──
   const pieChartData = useMemo(() => {
     if (!analysisData) return []
     return [
@@ -162,7 +157,6 @@ const SmartFarming: React.FC = () => {
     ]
   }, [analysisData])
 
-  // ── Validation ──
   const isFormValid = () => {
     if (!selectedTechnique || !farmSize || farmSize === '0' || Number(farmSize) <= 0) return false
     if (selectedTechnique === "other_farming" && !customFarmingType.trim()) return false
@@ -194,9 +188,8 @@ const SmartFarming: React.FC = () => {
     return farmingKeywords.some(k => t.includes(k)) && !nonFarmingKeywords.some(k => t.includes(k)) && !isGibberish
   }
 
-  // ── Reset ──
   const handleReset = () => {
-    clearFeature("smart")
+    ;["smart", "smart_subsidies", "smart_videos", "smart_insights"].forEach(clearFeature)
     setAnalysisData(null)
     setShowResults(false)
     setSelectedTechnique("")
@@ -217,7 +210,6 @@ const SmartFarming: React.FC = () => {
     })
   }
 
-  // ── Analysis ──
   const handleAnalysis = async () => {
     if (!isFormValid()) {
       if (!selectedTechnique) toast.error("Please select a farming technique", { style: { background: "#FF5757", color: "#fff", padding: "16px", borderRadius: "8px" } })
@@ -255,26 +247,25 @@ const SmartFarming: React.FC = () => {
       setShowResults(true)
       saveResult("smart", {
         inputs: { technique: techniqueForApi, farmSize, budget: selectedBudget, custom: selectedTechnique === "other_farming" ? customFarmingType : undefined },
-        analysisData: data as any,
+        analysisData: data,
         showResults: true,
       })
 
-      // Parallel fetch
       setSubsidyLoading(true)
       fetchSubsidies(techniqueForApi, undefined, selectedBudget)
-        .then((d) => { setSubsidyData(d); saveResult("smart_subsidies", d as any) })
+        .then((d) => { setSubsidyData(d); saveResult("smart_subsidies", d) })
         .catch((e) => console.error("Subsidy error:", e))
         .finally(() => setSubsidyLoading(false))
 
       setVideoLoading(true)
       fetchSuccessVideos(techniqueForApi)
-        .then((d) => { setVideoData(d); saveResult("smart_videos", d as any) })
+        .then((d) => { setVideoData(d); saveResult("smart_videos", d) })
         .catch((e) => console.error("Video error:", e))
         .finally(() => setVideoLoading(false))
 
       setInsightsLoading(true)
       fetchFarmingInsights(techniqueForApi, farmSize, selectedBudget)
-        .then((d) => { setInsightsData(d); saveResult("smart_insights", d as any) })
+        .then((d) => { setInsightsData(d); saveResult("smart_insights", d) })
         .catch((e) => console.error("Insights error:", e))
         .finally(() => setInsightsLoading(false))
     } catch (err) {
@@ -291,7 +282,6 @@ const SmartFarming: React.FC = () => {
 
   const getDisplayTitle = () => {
     if (selectedTechnique === "other_farming" && customFarmingType) {
-      // capitalize custom type nicely, like the model did
       return customFarmingType.replace(/\b\w/g, (l: string) => l.toUpperCase());
     }
     const tech = techniques.find(t => t.id === selectedTechnique);
@@ -300,16 +290,13 @@ const SmartFarming: React.FC = () => {
   }
   const techniqueName = getDisplayTitle()
 
-  // ── Render ──
   return (
     <div className="min-h-screen bg-white pt-24 pb-12">
-      <Toaster position="top-right" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* ════════════ FORM SECTION ════════════ */}
+        {                                            }
         {showResults && analysisData ? (
-          /* ── Collapsed bar ── */
           <div className="mb-8 bg-white rounded-2xl border border-[#5B532C]/10 overflow-hidden">
             <button
               onClick={() => setFormCollapsed(!formCollapsed)}
@@ -377,7 +364,6 @@ const SmartFarming: React.FC = () => {
             </AnimatePresence>
           </div>
         ) : !showResults ? (
-          /* ── Full input form ── */
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="px-4 mx-auto mb-10 max-w-4xl sm:px-0">
             <div className="p-8 bg-white rounded-2xl border border-[#5B532C]/10">
               <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#5B532C]/10">
@@ -387,7 +373,7 @@ const SmartFarming: React.FC = () => {
                 </div>
               </div>
 
-              {/* Technique */}
+              {               }
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#63A361] text-white text-xs font-bold flex items-center justify-center">1</div>
@@ -410,7 +396,7 @@ const SmartFarming: React.FC = () => {
                 </div>
               </div>
 
-              {/* Custom type */}
+              {                 }
               <AnimatePresence>
                 {selectedTechnique === "other_farming" && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="mb-8">
@@ -427,7 +413,7 @@ const SmartFarming: React.FC = () => {
                 )}
               </AnimatePresence>
 
-              {/* Farm details */}
+              {                  }
               <div className="mb-8">
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-7 h-7 rounded-full bg-[#63A361] text-white text-xs font-bold flex items-center justify-center">2</div>
@@ -471,12 +457,11 @@ const SmartFarming: React.FC = () => {
           </motion.div>
         ) : null}
 
-
-        {/* ════════════ RESULTS ════════════ */}
+        {                                       }
         {showResults && analysisData && (
           <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="space-y-10">
 
-            {/* ── Key Metrics ── */}
+            {                       }
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               {[
                 { label: "Total Investment", value: `₹${analysisData.techniqueAnalysis.overview.estimatedCost.toLocaleString()}`, sub: `${analysisData.techniqueAnalysis.overview.timeToRoi} ROI`, accent: true },
@@ -494,9 +479,9 @@ const SmartFarming: React.FC = () => {
               ))}
             </div>
 
-            {/* ── Charts ── */}
+            {                  }
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Cost Breakdown */}
+              {                    }
               <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10">
                 <h3 className="text-base font-semibold text-[#5B532C] mb-4">Cost Breakdown</h3>
                 <div className="h-72">
@@ -513,7 +498,7 @@ const SmartFarming: React.FC = () => {
                 </div>
               </div>
 
-              {/* Resource Efficiency */}
+              {                         }
               <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10">
                 <h3 className="text-base font-semibold text-[#5B532C] mb-4">Resource Efficiency</h3>
                 <div className="h-72">
@@ -529,7 +514,7 @@ const SmartFarming: React.FC = () => {
               </div>
             </div>
 
-            {/* Financial Projections */}
+            {                           }
             <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10">
               <h3 className="text-base font-semibold text-[#5B532C] mb-4">3-Year Financial Projections</h3>
               <div className="h-72">
@@ -547,7 +532,7 @@ const SmartFarming: React.FC = () => {
               </div>
             </div>
 
-            {/* ══════════ YEAR-BY-YEAR ROADMAP ══════════ */}
+            {                                                }
             <div className="bg-white rounded-2xl border border-[#5B532C]/10 overflow-hidden">
               <div className="px-6 py-5 border-b border-[#5B532C]/10">
                 <h3 className="text-lg font-bold text-[#5B532C]">Year-by-Year Roadmap</h3>
@@ -563,7 +548,7 @@ const SmartFarming: React.FC = () => {
 
                   return (
                     <div key={index} className="px-6 py-5">
-                      {/* Phase header row */}
+                      {                      }
                       <div className="flex items-start gap-4 mb-3">
                         <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold flex-shrink-0 mt-0.5" style={{ backgroundColor: color }}>
                           {index + 1}
@@ -581,7 +566,7 @@ const SmartFarming: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Milestones + Metrics in a clean two-column layout */}
+                      {                                                       }
                       <div className="ml-12 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
                         <div>
                           <p className="text-xs font-semibold text-[#5B532C]/40 uppercase tracking-wider mb-1.5">Milestones</p>
@@ -609,8 +594,7 @@ const SmartFarming: React.FC = () => {
               </div>
             </div>
 
-
-            {/* ══════════ GOVERNMENT SUBSIDIES ══════════ */}
+            {                                                }
             <div className="bg-white rounded-2xl border border-[#5B532C]/10 overflow-hidden">
               <div className="px-6 py-5 border-b border-[#5B532C]/10">
                 <h3 className="text-lg font-bold text-[#5B532C]">Government Subsidies</h3>
@@ -706,8 +690,7 @@ const SmartFarming: React.FC = () => {
               </div>
             </div>
 
-
-            {/* ══════════ SUCCESS STORY VIDEO ══════════ */}
+            {                                               }
             <div className="bg-white rounded-2xl border border-[#5B532C]/10 overflow-hidden">
               <div className="px-6 py-5 border-b border-[#5B532C]/10">
                 <h3 className="text-lg font-bold text-[#5B532C]">Success Story</h3>
@@ -722,7 +705,7 @@ const SmartFarming: React.FC = () => {
                   </div>
                 ) : videoData?.featuredVideo ? (
                   <div className="space-y-4">
-                    {/* Video embed */}
+                    {                 }
                     <div className="aspect-video rounded-xl overflow-hidden bg-black">
                       <iframe
                         src={videoData.featuredVideo.embedUrl}
@@ -733,13 +716,13 @@ const SmartFarming: React.FC = () => {
                       />
                     </div>
 
-                    {/* Video info */}
+                    {                }
                     <div>
                       <h4 className="font-semibold text-[#5B532C] text-sm leading-snug">{videoData.featuredVideo.title}</h4>
                       <p className="text-xs text-[#5B532C]/50 mt-1">{videoData.featuredVideo.channel} · {videoData.featuredVideo.views}</p>
                     </div>
 
-                    {/* Summary dropdown */}
+                    {                      }
                     {videoData.featuredVideo.summary && (
                       <div className="rounded-xl border border-[#5B532C]/10 overflow-hidden">
                         <button onClick={() => setShowVideoSummary(!showVideoSummary)}
@@ -772,7 +755,7 @@ const SmartFarming: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Related videos */}
+                    {                    }
                     {videoData.relatedVideos?.length > 0 && (
                       <div>
                         <p className="text-xs font-semibold text-[#5B532C]/40 uppercase mb-2">More Videos</p>
@@ -803,8 +786,7 @@ const SmartFarming: React.FC = () => {
               </div>
             </div>
 
-
-            {/* ══════════ PRACTICAL FARMING TIPS ══════════ */}
+            {                                                  }
             <div className="bg-white rounded-2xl border border-[#5B532C]/10 overflow-hidden">
               <div className="px-6 py-5 border-b border-[#5B532C]/10">
                 <h3 className="text-lg font-bold text-[#5B532C]">Practical Farming Tips</h3>
@@ -819,21 +801,21 @@ const SmartFarming: React.FC = () => {
                   </div>
                 ) : insightsData?.guide ? (
                   <div>
-                    {/* Introduction */}
+                    {                  }
                     {insightsData.guide.introduction && (
                       <p className="text-sm text-[#5B532C]/70 leading-relaxed mb-5 pb-5 border-b border-[#5B532C]/8">
                         {insightsData.guide.introduction}
                       </p>
                     )}
 
-                    {/* Grid of Tip Cards */}
+                    {                       }
                     <div className="grid lg:grid-cols-2 gap-4">
                       {insightsData.guide.sections?.map((section, idx) => {
                         const IconComp = sectionIcons[section.icon] || Lightbulb
 
                         return (
                           <div key={idx} className="flex flex-col p-5 rounded-2xl bg-white shadow-sm border border-[#5B532C]/10 relative overflow-hidden group">
-                            {/* Decorative background element inspired by landing page */}
+                            {                                                            }
                             <div className="absolute top-0 right-0 w-24 h-24 bg-[#63A361]/5 rounded-bl-[100px] pointer-events-none transition-transform group-hover:scale-110" />
 
                             <div className="flex items-center gap-3 mb-3 relative z-10">

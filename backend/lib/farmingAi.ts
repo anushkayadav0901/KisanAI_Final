@@ -1,15 +1,4 @@
-/**
- * farmingAi.ts — AI enrichment for farming data
- *
- * Uses Groq LLM to generate detailed, non-redundant farming guides.
- * The guide focuses ONLY on practical implementation — subsidy info and
- * success stories are handled by separate services (farmingScraper.ts
- * and farmingVideos.ts) to avoid duplication.
- */
-
 import { GROQ_API_KEY, GROQ_CHAT_URL } from "../config.js";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface FarmingInsightSection {
     heading: string;
@@ -43,11 +32,6 @@ interface GroqChatResponse {
     }>;
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
-/**
- * Call Groq LLM with a prompt and return the text response.
- */
 async function callGroq(
     systemPrompt: string,
     userPrompt: string,
@@ -88,9 +72,6 @@ async function callGroq(
     return data.choices?.[0]?.message?.content?.trim() || "";
 }
 
-/**
- * Parse JSON from an LLM response (strips markdown fences).
- */
 function parseJson<T>(text: string): T {
     let clean = text.replace(/```json\s*/gi, "").replace(/```/g, "").trim();
     const first = clean.indexOf("{");
@@ -99,15 +80,6 @@ function parseJson<T>(text: string): T {
     return JSON.parse(clean) as T;
 }
 
-// ── Detailed Farming Insights ─────────────────────────────────────────────────
-
-/**
- * Generate a comprehensive, actionable farming guide.
- *
- * NOTE: This guide does NOT include subsidy info or success stories —
- * those are separate sections on the frontend fetched from dedicated services.
- * This avoids redundancy and keeps each section focused.
- */
 export async function generateFarmingInsights({
     technique,
     farmSize,

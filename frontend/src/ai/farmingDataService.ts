@@ -1,14 +1,6 @@
-/**
- * farmingDataService.ts — Frontend service for farming subsidies, videos & insights
- *
- * Calls the new /api/farming/* backend endpoints.
- */
-
 const API_BASE_URL = import.meta.env.PROD
     ? "/api"
     : "http://localhost:3000/api";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface Subsidy {
     id: string;
@@ -85,8 +77,6 @@ export interface InsightsResponse {
     guide: FarmingGuide;
     cacheHit: boolean;
 }
-
-// ── API Calls ─────────────────────────────────────────────────────────────────
 
 export async function fetchSubsidies(
     technique: string,

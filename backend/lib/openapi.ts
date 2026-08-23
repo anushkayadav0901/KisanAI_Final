@@ -1,11 +1,3 @@
-/**
- * lib/openapi.js — OpenAPI 3.0 specification for the Agricultural Signal API
- *
- * Served at /v1/openapi.json. Any standards-compliant tool — Postman, Swagger
- * UI, an SDK generator — can consume this and produce a working client without
- * anyone at this end being involved. That is the point of publishing it.
- */
-
 export const OPENAPI_SPEC = (
   origin: string,
 ): Record<string, unknown> => ({

@@ -1,19 +1,3 @@
-/**
- * farmingScraper.ts — Government subsidy data via web scraping + AI enrichment
- *
- * Approach: Scrape DuckDuckGo HTML search for government subsidy pages,
- * then use llama-3.1 (NOT compound-beta) to structure the results.
- *
- * This avoids the 429 rate limit on compound-beta while still getting
- * real .gov.in URLs and up-to-date scheme information.
- *
- * Flow:
- *   1. Check cache
- *   2. Scrape DuckDuckGo HTML for "site:gov.in {technique} farming subsidy"
- *   3. Use llama-3.1 to enrich raw snippets into structured subsidy data
- *   4. Fall back to curated static data if scraping fails
- */
-
 import { readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -25,11 +9,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_PATH = path.join(__dirname, "..", "data", "farmingData.json");
 
-const SUBSIDY_CACHE_TTL = 6 * 60 * 60; // 6 hours
+const SUBSIDY_CACHE_TTL = 6 * 60 * 60;
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-/** A scraped government subsidy scheme (AI-enriched or curated). */
 export interface SubsidyScheme {
     id?: string;
     name?: string;
@@ -45,7 +26,6 @@ export interface SubsidyScheme {
     relevanceScore?: number;
 }
 
-/** A government scheme formatted for the monitoring ComprehensiveReport. */
 export interface GovtScheme {
     schemeName: string;
     description: string;
@@ -85,7 +65,6 @@ interface GroqChatResponse {
     }>;
 }
 
-// Map technique IDs to specific search terms
 const TECHNIQUE_SEARCH_MAP: Record<string, string> = {
     integrated_farming: "fish farming aquaculture",
     organic_farming: "organic farming",
@@ -101,9 +80,6 @@ const TECHNIQUE_SEARCH_MAP: Record<string, string> = {
     apiculture: "beekeeping apiculture",
 };
 
-/**
- * Map a technique string to a known category key (for static fallback).
- */
 function resolveKey(technique: string): string {
     const t = technique?.toLowerCase().replace(/\s+/g, "_") || "";
     if (t.includes("organic")) return "organic_farming";
@@ -113,9 +89,6 @@ function resolveKey(technique: string): string {
     return "default";
 }
 
-/**
- * Load subsidies from the static curated JSON file.
- */
 async function loadStaticSubsidies(key: string): Promise<SubsidyScheme[]> {
     try {
         const raw = await readFile(DATA_PATH, "utf-8");
@@ -127,9 +100,6 @@ async function loadStaticSubsidies(key: string): Promise<SubsidyScheme[]> {
     }
 }
 
-/**
- * Extract the actual URL from a DuckDuckGo redirect link.
- */
 function extractActualUrl(rawUrl: string): string {
     let actualUrl = rawUrl;
     const uddgMatch = rawUrl.match(/uddg=([^&]+)/);
@@ -139,9 +109,6 @@ function extractActualUrl(rawUrl: string): string {
     return actualUrl;
 }
 
-/**
- * Parse DuckDuckGo HTML into raw search results.
- */
 function parseDuckDuckGoHtml(html: string): SearchResult[] {
     const results: SearchResult[] = [];
     const resultRegex =
@@ -166,10 +133,6 @@ function parseDuckDuckGoHtml(html: string): SearchResult[] {
     return results;
 }
 
-/**
- * Scrape DuckDuckGo HTML search results for government subsidy pages.
- * Returns raw search results with titles, snippets, and URLs.
- */
 async function scrapeDuckDuckGo(searchTerm: string): Promise<SearchResult[]> {
     try {
         const query = `site:gov.in ${searchTerm} subsidy scheme farmer India 2024 2025`;
@@ -191,7 +154,6 @@ async function scrapeDuckDuckGo(searchTerm: string): Promise<SearchResult[]> {
 
         const html = await response.text();
 
-        // Parse results using regex (DuckDuckGo HTML is simple)
         const results = parseDuckDuckGoHtml(html);
 
         console.log(
@@ -208,10 +170,6 @@ function readGroqContent(data: GroqChatResponse): string | null {
     return data.choices?.[0]?.message?.content?.trim() || null;
 }
 
-/**
- * Use llama-3.1 to structure raw search results into subsidy data.
- * Uses llama (NOT compound-beta) to avoid rate limits.
- */
 async function enrichWithLlama(
     searchResults: SearchResult[],
     technique: string,
@@ -294,7 +252,6 @@ RULES:
         const content = readGroqContent(data);
         if (!content) return null;
 
-        // Parse JSON
         let clean = content
             .replace(/```json\s*/gi, "")
             .replace(/```/g, "")
@@ -320,12 +277,6 @@ RULES:
     }
 }
 
-// ── Public API ────────────────────────────────────────────────────────────────
-
-/**
- * Get government subsidies for a farming technique.
- * Flow: cache → DuckDuckGo scrape → llama enrichment → curated fallback
- */
 export async function getSubsidies(
     technique: string,
     state?: string,
@@ -334,36 +285,30 @@ export async function getSubsidies(
     const key = resolveKey(technique);
     const cacheKey = `subsidies:${technique}:${state || "all"}`;
 
-    // 1. Check cache
     const cached = cacheGet<SubsidiesResult>(cacheKey);
     if (cached) {
         console.log(`[farmingScraper] Cache hit for "${cacheKey}"`);
         return cached;
     }
 
-    // 2. Get search term for this technique
     const searchTerm =
         TECHNIQUE_SEARCH_MAP[technique] || technique.replace(/_/g, " ");
 
-    // 3. Scrape DuckDuckGo for .gov.in subsidy pages
     const searchResults = await scrapeDuckDuckGo(searchTerm);
 
     let subsidies: SubsidyScheme[] | null = null;
     let source: "web-search" | "curated" = "web-search";
 
-    // 4. Enrich with llama if we got results
     if (searchResults.length > 0) {
         subsidies = await enrichWithLlama(searchResults, technique);
     }
 
-    // 5. Fall back to curated data
     if (!subsidies || subsidies.length === 0) {
         subsidies = await loadStaticSubsidies(key);
         source = "curated";
         console.log(`[farmingScraper] Using curated data for "${key}"`);
     }
 
-    // 6. Sort by relevance
     subsidies.sort((a, b) => (b.relevanceScore || 0) - (a.relevanceScore || 0));
 
     const result: SubsidiesResult = {
@@ -373,28 +318,19 @@ export async function getSubsidies(
         source,
     };
 
-    // 7. Cache
     cacheSet(cacheKey, result, SUBSIDY_CACHE_TTL);
 
     return result;
 }
 
-/**
- * Manually trigger a re-search (invalidates cache).
- */
 export async function manualScrape(technique: string): Promise<SubsidiesResult> {
     const { cacheInvalidate } = await import("./farmingCache.js");
     cacheInvalidate(`subsidies:${technique}`);
     return getSubsidies(technique);
 }
 
-// ── Government Schemes for Monitoring ─────────────────────────────────────────
+const GOVT_SCHEME_CACHE_TTL = 6 * 60 * 60;
 
-const GOVT_SCHEME_CACHE_TTL = 6 * 60 * 60; // 6 hours
-
-/**
- * Raw DuckDuckGo scrape (reuses same logic but accepts full query string).
- */
 async function scrapeDuckDuckGoRaw(query: string): Promise<SearchResult[]> {
     try {
         const url = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
@@ -418,10 +354,6 @@ async function scrapeDuckDuckGoRaw(query: string): Promise<SearchResult[]> {
     }
 }
 
-/**
- * Use llama-3.1 to structure raw search results into government scheme data
- * formatted for the monitoring ComprehensiveReport.
- */
 async function enrichGovtSchemesWithLlama(
     searchResults: SearchResult[],
     cropIssue: string,
@@ -525,13 +457,6 @@ RULES:
     }
 }
 
-/**
- * Get government schemes relevant to detected crop issues for the
- * monitoring ComprehensiveReport. Replaces AI-hallucinated schemes with
- * real, web-scraped government scheme data.
- *
- * Flow: cache → DuckDuckGo scrape → llama enrichment → static fallback
- */
 export async function getGovtSchemes(
     cropIssue: string,
     cropName?: string,
@@ -539,14 +464,12 @@ export async function getGovtSchemes(
 ): Promise<GovtSchemesResult> {
     const cacheKey = `govt-schemes:${cropIssue}:${cropName || "general"}:${state || "all"}`;
 
-    // 1. Check cache
     const cached = cacheGet<GovtSchemesResult>(cacheKey);
     if (cached) {
         console.log(`[farmingScraper] Govt schemes cache hit for "${cacheKey}"`);
         return cached;
     }
 
-    // 2. Build search queries for government schemes
     const searchQueries = [
         `site:gov.in ${cropIssue || "crop"} farmer scheme subsidy India 2025`,
         `site:gov.in ${cropName || "agriculture"} crop insurance compensation India`,
@@ -555,14 +478,12 @@ export async function getGovtSchemes(
         searchQueries.push(`site:gov.in ${state} agriculture farmer scheme 2025`);
     }
 
-    // 3. Scrape DuckDuckGo for all queries and merge results
     let allResults: SearchResult[] = [];
     for (const query of searchQueries) {
         const results = await scrapeDuckDuckGoRaw(query);
         allResults = allResults.concat(results);
     }
 
-    // Deduplicate by URL
     const seen = new Set<string>();
     allResults = allResults.filter((r) => {
         if (seen.has(r.url)) return false;
@@ -577,7 +498,6 @@ export async function getGovtSchemes(
     let schemes: GovtScheme[] | null = null;
     let source: "web-search" | "curated" = "web-search";
 
-    // 4. Enrich with llama if we got results
     if (allResults.length > 0) {
         schemes = await enrichGovtSchemesWithLlama(
             allResults,
@@ -587,7 +507,6 @@ export async function getGovtSchemes(
         );
     }
 
-    // 5. Fall back to curated static schemes
     if (!schemes || schemes.length === 0) {
         schemes = getStaticGovtSchemes(cropIssue);
         source = "curated";
@@ -601,15 +520,11 @@ export async function getGovtSchemes(
         source,
     };
 
-    // 6. Cache
     cacheSet(cacheKey, result, GOVT_SCHEME_CACHE_TTL);
 
     return result;
 }
 
-/**
- * Static fallback government schemes (always relevant for Indian farmers).
- */
 function getStaticGovtSchemes(cropIssue: string): GovtScheme[] {
     const schemes: GovtScheme[] = [
         {
@@ -652,7 +567,6 @@ function getStaticGovtSchemes(cropIssue: string): GovtScheme[] {
         },
     ];
 
-    // Add crop-loss specific scheme if issue detected
     if (cropIssue) {
         schemes.push({
             schemeName: "National Agriculture Market (e-NAM)",

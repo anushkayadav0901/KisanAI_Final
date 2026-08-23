@@ -1,13 +1,3 @@
-/**
- * GroundedAdvisory — ask a question, get an answer that shows its sources
- *
- * The interesting state here is the refusal. When the corpus cannot support an
- * answer this panel says so, shows the gate that made that call, and points the
- * farmer at their KVK — rather than producing confident text with nothing
- * behind it. That behaviour is the feature, so the UI gives it as much room as
- * a successful answer.
- */
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -64,7 +54,6 @@ const EXAMPLES = [
   "Which brand of tractor should I buy",
 ];
 
-/** Renders [1] [2] markers in the answer as visual chips. */
 function renderAnswer(answer: string) {
   const parts = answer.split(/(\[\d+\])/g);
   return parts.map((part, i) => {
@@ -194,7 +183,7 @@ export const GroundedAdvisory: React.FC = () => {
 
   return (
     <div>
-      {/* Ask box */}
+      {             }
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -227,7 +216,7 @@ export const GroundedAdvisory: React.FC = () => {
         </button>
       </form>
 
-      {/* Examples */}
+      {              }
       <div className="flex flex-wrap gap-2 mt-4">
         {EXAMPLES.map((ex, i) => (
           <button
@@ -253,7 +242,7 @@ export const GroundedAdvisory: React.FC = () => {
         ))}
       </div>
 
-      {/* Result */}
+      {            }
       <AnimatePresence mode="wait">
         {result && (
           <motion.div
@@ -264,7 +253,6 @@ export const GroundedAdvisory: React.FC = () => {
             className="mt-6"
           >
             {refused ? (
-              /* ── Refusal ─────────────────────────────────────────────── */
               <div className="p-6 rounded-2xl bg-[#FFC50F]/8 border border-[#FFC50F]/30">
                 <div className="flex items-start gap-4">
                   <div className="w-11 h-11 rounded-xl bg-[#FFC50F]/20 flex items-center justify-center shrink-0">
@@ -302,7 +290,6 @@ export const GroundedAdvisory: React.FC = () => {
                 </div>
               </div>
             ) : (
-              /* ── Grounded answer ─────────────────────────────────────── */
               <div>
                 <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg shadow-[#5B532C]/5">
                   <div className="flex items-center gap-2 mb-3 flex-wrap">

@@ -21,7 +21,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import Select from 'react-select/async';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar, ComposedChart } from 'recharts';
 import mahaData from '../data/maha.json';
@@ -77,7 +77,6 @@ interface WeatherData {
   name: string;
 }
 
-// Add new type for insight modes
 type InsightMode = 'Accurate' | 'Estimate' | 'Realtime' | 'Predictive';
 
 export const MarketInsights: React.FC<MarketInsightsProps> = () => {
@@ -113,7 +112,6 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     return Array.from(cropSet).sort((a, b) => a.localeCompare(b));
   }, [selectedCity, baseCityData]);
 
-  // Hydrate cached selection and processed data
   useEffect(() => {
     const cached = loadResult<{
       selectedState: string;
@@ -137,7 +135,6 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
       if (cached.selectedCity) {
         setHasLoadedCity(true);
         setIsWeatherSectionVisible(true);
-        // If crop analyses exist in cache, weather section is already loaded
         if (cached.cropAnalyses && cached.cropAnalyses.length > 0) {
           setIsWeatherSectionVisible(true);
         }
@@ -156,7 +153,6 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
 
   const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
-  // Add realistic market price variations to base data without randomness
   const diversifyMarketPrices = useCallback((cityData: any) => {
     const diversifiedData = JSON.parse(JSON.stringify(cityData));
     diversifiedData.markets = diversifiedData.markets.map((market: any) => {
@@ -168,7 +164,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             return [crop, price];
           }
           const seed = getDeterministicHash(`${cityData.city}-${market.name}-${crop}`);
-          const variation = ((seed % 7) - 3) / 100; // -3% to +3%
+          const variation = ((seed % 7) - 3) / 100;
           const adjustedPrice = Math.max(500, Math.round(basePrice * (1 + variation)));
           return [crop, `₹${adjustedPrice.toLocaleString('en-IN')}/quintal`];
         })
@@ -232,7 +228,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
       setAiPipelineStep('Fetching live weather impact...');
       setIsWeatherLoading(true);
       const { cropAnalyses: cropAnalysisData, weatherData: weatherInfo, overallAnalysis } = await auditMarketWithWeather(diversifiedCityData, cityName);
-      setSelectedCity(diversifiedCityData); // Keep original data without modifications
+      setSelectedCity(diversifiedCityData);
       setWeatherData(weatherInfo);
       setWeatherAnalysis(overallAnalysis);
       setCropAnalyses(cropAnalysisData);
@@ -270,7 +266,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
         insightMode,
         weeklyTrendView,
         selectedCrop: '',
-        cropAnalyses: [] as any // In error case, no crop analyses
+        cropAnalyses: [] as any
       });
     } finally {
       setIsWeatherLoading(false);
@@ -281,10 +277,9 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     }
   };
 
-  // Get current time-based adjustments
   const getDeterministicFactor = useCallback((identifier: string, maxDelta: number) => {
     const hash = Math.abs(getDeterministicHash(identifier));
-    const normalized = (hash % 1000) / 1000; // 0..0.999
+    const normalized = (hash % 1000) / 1000;
     const delta = (normalized * 2 - 1) * maxDelta;
     return 1 + delta;
   }, []);
@@ -459,7 +454,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
       animate={{ opacity: 1 }}
       className="space-y-8"
     >
-      {/* Hero Empty State */}
+      {                      }
       <div className="relative p-8 text-center bg-gradient-to-br from-[#FDE7B3]/30 via-white to-[#63A361]/5 rounded-3xl border border-[#5B532C]/10 overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#63A361]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#FFC50F]/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
@@ -495,7 +490,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
           </div>
         </motion.div>
       </div>
-      {/* Skeleton Stats Cards */}
+      {                          }
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {[DollarSign, Users, BarChart2].map((Icon, i) => (
           <motion.div
@@ -517,9 +512,9 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
           </motion.div>
         ))}
       </div>
-      {/* Skeleton Charts */}
+      {                     }
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        {/* Mock Line Chart */}
+        {                     }
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -534,11 +529,11 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
           </div>
           <div className="relative h-64">
             <svg className="w-full h-full" viewBox="0 0 400 200">
-              {/* Grid lines */}
+              {                }
               {[0, 1, 2, 3, 4].map(i => (
                 <line key={i} x1="40" y1={40 + i * 35} x2="380" y2={40 + i * 35} stroke="#63A361" strokeOpacity="0.1" />
               ))}
-              {/* Mock chart line */}
+              {                     }
               <motion.path
                 d="M 40 150 Q 100 120, 140 130 T 200 100 T 260 110 T 320 80 T 380 90"
                 fill="none"
@@ -567,7 +562,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             </div>
           </div>
         </motion.div>
-        {/* Mock Bar Chart */}
+        {                    }
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -595,7 +590,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
           </div>
         </motion.div>
       </div>
-      {/* Feature Preview Cards */}
+      {                           }
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[
           { icon: Cloud, title: 'Weather Analysis', desc: 'Real-time impact on crops' },
@@ -656,8 +651,6 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     return selectedCity;
   }, [hasLoadedCity, processedData, selectedCity, showProcessedData]);
 
-  // Chart data generation functions - Logical and meaningful
-  // Create stable crop activity data that doesn't change with toggles
   const getStableCropActivityData = useCallback(() => {
     if (!displayData?.markets?.length) return [];
     const referenceMarket = displayData.markets[0];
@@ -692,13 +685,11 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     });
   }, [displayData]);
 
-  // Get timeline information for market data - stable values
   const getTimelineInfo = useCallback(() => {
     const now = new Date();
-    // Use deterministic time based on current hour to avoid random changes
-    const hourOffset = now.getHours() % 2; // 0 or 1 hour offset
+    const hourOffset = now.getHours() % 2;
     const lastUpdate = new Date(now.getTime() - hourOffset * 60 * 60 * 1000);
-    const nextUpdate = new Date(now.getTime() + 30 * 60 * 1000); // Next update in 30 minutes
+    const nextUpdate = new Date(now.getTime() + 30 * 60 * 1000);
     return {
       lastUpdate: lastUpdate.toLocaleTimeString('en-IN', {
         hour: '2-digit',
@@ -719,14 +710,12 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     if (!cityData?.markets) return [];
     const crops = Object.keys(cityData.markets[0]?.cropPrices || {});
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    // Generate data for each day with all crops
     return days.map((day, index) => {
       const dayData: any = { day };
       crops.forEach((crop, cropIndex) => {
         const basePrice = parseInt(cityData.markets[0].cropPrices[crop]?.replace(/[^0-9]/g, ''), 10) || 2000;
-        // Small variations based on day of week and crop characteristics
-        const dayMultiplier = index >= 5 ? 0.95 : 1.0; // Weekend reduction
-        const cropVariation = Math.sin(index * 0.8 + cropIndex * 0.5) * 0.05; // Different pattern per crop
+        const dayMultiplier = index >= 5 ? 0.95 : 1.0;
+        const cropVariation = Math.sin(index * 0.8 + cropIndex * 0.5) * 0.05;
         const price = Math.round(basePrice * dayMultiplier * (1 + cropVariation));
         dayData[crop] = price;
       });
@@ -734,7 +723,6 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     });
   };
 
-  // Create stable weekly trend data that doesn't change with toggles
   const getStableWeeklyTrendData = useCallback(() => {
     if (!displayData?.markets?.length) return [];
     const referenceMarket = displayData.markets[0];
@@ -753,19 +741,15 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
     });
   }, [displayData]);
 
-  // Generate synchronized price alerts based on weekly trends
   const getSynchronizedPriceAlerts = (cityData: any) => {
     if (!cityData?.markets) return [];
     const crops = Object.keys(cityData.markets[0]?.cropPrices || {});
     const weeklyData = getWeeklyPriceTrend(cityData);
     return crops.map((crop, index) => {
-      // Get current price and previous day price from weekly trend
       const currentPrice = weeklyData[weeklyData.length - 1]?.[crop] || 2000;
       const previousPrice = weeklyData[weeklyData.length - 2]?.[crop] || 2000;
-      // Calculate percentage change
       const change = ((currentPrice - previousPrice) / previousPrice) * 100;
       const changePercent = Math.round(change * 10) / 10;
-      // Generate realistic time and reason
       const times = ['30 min ago', '1 hour ago', '2 hours ago', '3 hours ago'];
       const reasons = [
         'Increased demand from local mills',
@@ -786,9 +770,8 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-12">
-      <Toaster position="top-right" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {            }
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -802,10 +785,10 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             Real-time updates from Indian agricultural markets with AI-powered analysis
           </p>
         </motion.div>
-        {/* Selection Panel */}
+        {                     }
         <div className="px-4 mx-auto mb-8 max-w-4xl md:mb-12 sm:px-0">
           <div className="p-8 bg-white rounded-2xl border border-[#5B532C]/10">
-            {/* Header */}
+            {            }
             <div className="flex items-center gap-4 mb-8 pb-6 border-b border-[#5B532C]/10">
               <div className="p-3 rounded-xl bg-[#63A361]">
                 <MapPin className="w-6 h-6 text-white" />
@@ -815,7 +798,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                 <p className="text-sm text-[#5B532C]/60">Choose your market location to view insights</p>
               </div>
             </div>
-            {/* Step 1: Location Selection */}
+            {                                }
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#63A361] text-white text-xs font-bold">1</div>
@@ -886,14 +869,14 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             </div>
             {hasLoadedCity && (
               <div className="space-y-6 mt-6">
-                {/* Step 2: Crop & Mode Selection */}
+                {                                   }
                 <div>
                   <div className="flex items-center gap-3 mb-4">
                     <div className="flex items-center justify-center w-7 h-7 rounded-full bg-[#63A361] text-white text-xs font-bold">2</div>
                     <label className="text-sm font-semibold text-[#5B532C]">Configure Analysis</label>
                   </div>
                   <div className="grid gap-4 md:grid-cols-2">
-                    {/* Crop Selection */}
+                    {                    }
                     <div>
                       <label className="block mb-2 text-sm font-medium text-[#5B532C]/70">Focus Crop</label>
                       <div className="relative">
@@ -917,7 +900,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                         </svg>
                       </div>
                     </div>
-                    {/* Insight Mode Selection */}
+                    {                            }
                     <div>
                       <label className="block mb-2 text-sm font-medium text-[#5B532C]/70">Insight Mode</label>
                       <div className="relative">
@@ -943,7 +926,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                     </div>
                   </div>
                 </div>
-                {/* Generate Button */}
+                {                     }
                 <button
                   onClick={handleGetInsights}
                   disabled={isLoading || !selectedCity || !selectedCrop}
@@ -964,7 +947,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                     </>
                   )}
                 </button>
-                {/* Status Message */}
+                {                    }
                 {!selectedCrop && (
                   <div className="p-4 rounded-lg bg-[#FDE7B3]/20 border border-[#FFC50F]/20">
                     <div className="flex items-center gap-3">
@@ -1062,7 +1045,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                           <p className="text-xs text-[#5B532C]/50 mt-1">Visibility {weatherData.visibility} m</p>
                         </div>
                       </div>
-                      {/* Add spacing between basic weather data and crop analyses */}
+                      {                                                              }
                       <div className="mt-6">
                         {cropAnalyses && cropAnalyses.length > 0 && (
                           <div className="p-6 rounded-2xl bg-[#FDE7B3]/10 border border-[#5B532C]/20">
@@ -1124,7 +1107,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             </div>
           </motion.div>
         )}
-        {/* AI Pipeline Status */}
+        {                        }
         {isProcessing && (
           <motion.div
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -1213,11 +1196,11 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             </div>
           </motion.div>
         )}
-        {/* Placeholder Dashboard - Show when no data */}
+        {                                               }
         {!hasLoadedCity && !isLoading && (
           <PlaceholderDashboard />
         )}
-        {/* Market Stats */}
+        {                  }
         {isLoading ? (
           <LoadingSpinner />
         ) : hasLoadedCity && (
@@ -1227,14 +1210,14 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             ))}
           </div>
         )}
-        {/* Charts Section */}
+        {                    }
         {displayData && selectedCrop && !isLoading && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-1 gap-8 mb-8 lg:grid-cols-2"
           >
-            {/* Weekly Price Trend Chart */}
+            {                              }
             <div className="p-6 bg-white rounded-2xl border shadow-xl border-[#5B532C]/10">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex gap-3 items-center">
@@ -1245,7 +1228,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                     <h3 className="text-lg font-bold text-[#5B532C]">Weekly Price Trend</h3>
                   </div>
                 </div>
-                {/* View Toggle */}
+                {                 }
                 <div className="flex gap-1 p-1 rounded-lg border bg-white border-[#5B532C]/10">
                   <button
                     onClick={() => setWeeklyTrendView('chart')}
@@ -1347,7 +1330,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                 )}
               </div>
             </div>
-            {/* Crop Price & Yield Chart with Dual Y-Axis */}
+            {                                               }
             <div className="p-6 bg-white rounded-2xl border shadow-xl border-[#5B532C]/10">
               <div className="flex gap-3 items-center mb-6">
                 <div className="p-2.5 bg-[#FDE7B3]/30 rounded-lg">
@@ -1442,14 +1425,14 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             </div>
           </motion.div>
         )}
-        {/* Markets and Alerts Grid */}
+        {                             }
         {displayData && selectedCrop && !isLoading && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-1 gap-8 lg:grid-cols-2"
           >
-            {/* Markets List */}
+            {                  }
             <div className="p-6 bg-white rounded-2xl border shadow-xl border-[#5B532C]/10">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex gap-4 items-center">
@@ -1481,7 +1464,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
                 ))}
               </div>
             </div>
-            {/* Price Alerts */}
+            {                  }
             <div className="p-6 bg-white rounded-2xl border shadow-xl border-[#5B532C]/10">
               <div className="flex justify-between items-center mb-6">
                 <div className="flex gap-4 items-center">
@@ -1521,7 +1504,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
             </div>
           </motion.div>
         )}
-        {/* Footer */}
+        {            }
         <div className="mt-16 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

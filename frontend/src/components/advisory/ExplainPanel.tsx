@@ -1,17 +1,3 @@
-/**
- * ExplainPanel — the reasoning behind an advisory, shown rather than hidden
- *
- * A farmer who can see the inputs can disagree with them. If the panel says
- * soil moisture is 18% and they know they irrigated yesterday, they learn the
- * sensor is wrong instead of following bad advice — and that is only possible
- * if the inputs are on screen.
- *
- * Rules that could not be evaluated are shown too. "We did not check for
- * planthopper resurgence because you have not told us what you last sprayed" is
- * honest about coverage; silently omitting it would imply the system looked at
- * more than it did.
- */
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -76,6 +62,9 @@ const AdvisoryCard: React.FC<{ advisory: Advisory }> = ({ advisory }) => {
           className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
           style={{ background: u.soft }}
         >
+          {/* eslint-disable-next-line react-hooks/static-components --
+              iconFor returns one of four module-level lucide components, so the
+              identity is stable; the rule cannot prove that. */}
           <Icon className="w-5 h-5" style={{ color: u.color }} />
         </div>
 
@@ -113,7 +102,7 @@ const AdvisoryCard: React.FC<{ advisory: Advisory }> = ({ advisory }) => {
                 What was measured
               </div>
 
-              {/* Inputs → rule → conclusion, as a visible chain */}
+              {                                                    }
               <div className="space-y-2">
                 {advisory.inputs.map((inp) => (
                   <div

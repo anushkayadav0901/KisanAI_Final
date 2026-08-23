@@ -1,16 +1,3 @@
-/**
- * routes/aiVision.ts — vision endpoints mounted under /api/ai
- *
- * Fallback policy (hard rule): NO silent fallbacks, NO fabricated results.
- * - `provider: "auto"` (default) tries the local Ollama model first when
- *   LOCAL_VISION_FIRST is on, then Gemini. Any degradation is declared in the
- *   response via `degraded` + `fallbackReason`.
- * - `provider: "ollama" | "gemini"` forces one provider; its failure is an
- *   explicit error response, never substituted.
- * - If every configured provider fails the route returns a 502 with both
- *   errors. The old static "fake health score" fallbacks are gone.
- */
-
 import { Router, type Request, type Response } from "express";
 import { LOCAL_VISION_FIRST } from "../config.js";
 import { callGemini, parseGeminiJson } from "../lib/gemini.js";
@@ -22,8 +9,6 @@ import {
 } from "../lib/ollama.js";
 
 export const visionRouter = Router();
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 type VisionProvider = "ollama" | "gemini";
 type ProviderChoice = "auto" | VisionProvider;
@@ -51,8 +36,6 @@ class ProviderError extends Error {
     this.name = "ProviderError";
   }
 }
-
-// ── Provider execution ────────────────────────────────────────────────────────
 
 const VISION_PROMPTS = {
   detailed: `Analyze this image in detail. You are a versatile AI vision system capable of describing anything you see.
@@ -97,7 +80,6 @@ Guidelines:
 
 interface RunOptions {
   prompt: string;
-  /** Base64 without data-URI prefix */
   imageB64: string;
   temperature: number;
   maxOutputTokens: number;
@@ -150,10 +132,6 @@ interface VisionOutcome {
   errors: ProviderError[];
 }
 
-/**
- * Resolve the provider chain for a request and run it.
- * Declares every degradation in the result instead of hiding it.
- */
 async function runVision(
   choice: ProviderChoice,
   opts: RunOptions,
@@ -189,7 +167,6 @@ async function runVision(
     return { data: lastData, provider: "gemini", errors };
   }
 
-  // auto
   if (!LOCAL_VISION_FIRST) {
     const err = await attempt("gemini");
     if (err) throw errors;
@@ -201,7 +178,6 @@ async function runVision(
     return { data: lastData, provider: "ollama", errors };
   }
 
-  // Local failed — degrade loudly to Gemini
   const geminiErr = await attempt("gemini");
   if (!geminiErr) {
     return {
@@ -213,13 +189,11 @@ async function runVision(
     };
   }
 
-  throw errors; // both failed — caller returns an explicit 502
+  throw errors;
 }
 
-// ── Routes ────────────────────────────────────────────────────────────────────
-
 visionRouter.get("/local-vision/health", async (_req: Request, res: Response) => {
-  await isOllamaAvailable(0); // force refresh
+  await isOllamaAvailable(0);
   res.json({
     ...ollamaStatus(),
     fallback: "gemini",

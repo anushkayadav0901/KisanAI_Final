@@ -1,9 +1,4 @@
-/**
- * useLanguage — Google Translate integration hook
- * Manages language selection, GT injection, and cookie-based translation.
- */
-
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 
 export interface Language {
   code: string;
@@ -35,6 +30,9 @@ export const LANGUAGES: Language[] = [
 ];
 
 const LANG_KEY = "kisan_lang";
+
+const MENU_ATTR = "data-lang-menu";
+const MENU_PROPS = { [MENU_ATTR]: "" } as const;
 
 function injectGoogleTranslate() {
   if (document.getElementById("gt-script")) return;
@@ -106,41 +104,48 @@ function applyLanguage(code: string) {
   }
 }
 
+const listeners = new Set<() => void>();
+let current: Language =
+  LANGUAGES.find((l) => l.code === (localStorage.getItem(LANG_KEY) ?? "en")) ??
+  LANGUAGES[0];
+
+function subscribe(fn: () => void) {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+}
+
+function setCurrent(lang: Language) {
+  current = lang;
+  localStorage.setItem(LANG_KEY, lang.code);
+  listeners.forEach((fn) => fn());
+}
+
 export function useLanguage() {
-  const [selected, setSelected] = useState<Language>(
-    () =>
-      LANGUAGES.find(
-        (l) => l.code === (localStorage.getItem(LANG_KEY) ?? "en"),
-      ) ?? LANGUAGES[0],
-  );
+  const selected = useSyncExternalStore(subscribe, () => current);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const dropRef = useRef<HTMLDivElement>(null);
 
-  // Inject GT widget once
   useEffect(() => {
     injectGoogleTranslate();
     const saved = localStorage.getItem(LANG_KEY);
     if (saved && saved !== "en") setTimeout(() => applyLanguage(saved), 900);
   }, []);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const h = (e: MouseEvent) => {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setSearch("");
-      }
+      const target = e.target as HTMLElement | null;
+      if (target?.closest(`[${MENU_ATTR}]`)) return;
+      setOpen(false);
+      setSearch("");
     };
     document.addEventListener("mousedown", h);
     return () => document.removeEventListener("mousedown", h);
   }, []);
 
   const pick = useCallback((lang: Language) => {
-    setSelected(lang);
     setOpen(false);
     setSearch("");
-    localStorage.setItem(LANG_KEY, lang.code);
+    setCurrent(lang);
     applyLanguage(lang.code);
   }, []);
 
@@ -149,10 +154,11 @@ export function useLanguage() {
     setSearch("");
   }, []);
 
+  const needle = search.toLowerCase();
   const filtered = LANGUAGES.filter(
     (l) =>
-      l.name.toLowerCase().includes(search.toLowerCase()) ||
-      l.native.toLowerCase().includes(search.toLowerCase()),
+      l.name.toLowerCase().includes(needle) ||
+      l.native.toLowerCase().includes(needle),
   );
 
   return {
@@ -160,7 +166,7 @@ export function useLanguage() {
     open,
     search,
     setSearch,
-    dropRef,
+    menuProps: MENU_PROPS,
     pick,
     toggle,
     filtered,

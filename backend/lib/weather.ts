@@ -1,15 +1,6 @@
-/**
- * lib/weather.ts — shared OpenWeather fetch + normalisation helper
- *
- * The two weather routes (by-city and by-coords) previously duplicated
- * ~40 lines of identical fetch + shape logic. This module extracts it.
- */
-
 import { WEATHER_API_KEY } from "../config.js";
 
 const OWM_BASE = "https://api.openweathermap.org/data/2.5/weather";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface WeatherCondition {
     id: number;
@@ -54,14 +45,6 @@ interface OwmApiResponse {
     name?: string;
 }
 
-// ── Fetch ─────────────────────────────────────────────────────────────────────
-
-/**
- * Fetch current weather from OpenWeatherMap and return a normalised object.
- *
- * @param queryParams - Pre-built query string params
- * @throws  When the API key is missing or OWM returns a non-200 cod.
- */
 export async function fetchWeather(queryParams: string | URLSearchParams): Promise<NormalisedWeather> {
     if (!WEATHER_API_KEY) {
         throw Object.assign(new Error("WEATHER_API_KEY not configured"), { status: 500 });
@@ -81,12 +64,6 @@ export async function fetchWeather(queryParams: string | URLSearchParams): Promi
     return normalise(data);
 }
 
-// ── Normalisation ─────────────────────────────────────────────────────────────
-
-/**
- * Round all numeric fields and enforce a consistent shape.
- * Kept here so both routes always return identical bodies.
- */
 function normalise(data: OwmApiResponse): NormalisedWeather {
     const main = data.main ?? {};
     const round = (n: number | undefined): number => Math.round(n ?? NaN);

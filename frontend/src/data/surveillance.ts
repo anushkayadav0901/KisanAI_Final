@@ -1,19 +1,5 @@
-/**
- * surveillance.ts — types and presentation helpers for the Command Centre
- *
- * This file deliberately contains NO data. Every figure the dashboard shows now
- * comes from the public /v1 API (see ../api/surveillance.ts), which means the
- * dashboard is just one API consumer among many rather than a privileged view
- * with its own private copy of the numbers.
- *
- * What lives here is only what a client needs to render: colours, labels and
- * formatting.
- */
-
 export type Severity = "low" | "guarded" | "elevated" | "high" | "severe";
 export type MetricKey = "outbreak" | "reach" | "soil" | "water";
-
-// ── Wire types (camelCase mirror of the API's snake_case payloads) ────────────
 
 export interface StateSignal {
   code: string;
@@ -105,7 +91,6 @@ export interface ModelCard {
   adoptedBy: string[];
   forks: number;
   profile: string;
-  /** The raw artefact exactly as the API returned it, for the model card view. */
   raw: unknown;
 }
 
@@ -115,11 +100,6 @@ export interface RegistryTotals {
   forks: number;
   validations: number;
 }
-
-// ── Severity ramp, tuned for the light brand palette ─────────────────────────
-//   color — solid fill / marker
-//   text  — darkened variant that stays readable on white
-//   soft  — translucent tint for chip and row backgrounds
 
 export const SEVERITY_META: Record<
   Severity,
@@ -132,7 +112,6 @@ export const SEVERITY_META: Record<
   severe: { label: "Severe", color: "#D64545", text: "#B3332E", soft: "rgba(214,69,69,0.12)" },
 };
 
-/** Mirrors the banding the server applies, for values computed client-side. */
 export function severityOf(index: number): Severity {
   if (index >= 78) return "severe";
   if (index >= 60) return "high";
@@ -182,8 +161,6 @@ export function districtMetricValue(d: DistrictSignal, metric: MetricKey): numbe
       return d.waterStress;
   }
 }
-
-// ── Formatting ────────────────────────────────────────────────────────────────
 
 export function compact(n: number): string {
   if (n >= 10000000) return `${(n / 10000000).toFixed(2)} Cr`;

@@ -1,21 +1,7 @@
-/**
- * lib/ollama.ts — local vision model client (Ollama)
- *
- * Runs image understanding on a locally hosted multimodal model
- * (default: llava) so crop monitoring and scene description work
- * without any cloud API key.
- *
- * Policy: this module NEVER fabricates results. Every failure throws —
- * callers decide how loudly to report it.
- */
-
 import { OLLAMA_URL, OLLAMA_VISION_MODEL } from "../config.js";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface OllamaVisionOptions {
   prompt: string;
-  /** Base64 image without data-URI prefix */
   imageB64: string;
   system?: string;
   temperature?: number;
@@ -44,13 +30,10 @@ interface OllamaChatResponse {
 export interface OllamaStatus {
   readonly url: string;
   readonly configuredModel: string;
-  /** The concrete installed tag to send to /api/chat, e.g. llava:7b */
   readonly resolvedModel: string | null;
   readonly available: boolean;
   readonly models: readonly string[];
 }
-
-// ── Availability tracking ─────────────────────────────────────────────────────
 
 const AVAILABILITY_TTL_MS = 30_000;
 
@@ -72,7 +55,6 @@ function baseName(model: string): string {
   return model.split(":")[0] ?? model;
 }
 
-/** The concrete installed tag to send to /api/chat (e.g. llava:7b for llava). */
 export function resolvedModel(): string | null {
   return availabilityCache.status.resolvedModel;
 }
@@ -120,14 +102,6 @@ export function ollamaStatus(): OllamaStatus {
   return availabilityCache.status;
 }
 
-// ── Vision inference ──────────────────────────────────────────────────────────
-
-/**
- * Run a vision prompt against the local model. Returns raw text.
- * `format: "json"` makes Ollama constrain output to valid JSON.
- *
- * @throws on any HTTP/network/empty-response failure.
- */
 export async function ollamaVision({
   prompt,
   imageB64,
@@ -177,7 +151,6 @@ export async function ollamaVision({
   return text;
 }
 
-/** Extract the first JSON object from model output and parse it. */
 export function parseLooseJson<T = Record<string, unknown>>(text: string): T {
   const cleaned = String(text)
     .trim()

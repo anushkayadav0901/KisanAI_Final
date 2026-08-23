@@ -15,8 +15,8 @@ import {
   ThermalMonitoringResult,
   FieldMonitoringResult
 } from '../types';
+import { parseModelJson } from "./parseModelJson";
 
-// Backend API URL - NO VITE_ PREFIX!
 const API_BASE_URL = import.meta.env.PROD 
   ? '/api'
   : 'http://localhost:3000/api';
@@ -31,15 +31,12 @@ interface GeminiResponse {
   }>;
 }
 
-/**
- * Call Gemini API via backend proxy
- */
 async function callGeminiAPI(payload: any, retries = 3, initialDelay = 1000) {
   for (let i = 0; i < retries; i++) {
     try {
       return await axios.post<GeminiResponse>(`${API_BASE_URL}/ai/gemini`, payload, {
         headers: { 'Content-Type': 'application/json' },
-        timeout: 30000 // 30s timeout
+        timeout: 30000
       });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 429 && i < retries - 1) {
@@ -54,51 +51,6 @@ async function callGeminiAPI(payload: any, retries = 3, initialDelay = 1000) {
   throw new Error('Max retries reached');
 }
 
-/**
- * Clean and parse JSON response from AI, handling common formatting issues
- */
-function cleanAndParseJSON<T>(text: string): T {
-  try {
-    // Remove markdown code blocks
-    let cleaned = text.trim().replace(/^```json\s*|\s*```$/gm, '').trim();
-    
-    // Remove any text before the first { or after the last }
-    const firstBrace = cleaned.indexOf('{');
-    const lastBrace = cleaned.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace !== -1) {
-      cleaned = cleaned.substring(firstBrace, lastBrace + 1);
-    }
-    
-    // Try to parse as-is first
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      // If that fails, try to fix common issues
-      
-      // Replace single quotes with double quotes (but be careful with apostrophes in text)
-      cleaned = cleaned.replace(/'/g, '"');
-      
-      // Remove trailing commas before closing braces/brackets
-      cleaned = cleaned.replace(/,(\s*[}\]])/g, '$1');
-      
-      // Fix unquoted property names (basic case)
-      cleaned = cleaned.replace(/(\w+):/g, '"$1":');
-      
-      // Remove any newlines or excessive whitespace within the JSON
-      cleaned = cleaned.replace(/\s+/g, ' ');
-      
-      return JSON.parse(cleaned);
-    }
-  } catch (error) {
-    console.error('Failed to parse JSON:', text);
-    console.error('Parse error:', error);
-    throw new Error('Failed to parse AI response as valid JSON');
-  }
-}
-
-/**
- * Analyzes a crop image using Gemini API via backend proxy
- */
 export async function analyzeCropImage(
   imageData: string,
   config?: CropMonitoringPromptConfig
@@ -132,9 +84,8 @@ export async function analyzeCropImage(
     const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) throw new Error('No response from AI model');
 
-    const result = cleanAndParseJSON<CropMonitoringResult>(text);
+    const result = parseModelJson<CropMonitoringResult>(text);
 
-    // Validation for invalid images
     if (result.confidenceLevel === 0 || result.diseaseDetected === 'Invalid Input') {
       return result;
     }
@@ -148,9 +99,6 @@ export async function analyzeCropImage(
   }
 }
 
-/**
- * Analyzes a soil image using Gemini API via backend proxy
- */
 export async function analyzeSoilImage(
   imageData: string,
   config?: SoilMonitoringPromptConfig
@@ -184,9 +132,8 @@ export async function analyzeSoilImage(
     const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) throw new Error('No response from AI model');
 
-    const result = cleanAndParseJSON<SoilMonitoringResult>(text);
+    const result = parseModelJson<SoilMonitoringResult>(text);
 
-    // Validation for invalid images
     if (result.confidenceLevel === 0 || result.soilType === 'Not Applicable') {
       return result;
     }
@@ -200,9 +147,6 @@ export async function analyzeSoilImage(
   }
 }
 
-/**
- * Analyzes a thermal image using Gemini API via backend proxy
- */
 export async function analyzeThermalImage(
   imageData: string,
   config?: ThermalMonitoringPromptConfig
@@ -236,9 +180,8 @@ export async function analyzeThermalImage(
     const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) throw new Error('No response from AI model');
 
-    const result = cleanAndParseJSON<ThermalMonitoringResult>(text);
+    const result = parseModelJson<ThermalMonitoringResult>(text);
 
-    // Validation for invalid images
     if (result.confidenceLevel === 0 || result.analysisSummary === 'Non-thermal image detected') {
       return result;
     }
@@ -252,9 +195,6 @@ export async function analyzeThermalImage(
   }
 }
 
-/**
- * Analyzes a field/drone image using Gemini API via backend proxy
- */
 export async function analyzeFieldImage(
   imageData: string,
   config?: FieldMonitoringPromptConfig
@@ -288,9 +228,8 @@ export async function analyzeFieldImage(
     const text = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!text) throw new Error('No response from AI model');
 
-    const result = cleanAndParseJSON<FieldMonitoringResult>(text);
+    const result = parseModelJson<FieldMonitoringResult>(text);
 
-    // Validation for invalid images
     if (result.confidenceLevel === 0 || result.analysisSummary === 'Non-field image detected') {
       return result;
     }
@@ -304,9 +243,6 @@ export async function analyzeFieldImage(
   }
 }
 
-/**
- * Helper function to validate if an image is appropriate for the selected monitoring type
- */
 export function isValidImage(result: any): boolean {
   return result && result.confidenceLevel > 0;
 }

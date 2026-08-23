@@ -1,18 +1,5 @@
-/**
- * utils/ring.ts — keep hand-drawn field boundaries geometrically valid
- *
- * Farmers tap plot corners in whatever order feels natural — often a zig-zag
- * ("Z" order across four corners), which produces a self-crossing bow-tie
- * polygon. Area math on a crossed ring is garbage. When a ring self-
- * intersects we re-order the same corners by angle around their centroid,
- * which recovers the intended simple shape for the overwhelmingly common
- * case of convex plots. Deliberately concave shapes can still be drawn by
- * tapping in rotational order (or with Undo).
- */
-
 export type LngLat = [number, number];
 
-/** Cross-product orientation test for segment intersection. */
 function segmentsIntersect(
   p1: LngLat,
   p2: LngLat,
@@ -34,14 +21,12 @@ function segmentsIntersect(
          ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0));
 }
 
-/** True if the closed ring has no crossing segments. */
 export function isSimple(ring: LngLat[]): boolean {
   const n = ring.length;
   if (n < 4) return true;
 
   for (let i = 0; i < n; i++) {
     for (let j = i + 2; j < n; j++) {
-      // Segments that share an endpoint are not crossings
       if (i === 0 && j === n - 1) continue;
       const a1 = ring[i]!;
       const a2 = ring[(i + 1) % n]!;
@@ -53,8 +38,7 @@ export function isSimple(ring: LngLat[]): boolean {
   return true;
 }
 
-/** Re-order corners angularly around the centroid. */
-export function orderByAngle(ring: LngLat[]): LngLat[] {
+function orderByAngle(ring: LngLat[]): LngLat[] {
   const cx = ring.reduce((s, p) => s + p[0], 0) / ring.length;
   const cy = ring.reduce((s, p) => s + p[1], 0) / ring.length;
   return [...ring].sort(
@@ -63,7 +47,6 @@ export function orderByAngle(ring: LngLat[]): LngLat[] {
   );
 }
 
-/** The ring to render/save: click order when valid, corrected otherwise. */
 export function simpleRing(ring: LngLat[]): LngLat[] {
   return ring.length >= 4 && !isSimple(ring) ? orderByAngle(ring) : ring;
 }

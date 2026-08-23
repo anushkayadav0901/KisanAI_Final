@@ -1,17 +1,3 @@
-/**
- * offlineQueue.ts — durable queue for diagnoses captured without a network
- *
- * The problem this solves is specific. A farmer walks into a field, sees
- * something wrong with a crop, and photographs it. That is exactly the moment
- * they are least likely to have signal — and exactly the moment the observation
- * matters most. Losing it means they either walk back later or give up.
- *
- * So the capture path never depends on connectivity: the photo goes into
- * IndexedDB immediately, and the analysis request is replayed when a network
- * returns. IndexedDB rather than localStorage because these are base64 images —
- * localStorage would blow its 5MB quota after a handful of them.
- */
-
 const DB_NAME = "kisan-offline";
 const DB_VERSION = 1;
 const STORE = "diagnoses";
@@ -20,21 +6,15 @@ export type QueueStatus = "pending" | "syncing" | "failed";
 
 export interface QueuedDiagnosis {
   id: string;
-  /** Data URI of the captured frame. */
   image: string;
-  /** Which analysis the farmer asked for. */
   kind: "crop" | "soil" | "thermal" | "field";
-  /** Free-text note the farmer added, if any. */
   note?: string;
-  /** Where it was taken, when the device would give us a fix. */
   location?: { lat: number; lon: number };
   capturedAt: number;
   status: QueueStatus;
   attempts: number;
   lastError?: string;
 }
-
-// ── IndexedDB plumbing ────────────────────────────────────────────────────────
 
 let dbPromise: Promise<IDBDatabase> | null = null;
 
@@ -70,8 +50,6 @@ async function tx<T>(
     request.onerror = () => reject(request.error);
   });
 }
-
-// ── Public API ────────────────────────────────────────────────────────────────
 
 export async function enqueue(
   entry: Omit<QueuedDiagnosis, "id" | "capturedAt" | "status" | "attempts">,
@@ -121,9 +99,6 @@ export async function clearQueue(): Promise<void> {
   notify();
 }
 
-// ── Change notification ───────────────────────────────────────────────────────
-// A tiny event bus so any component can reflect the queue without polling.
-
 const CHANGE_EVENT = "kisan:queue-changed";
 
 function notify() {
@@ -135,18 +110,6 @@ export function onQueueChange(fn: () => void): () => void {
   return () => window.removeEventListener(CHANGE_EVENT, fn);
 }
 
-// ── Replay ────────────────────────────────────────────────────────────────────
-
-/**
- * Replays every pending capture against the supplied analyser.
- *
- * The analyser is injected rather than imported so this module stays free of
- * any dependency on a particular AI service — the queue does not care what
- * eventually processes the image.
- *
- * Entries that fail are kept, not dropped: after three attempts they are marked
- * failed and surfaced to the farmer rather than silently disappearing.
- */
 export async function flushQueue(
   analyse: (entry: QueuedDiagnosis) => Promise<void>,
   opts: { maxAttempts?: number } = {},

@@ -1,18 +1,3 @@
-/**
- * tests/critical.test.ts — the few tests that guard load-bearing behaviour.
- *
- * Deliberately small. These are not coverage theatre; each one protects a
- * failure that would matter in the field:
- *
- *  1. The advisory refusal gate      — a wrong crop advisory costs a season
- *  2. Consent enforcement on revoke  — consent is enforced, not recorded
- *  3. Field polygon area             — GeoJSON out is what Earth Engine takes
- *  4. Surveillance feed shape        — the stable public contract of /v1
- *  5. Ollama JSON parsing            — no fabricated output may enter the pipeline
- *
- * Run: npm test   (node:test + tsx, no extra framework)
- */
-
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
@@ -21,8 +6,6 @@ import { createConsent, revokeConsent, authorise } from "../lib/consent.js";
 import { polygonAreaHectares, createField } from "../lib/fields.js";
 import { NATIONAL_SIGNAL, serialiseStates } from "../lib/surveillance.js";
 import { parseLooseJson } from "../lib/ollama.js";
-
-// ── 1. Grounding gate ─────────────────────────────────────────────────────────
 
 describe("advisory grounding gate", () => {
   it("grounds an in-corpus question", () => {
@@ -44,8 +27,6 @@ describe("advisory grounding gate", () => {
     assert.ok(CORPUS_STATS.passages >= CORPUS_STATS.documents);
   });
 });
-
-// ── 2. Consent enforcement ────────────────────────────────────────────────────
 
 describe("consent is enforced, not recorded", () => {
   const consumer = { id: "test-dept", name: "Test Dept" };
@@ -94,11 +75,8 @@ describe("consent is enforced, not recorded", () => {
   });
 });
 
-// ── 3. Field geometry ────────────────────────────────────────────────────────
-
 describe("field polygons", () => {
   it("computes a sane area for a known quad", () => {
-    // ~111m x ~111m near the equator ≈ 1.2 ha
     const ha = polygonAreaHectares([
       [0, 0],
       [0.001, 0],
@@ -119,13 +97,10 @@ describe("field polygons", () => {
       ],
     });
     assert.ok(field.id.length > 0);
-    // Ring is closed automatically per GeoJSON spec: 4 corners + closing point
     assert.equal(field.geometry.coordinates[0]?.length, 5);
     assert.ok(field.areaHectares > 0);
   });
 });
-
-// ── 4. Surveillance contract ─────────────────────────────────────────────────
 
 describe("surveillance public contract", () => {
   it("covers all 29 states with required fields", () => {
@@ -142,8 +117,6 @@ describe("surveillance public contract", () => {
     assert.ok(Array.isArray(feed.states));
   });
 });
-
-// ── 5. Local model output hygiene ────────────────────────────────────────────
 
 describe("ollama response parsing", () => {
   it("extracts JSON from fenced model output", () => {

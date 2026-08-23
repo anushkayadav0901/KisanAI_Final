@@ -1,27 +1,17 @@
-/**
- * Audio Player Worklet — receives Float32Array chunks at 24 kHz
- * (Gemini output), upsamples to the AudioContext's native rate,
- * and writes to the speaker output buffer.
- */
 class AudioPlayerWorklet extends AudioWorkletProcessor {
   constructor() {
     super();
     this._inputRate = 24000;
-    this._outputRate = sampleRate; // AudioWorkletGlobalScope.sampleRate
+    this._outputRate = sampleRate;
     this.queue = [];
     this.port.onmessage = (event) => {
       if (event.data) {
-        // Resample from 24 kHz → context rate on arrival
         const resampled = this._resample(event.data);
         this.queue.push(resampled);
       }
     };
   }
 
-  /**
-   * Linear-interpolation resample from inputRate to outputRate.
-   * When rates match, returns input unchanged.
-   */
   _resample(inputData) {
     if (this._inputRate === this._outputRate) return inputData;
     const ratio = this._inputRate / this._outputRate;
@@ -59,12 +49,10 @@ class AudioPlayerWorklet extends AudioWorkletProcessor {
         }
       }
 
-      // Copy to other channels (stereo)
       for (let i = 1; i < output.length; i++) {
         output[i].set(channel);
       }
     } else {
-      // Silence
       channel.fill(0);
       for (let i = 1; i < output.length; i++) {
         output[i].fill(0);

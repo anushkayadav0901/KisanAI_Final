@@ -29,15 +29,10 @@ interface WeatherData {
   name: string;
 }
 
-// Backend API URL - NO VITE_ PREFIX!
 const API_BASE_URL = import.meta.env.PROD 
   ? '/api'
   : 'http://localhost:3000/api';
 
-/**
- * Fetch weather data via backend proxy
- * NO MOCK DATA - Only real API responses
- */
 export const fetchWeatherData = async (city: string): Promise<WeatherData> => {
   const response = await fetch(`${API_BASE_URL}/weather/${encodeURIComponent(city)}`);
   

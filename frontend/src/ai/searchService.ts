@@ -18,9 +18,6 @@ export interface SearchResponse {
   relatedQueries: string[];
 }
 
-/**
- * Search using Groq Kimi K2.5 for agricultural web search
- */
 export async function searchWithKimi(
   query: string,
   context?: string,

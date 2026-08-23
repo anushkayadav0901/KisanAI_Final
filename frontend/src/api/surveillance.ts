@@ -1,15 +1,3 @@
-/**
- * api/surveillance.ts — client for the public Agricultural Signal API
- *
- * The dashboard reads the same open endpoints any state department or third
- * party would call. There is no privileged path: if these requests work for the
- * dashboard, they work for anyone with curl.
- *
- * The API speaks snake_case (the convention Indian open-data portals publish
- * in). Mapping to the camelCase the components expect happens here and nowhere
- * else, so the wire format stays a contract rather than leaking through the UI.
- */
-
 import type {
   DistrictSignal,
   ModelCard,
@@ -20,13 +8,9 @@ import type {
   StateSignal,
 } from "../data/surveillance";
 
-/** In dev, Vite proxies /v1 to the backend; in production nginx does. */
 export const API_ROOT = "/v1";
 
-/** Shown on the page so a reader can see exactly what is being called. */
 export function endpointFor(metric: string, state: string | null): string {
-  // The states feed returns every metric; the metric toggle is applied
-  // client-side, so the honest curl line is the plain states call.
   void metric;
   return state
     ? `GET /v1/surveillance/districts?state=${state}`
@@ -38,19 +22,12 @@ async function getJson<T>(path: string): Promise<T> {
     headers: { Accept: "application/json" },
   });
   if (!res.ok) {
-    let detail = res.statusText;
-    try {
-      const body = await res.json();
-      detail = body.message ?? body.error ?? detail;
-    } catch {
-      /* non-JSON error body — fall back to the status text */
-    }
+    const body = await res.json().catch(() => null);
+    const detail = body?.message ?? body?.error ?? res.statusText;
     throw new Error(`${res.status} — ${detail}`);
   }
   return res.json() as Promise<T>;
 }
-
-// ── Raw wire shapes ───────────────────────────────────────────────────────────
 
 interface WireState {
   code: string;
@@ -88,8 +65,6 @@ interface WireDistrict {
   trend_14d: number[];
 }
 
-// ── Mappers ───────────────────────────────────────────────────────────────────
-
 const toState = (s: WireState): StateSignal => ({
   code: s.code,
   name: s.name,
@@ -125,8 +100,6 @@ const toDistrict = (d: WireDistrict): DistrictSignal => ({
   weekDelta: d.week_delta_pct,
   trend: d.trend_14d,
 });
-
-// ── Calls ─────────────────────────────────────────────────────────────────────
 
 export interface NationalResponse {
   totals: NationalTotals;

@@ -1,15 +1,3 @@
-/**
- * Fields — draw and manage plot boundaries
- *
- * This is what turns "localised" from a city name in a dropdown into an actual
- * plot. Everything downstream — advisories, vegetation trend, irrigation timing
- * — becomes per-field rather than per-district once a boundary exists.
- *
- * The vegetation chart is fed by a placeholder series today and says so on the
- * page. Building the chart, the API shape and the field record now means the
- * Earth Engine integration is a substitution rather than a new feature.
- */
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,7 +13,7 @@ import {
   AlertCircle,
   X,
 } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { FieldMap, type LngLat } from "../components/fields/FieldMap";
 import { simpleRing } from "../utils/ring";
 import Footer from "../components/Footer";
@@ -51,13 +39,6 @@ interface Vegetation {
 
 const CROPS = ["Wheat", "Rice", "Cotton", "Maize", "Sugarcane", "Mustard", "Potato", "Soybeans"];
 
-// ── Vegetation chart ──────────────────────────────────────────────────────────
-
-/**
- * Inline SVG rather than a chart library: the series is a dozen points on one
- * axis, and the NDVI health bands are the informative part, which is easier to
- * draw directly than to configure.
- */
 const NdviChart: React.FC<{ series: Vegetation["ndviSeries"] }> = ({ series }) => {
   const w = 640;
   const h = 180;
@@ -71,7 +52,6 @@ const NdviChart: React.FC<{ series: Vegetation["ndviSeries"] }> = ({ series }) =
   const line = series.map((p, i) => `${x(i).toFixed(1)},${y(p.ndvi).toFixed(1)}`).join(" ");
   const area = `${padL},${h - padB} ${line} ${x(series.length - 1).toFixed(1)},${h - padB}`;
 
-  // NDVI bands: below 0.3 bare or stressed, 0.3-0.6 developing, above 0.6 vigorous.
   const bands = [
     { from: 0.0, to: 0.3, fill: "rgba(214,69,69,0.07)" },
     { from: 0.3, to: 0.6, fill: "rgba(255,197,15,0.09)" },
@@ -139,8 +119,6 @@ const NdviChart: React.FC<{ series: Vegetation["ndviSeries"] }> = ({ series }) =
     </svg>
   );
 };
-
-// ── Page ──────────────────────────────────────────────────────────────────────
 
 const Fields: React.FC = () => {
   const [fields, setFields] = React.useState<Field[]>([]);
@@ -252,22 +230,8 @@ const Fields: React.FC = () => {
 
   return (
     <div className="relative bg-white">
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: "#FFFFFF",
-            color: "#5B532C",
-            border: "1px solid rgba(91,83,44,0.12)",
-            borderRadius: "16px",
-            fontSize: "13px",
-            fontWeight: 500,
-          },
-          success: { iconTheme: { primary: "#63A361", secondary: "#FFFFFF" } },
-        }}
-      />
 
-      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="relative pt-32 pb-10">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
@@ -313,7 +277,7 @@ const Fields: React.FC = () => {
         </div>
       )}
 
-      {/* ── Map + list ────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="pb-16">
         <div className="px-4 mx-auto max-w-6xl sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-[1fr_320px] gap-6">
@@ -381,7 +345,7 @@ const Fields: React.FC = () => {
                 highlightId={selected}
               />
 
-              {/* Name + crop, shown once the shape is complete */}
+              {                                                   }
               <AnimatePresence>
                 {naming && (
                   <motion.div
@@ -428,7 +392,7 @@ const Fields: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            {/* Saved fields */}
+            {                  }
             <aside>
               <div className="flex items-baseline justify-between mb-3">
                 <h2 className="text-lg font-bold text-[#5B532C]">Your fields</h2>
@@ -508,7 +472,7 @@ const Fields: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Vegetation ────────────────────────────────────────────────────── */}
+      {                                                                          }
       {vegetation && (
         <section className="py-14 bg-[#FDFCF8] border-y border-[#5B532C]/10">
           <div className="px-4 mx-auto max-w-6xl sm:px-6 lg:px-8">

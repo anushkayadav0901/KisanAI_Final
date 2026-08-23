@@ -120,18 +120,18 @@ export const CropMonitoringResult: React.FC<Props> = ({
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Premium Header Status */}
+      {                           }
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="relative overflow-hidden p-8 bg-gradient-to-br from-[#63A361] to-[#4a8a4d] rounded-2xl text-white shadow-lg shadow-[#5B532C]/10"
       >
-        {/* Abstract Deco Elements */}
+        {                            }
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-60 h-60 bg-yellow-400/10 rounded-full blur-2xl" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-          {/* Analysis Badge & Image */}
+          {                            }
           <div className="relative">
             <div className="w-40 h-40 rounded-[2rem] overflow-hidden border-4 border-white/20 shadow-2xl bg-white/10 backdrop-blur-md">
               <img
@@ -172,9 +172,9 @@ export const CropMonitoringResult: React.FC<Props> = ({
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Core Stats */}
+        {                             }
         <div className="lg:col-span-2 space-y-8">
-          {/* Quick Stats Grid */}
+          {                      }
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.div
               className={`p-8 bg-white rounded-2xl border-2 ${getSeverityColor(result.diseaseSeverity).border} shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group transition-all`}
@@ -212,13 +212,13 @@ export const CropMonitoringResult: React.FC<Props> = ({
             </motion.div>
           </div>
 
-          {/* Charts Card */}
+          {                 }
           <div className="p-10 bg-white rounded-[3rem] border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10 relative overflow-hidden">
-            {/* Decorative Grid Line */}
+            {                          }
             <div className="absolute top-0 bottom-0 left-1/2 w-px bg-[#5B532C]/5 hidden md:block" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {/* Vitality Metric */}
+              {                     }
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-xl font-bold text-[#5B532C]">Vitality Metrics</h3>
@@ -261,7 +261,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
                 </div>
               </div>
 
-              {/* Impact Pie */}
+              {                }
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-xl font-bold text-[#5B532C]">Tissue Impact</h3>
@@ -295,7 +295,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* Environmental Conditions */}
+          {                              }
           <div className="p-10 bg-[#FDE7B3]/10 rounded-[3rem] border border-[#5B532C]/10">
             <h3 className="text-xl font-bold text-[#5B532C] mb-8 flex items-center gap-4">
               <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center shadow-md">
@@ -316,9 +316,9 @@ export const CropMonitoringResult: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Right Column: Guidance & Resources */}
+        {                                        }
         <div className="space-y-8">
-          {/* Precision Action Plan */}
+          {                           }
           <div className="p-8 bg-[#5B532C] rounded-[3rem] text-white shadow-lg shadow-[#5B532C]/10">
             <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
               <Shield className="w-6 h-6 text-[#FFC50F]" />
@@ -336,7 +336,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* CRAWL RESULTS: Web & Video Guidance */}
+          {                                         }
           <div className="p-8 bg-white rounded-[3rem] border-2 border-[#63A361]/20 shadow-2xl shadow-gray-100 flex flex-col">
             <div className="flex items-center justify-between mb-10">
               <h3 className="text-lg font-bold text-[#5B532C]">Guidance Crawl</h3>
@@ -346,7 +346,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
             </div>
 
             <div className="space-y-6 flex-1">
-              {/* Simulated Web Crawl 1: YouTube */}
+              {                                    }
               <motion.a
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent(result.diseaseDetected + " treatment for " + result.cropType + " ICAR KVK India")}`}
                 target="_blank"
@@ -369,7 +369,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
                 </div>
               </motion.a>
 
-              {/* Simulated Web Crawl 2: ICAR / Articles */}
+              {                                            }
               <motion.a
                 href={`https://www.google.com/search?q=${encodeURIComponent("ICAR guide for " + result.diseaseDetected + " " + result.cropType)}`}
                 target="_blank"
@@ -392,7 +392,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
                 </div>
               </motion.a>
 
-              {/* Crawl Summary Bubble */}
+              {                          }
               <div className="mt-4 p-6 bg-[#FDE7B3]/30 rounded-2xl border border-[#FFC50F]/20 relative">
                 <div className="inline-flex items-center gap-2 px-2 py-0.5 bg-white/50 rounded-full mb-3">
                   <Search className="w-3 h-3 text-[#5B532C]/40" />
@@ -406,7 +406,7 @@ export const CropMonitoringResult: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* New Session Button */}
+          {                        }
           <motion.button
             onClick={onRetry}
             className="w-full py-3.5 bg-white border border-[#5B532C]/15 text-[#5B532C] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#FDE7B3]/30 transition-colors text-sm"

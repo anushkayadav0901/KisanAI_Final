@@ -1,25 +1,3 @@
-/**
- * corpus.js — the advisory knowledge base that grounds AI answers
- *
- * PROVENANCE, STATED PLAINLY:
- * These entries are a curated draft written for this project. They are NOT
- * extracts from ICAR, KVK or state agricultural university publications, and
- * nothing here should be presented as such. Every document carries
- * `source.status: "curated-draft"` and a `verify_at` search link so a reader
- * can check the guidance against an official portal.
- *
- * The point of this file is to make the retrieval pipeline real and testable.
- * The pipeline does not care where passages come from — run
- * `node scripts/ingest.js <dir>` over genuine ICAR package-of-practices PDFs
- * and those replace this seed corpus, at which point `source.status` becomes
- * "official" and the citations become authoritative.
- *
- * Content is standard, widely published agronomy. Chemical recommendations are
- * indicative only; every advisory that surfaces one also surfaces the
- * instruction to confirm dosage against the product label and the local KVK,
- * because pesticide guidance varies by state, variety and season.
- */
-
 const verifyUrl = (q: string): string =>
   `https://www.google.com/search?q=${encodeURIComponent(
     `${q} site:icar.org.in OR site:farmer.gov.in OR site:kvk.icar.gov.in`,
@@ -381,5 +359,4 @@ export const CORPUS: KnowledgeDoc[] = [
   },
 ];
 
-/** Convenience: every distinct crop the corpus covers. */
 export const CORPUS_CROPS = [...new Set(CORPUS.map((d) => d.crop))];

@@ -1,24 +1,13 @@
-/**
- * Audio Recorder Worklet — captures mic audio, downsamples to 16 kHz,
- * and posts Float32Array chunks to the main thread.
- *
- * Gemini Live API expects 16-bit PCM at 16 kHz mono.
- * The main thread converts Float32 → Int16 → Base64 before sending.
- */
 class AudioRecorderWorklet extends AudioWorkletProcessor {
   constructor() {
     super();
     this._targetRate = 16000;
-    this._contextRate = sampleRate; // AudioWorkletGlobalScope.sampleRate
+    this._contextRate = sampleRate;
     this._bufferSize = 2048;
     this._bytesWritten = 0;
     this._buffer = new Float32Array(this._bufferSize);
   }
 
-  /**
-   * Linear-interpolation downsample from contextRate to targetRate.
-   * If rates match, returns input unchanged.
-   */
   _downsample(inputData) {
     if (this._contextRate === this._targetRate) return inputData;
     const ratio = this._contextRate / this._targetRate;
@@ -39,7 +28,7 @@ class AudioRecorderWorklet extends AudioWorkletProcessor {
     const input = inputs[0];
     if (!input || input.length === 0) return true;
 
-    const raw = input[0]; // mono channel
+    const raw = input[0];
     const downsampled = this._downsample(raw);
     if (!downsampled) return true;
 

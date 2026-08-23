@@ -1,19 +1,6 @@
-/**
- * CommandCentre — the state and ministry facing half of the network.
- *
- * The farmer app produces diagnoses. This view is what those diagnoses become
- * once they are anonymised and aggregated: a live crop-health surveillance
- * picture for a state agriculture department, and a registry through which
- * states hand working advisory models to each other.
- *
- * Every figure on this page is fetched from the public /v1 API. The dashboard
- * holds no private copy of the data and has no privileged access path — it is
- * one consumer of an open endpoint, exactly like any state system would be.
- */
-
 import React from "react";
 import { motion } from "framer-motion";
-import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import {
   Map as MapIcon,
   Users,
@@ -53,13 +40,6 @@ import {
   fetchRegistry,
 } from "../api/surveillance";
 
-// ── Live endpoint readout ─────────────────────────────────────────────────────
-
-/**
- * Shows the exact request behind whatever is on screen. Not decoration: the
- * point of an open API is that a reader can copy this line, run it themselves
- * and get the same bytes the page is rendering.
- */
 const EndpointStrip: React.FC<{ endpoint: string }> = ({ endpoint }) => {
   const [copied, setCopied] = React.useState(false);
 
@@ -70,7 +50,7 @@ const EndpointStrip: React.FC<{ endpoint: string }> = ({ endpoint }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch {
-      /* clipboard unavailable — the endpoint is still readable on screen */
+      toast.error("Clipboard blocked by the browser");
     }
   };
 
@@ -104,34 +84,27 @@ const EndpointStrip: React.FC<{ endpoint: string }> = ({ endpoint }) => {
   );
 };
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 const CommandCentre: React.FC = () => {
   const [metric, setMetric] = React.useState<MetricKey>("outbreak");
   const [selected, setSelected] = React.useState<string | null>(null);
 
-  // National signal — loaded once.
   const [states, setStates] = React.useState<StateSignal[]>([]);
   const [totals, setTotals] = React.useState<NationalTotals | null>(null);
   const [provenance, setProvenance] = React.useState<string>("");
   const [nationalLoading, setNationalLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
-  // Escalation queue — refetched whenever scope changes.
   const [alerts, setAlerts] = React.useState<OutbreakAlert[]>([]);
   const [alertsLoading, setAlertsLoading] = React.useState(true);
 
-  // District drill-down — fetched on selection.
   const [stateDetail, setStateDetail] = React.useState<StateDetail | null>(null);
   const [districts, setDistricts] = React.useState<DistrictSignal[]>([]);
   const [districtsLoading, setDistrictsLoading] = React.useState(false);
 
-  // Model registry.
   const [models, setModels] = React.useState<ModelCard[]>([]);
   const [registryTotals, setRegistryTotals] = React.useState<RegistryTotals | null>(null);
   const [registryLoading, setRegistryLoading] = React.useState(true);
 
-  // ── Load national signal + registry ────────────────────────────────────────
   React.useEffect(() => {
     let cancelled = false;
 
@@ -153,7 +126,6 @@ const CommandCentre: React.FC = () => {
         setRegistryTotals(res.totals);
       })
       .catch(() => {
-        /* registry failure is not fatal — the surveillance view still works */
       })
       .finally(() => !cancelled && setRegistryLoading(false));
 
@@ -162,7 +134,6 @@ const CommandCentre: React.FC = () => {
     };
   }, []);
 
-  // ── Alerts follow the selected scope ───────────────────────────────────────
   React.useEffect(() => {
     let cancelled = false;
     setAlertsLoading(true);
@@ -177,7 +148,6 @@ const CommandCentre: React.FC = () => {
     };
   }, [selected]);
 
-  // ── Districts load on selection ────────────────────────────────────────────
   React.useEffect(() => {
     if (!selected) {
       setStateDetail(null);
@@ -248,23 +218,8 @@ const CommandCentre: React.FC = () => {
 
   return (
     <div className="relative bg-white">
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: "#FFFFFF",
-            color: "#5B532C",
-            border: "1px solid rgba(91,83,44,0.12)",
-            borderRadius: "16px",
-            fontSize: "13px",
-            fontWeight: 500,
-            boxShadow: "0 10px 30px rgba(91,83,44,0.10)",
-          },
-          success: { iconTheme: { primary: "#63A361", secondary: "#FFFFFF" } },
-        }}
-      />
 
-      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="relative pt-32 pb-16">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
@@ -328,7 +283,7 @@ const CommandCentre: React.FC = () => {
         </div>
       </section>
 
-      {/* ── API unreachable ───────────────────────────────────────────────── */}
+      {                                                                          }
       {error && (
         <section className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 pb-8">
           <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#D64545]/8 border border-[#D64545]/20">
@@ -351,7 +306,7 @@ const CommandCentre: React.FC = () => {
         </section>
       )}
 
-      {/* ── Signal band ───────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="bg-[#FDFCF8] border-y border-[#5B532C]/10">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-12">
@@ -373,7 +328,7 @@ const CommandCentre: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Map + escalation queue ────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-20">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 items-end mb-10">
@@ -403,7 +358,7 @@ const CommandCentre: React.FC = () => {
           </div>
 
           <div className="grid lg:grid-cols-[1fr_380px] gap-6">
-            {/* Map card */}
+            {              }
             <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg shadow-[#5B532C]/5">
               <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <div>
@@ -459,7 +414,7 @@ const CommandCentre: React.FC = () => {
               )}
             </div>
 
-            {/* Escalation queue */}
+            {                      }
             <div className="p-6 bg-[#FDFCF8] rounded-2xl border border-[#5B532C]/10 h-[620px]">
               <AlertFeed
                 alerts={alerts}
@@ -470,7 +425,7 @@ const CommandCentre: React.FC = () => {
             </div>
           </div>
 
-          {/* Selected-state summary */}
+          {                            }
           {signal && (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
@@ -523,7 +478,7 @@ const CommandCentre: React.FC = () => {
         </div>
       </section>
 
-      {/* ── District drill-down ───────────────────────────────────────────── */}
+      {                                                                          }
       {stateDetail && (
         <section className="pb-20">
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -538,7 +493,7 @@ const CommandCentre: React.FC = () => {
         </section>
       )}
 
-      {/* ── Model exchange ────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-20 bg-[#FDFCF8] border-t border-[#5B532C]/10">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <ModelExchange
@@ -550,7 +505,7 @@ const CommandCentre: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Provenance ────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-12 bg-white">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#FDE7B3]/25 border border-[#5B532C]/10">

@@ -1,17 +1,3 @@
-/**
- * useConnection — what the network is actually doing, and what to do about it
- *
- * `navigator.onLine` only answers "is there an interface up", which on a rural
- * 2G connection is close to useless — the phone reports online while a 3MB
- * upload has no chance of completing. The Network Information API gives the
- * effective connection type, so the app can degrade deliberately instead of
- * hanging and looking broken.
- *
- * Data-saver mode can be forced on by the farmer and is remembered; it is also
- * turned on automatically when the connection reports 2G or the OS data-saver
- * flag is set.
- */
-
 import { useCallback, useEffect, useState } from "react";
 
 type EffectiveType = "slow-2g" | "2g" | "3g" | "4g" | "unknown";
@@ -34,13 +20,9 @@ const SAVER_KEY = "kisan_data_saver";
 export interface ConnectionState {
   online: boolean;
   effectiveType: EffectiveType;
-  /** True when the link is too weak for full-quality uploads. */
   slow: boolean;
-  /** Round-trip estimate in ms, when the browser exposes it. */
   rtt?: number;
-  /** Data-saver active, whether chosen by the farmer or forced by the network. */
   dataSaver: boolean;
-  /** The farmer's explicit choice, independent of network conditions. */
   dataSaverForced: boolean;
   toggleDataSaver: () => void;
 }
@@ -99,19 +81,6 @@ export function useConnection(): ConnectionState {
   };
 }
 
-// ── Image budgeting ───────────────────────────────────────────────────────────
-
-/**
- * Downscales and re-encodes a capture before it goes anywhere.
- *
- * A modern phone camera produces 3–5MB frames. On a 2G link that is minutes of
- * upload, and crop disease detection does not need the resolution — the visual
- * signal survives 720px comfortably. Under data-saver the budget tightens
- * further.
- *
- * Returns the original untouched if anything about the re-encode fails, since
- * a slightly large upload beats a lost observation.
- */
 export async function budgetImage(
   dataUri: string,
   opts: { dataSaver?: boolean } = {},
@@ -143,7 +112,6 @@ export async function budgetImage(
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     const out = canvas.toDataURL("image/jpeg", quality);
 
-    // Guard against the re-encode making things worse on already-small images.
     if (out.length >= dataUri.length) {
       return { image: dataUri, originalKb, finalKb: originalKb };
     }

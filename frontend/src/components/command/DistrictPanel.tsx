@@ -1,11 +1,3 @@
-/**
- * DistrictPanel — district-level drill-down for a selected state.
- *
- * This is the level a block officer or KVK actually acts at, so it carries the
- * full working set: pressure index, 14-day trajectory, dominant threat, and
- * the reach figures that decide where an advisory goes next.
- */
-
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, TrendingUp, TrendingDown, Minus, Download } from "lucide-react";
@@ -31,7 +23,6 @@ interface Props {
   onBack: () => void;
 }
 
-/** Inline sparkline — cheaper and sharper than a chart library at this size. */
 const Spark: React.FC<{ series: number[]; color: string }> = ({ series, color }) => {
   const w = 64;
   const h = 22;
@@ -97,11 +88,6 @@ export const DistrictPanel: React.FC<Props> = ({
     );
   }, [rows, sort, metric]);
 
-  /**
-   * Downloads the API response itself, byte for byte — not a client-side
-   * reconstruction of it. What the officer saves is exactly what any other
-   * consumer of the endpoint receives.
-   */
   const exportFeed = async () => {
     const url = `${API_ROOT}/surveillance/districts?state=${state.code}`;
     try {
@@ -127,7 +113,7 @@ export const DistrictPanel: React.FC<Props> = ({
       transition={{ duration: 0.35 }}
       className="bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg shadow-[#5B532C]/5 overflow-hidden"
     >
-      {/* Header */}
+      {            }
       <div className="flex flex-wrap items-center gap-4 px-6 py-5 border-b border-[#5B532C]/10">
         <button
           onClick={onBack}
@@ -180,7 +166,7 @@ export const DistrictPanel: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Table */}
+      {           }
       <div
         className={`max-h-[420px] overflow-y-auto transition-opacity ${loading ? "opacity-40" : "opacity-100"}`}
         aria-busy={loading}

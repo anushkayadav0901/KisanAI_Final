@@ -39,7 +39,6 @@ interface Props {
   onNewSession: () => void;
 }
 
-// Priority badge colors
 const priorityColors = {
   critical: {
     bg: "bg-red-100",
@@ -67,7 +66,6 @@ const priorityColors = {
   },
 };
 
-// Type badge colors
 const typeColors = {
   natural: { bg: "bg-green-100", text: "text-green-700", icon: Leaf },
   pesticide: { bg: "bg-red-100", text: "text-red-700", icon: AlertOctagon },
@@ -76,7 +74,6 @@ const typeColors = {
   mechanical: { bg: "bg-gray-100", text: "text-gray-700", icon: Shield },
 };
 
-// Progression risk colors
 const riskColors = {
   low: {
     bg: "bg-[#63A361]/10",
@@ -125,7 +122,7 @@ export const ComprehensiveReport: React.FC<Props> = ({
       animate="visible"
       className="space-y-6"
     >
-      {/* Header */}
+      {            }
       <motion.div
         variants={itemVariants}
         className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-white rounded-2xl border border-[#5B532C]/20 shadow-lg"
@@ -152,7 +149,7 @@ export const ComprehensiveReport: React.FC<Props> = ({
         </motion.button>
       </motion.div>
 
-      {/* Summary Card */}
+      {                  }
       <motion.div
         variants={itemVariants}
         className="p-6 bg-[#FDE7B3]/10 rounded-2xl border border-[#5B532C]/20"
@@ -172,7 +169,7 @@ export const ComprehensiveReport: React.FC<Props> = ({
         </div>
       </motion.div>
 
-      {/* Navigation Tabs */}
+      {                     }
       <motion.div
         variants={itemVariants}
         className="flex gap-2 p-1.5 bg-[#FDE7B3]/20 rounded-2xl"
@@ -197,7 +194,7 @@ export const ComprehensiveReport: React.FC<Props> = ({
         ))}
       </motion.div>
 
-      {/* Tab Content */}
+      {                 }
       <AnimatePresence mode="wait">
         {activeTab === "overview" && (
           <motion.div
@@ -207,10 +204,10 @@ export const ComprehensiveReport: React.FC<Props> = ({
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Weather Report */}
+            {                    }
             <WeatherSection weather={report.weatherReport} />
 
-            {/* Disease Analysis */}
+            {                      }
             {report.diseaseAnalysis.isDetected && (
               <DiseaseAnalysisSection
                 analysis={report.diseaseAnalysis}
@@ -219,7 +216,7 @@ export const ComprehensiveReport: React.FC<Props> = ({
               />
             )}
 
-            {/* Key Findings */}
+            {                  }
             <KeyFindingsSection findings={report.keyFindings} />
           </motion.div>
         )}
@@ -232,13 +229,13 @@ export const ComprehensiveReport: React.FC<Props> = ({
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Immediate Actions */}
+            {                       }
             <ImmediateActionsSection actions={report.immediateActions} />
 
-            {/* Prevention Measures */}
+            {                         }
             <PreventionMeasuresSection measures={report.preventionMeasures} />
 
-            {/* Follow-up */}
+            {               }
             <FollowUpSection recommendations={report.followUpRecommendations} />
           </motion.div>
         )}
@@ -251,13 +248,13 @@ export const ComprehensiveReport: React.FC<Props> = ({
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Video Recommendations */}
+            {                           }
             <VideoSection videos={report.videoRecommendations} />
 
-            {/* Articles */}
+            {              }
             <ArticlesSection articles={report.articleLinks} />
 
-            {/* Government Resources */}
+            {                          }
             <GovernmentSection resources={report.governmentResources} />
           </motion.div>
         )}
@@ -266,7 +263,6 @@ export const ComprehensiveReport: React.FC<Props> = ({
   );
 };
 
-// Weather Section Component
 const WeatherSection: React.FC<{
   weather: ComprehensiveSessionReport["weatherReport"];
 }> = ({ weather }) => (
@@ -338,7 +334,6 @@ const WeatherSection: React.FC<{
   </motion.div>
 );
 
-// Disease Analysis Section
 const DiseaseAnalysisSection: React.FC<{
   analysis: ComprehensiveSessionReport["diseaseAnalysis"];
   expandedStage: string | null;
@@ -370,7 +365,7 @@ const DiseaseAnalysisSection: React.FC<{
       </div>
     </div>
 
-    {/* Current Stage */}
+    {                   }
     <div className="p-4 bg-red-50 rounded-xl border border-red-100 mb-5">
       <div className="flex items-center gap-2 mb-2">
         <TrendingUp className="w-4 h-4 text-red-500" />
@@ -382,7 +377,7 @@ const DiseaseAnalysisSection: React.FC<{
       <p className="text-sm text-red-500 mt-2">{analysis.spreadPrediction}</p>
     </div>
 
-    {/* Disease Stages Timeline */}
+    {                             }
     <div className="space-y-3">
       <h4 className="text-sm font-semibold text-[#5B532C] uppercase tracking-wider">
         Disease Progression
@@ -403,7 +398,6 @@ const DiseaseAnalysisSection: React.FC<{
   </motion.div>
 );
 
-// Disease Stage Card
 const DiseaseStageCard: React.FC<{
   stage: DiseaseStage;
   index: number;
@@ -482,7 +476,6 @@ const DiseaseStageCard: React.FC<{
   </div>
 );
 
-// Key Findings Section
 const KeyFindingsSection: React.FC<{ findings: string[] }> = ({ findings }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
@@ -503,7 +496,6 @@ const KeyFindingsSection: React.FC<{ findings: string[] }> = ({ findings }) => (
   </motion.div>
 );
 
-// Immediate Actions Section
 const ImmediateActionsSection: React.FC<{ actions: string[] }> = ({
   actions,
 }) => (
@@ -536,7 +528,6 @@ const ImmediateActionsSection: React.FC<{ actions: string[] }> = ({
   </motion.div>
 );
 
-// Prevention Measures Section
 const PreventionMeasuresSection: React.FC<{
   measures: PreventionMeasure[];
 }> = ({ measures }) => (
@@ -611,7 +602,6 @@ const PreventionMeasuresSection: React.FC<{
   </motion.div>
 );
 
-// Follow-up Section
 const FollowUpSection: React.FC<{ recommendations: string[] }> = ({
   recommendations,
 }) => (
@@ -639,7 +629,6 @@ const FollowUpSection: React.FC<{ recommendations: string[] }> = ({
   </motion.div>
 );
 
-// Video Section
 const VideoSection: React.FC<{
   videos: ComprehensiveSessionReport["videoRecommendations"];
 }> = ({ videos }) => (
@@ -676,7 +665,6 @@ const VideoSection: React.FC<{
   </motion.div>
 );
 
-// Articles Section
 const ArticlesSection: React.FC<{
   articles: ComprehensiveSessionReport["articleLinks"];
 }> = ({ articles }) => (
@@ -693,9 +681,6 @@ const ArticlesSection: React.FC<{
     </div>
     <div className="space-y-4">
       {articles.map((article, i) => {
-        // A model-invented URL looks authoritative and goes nowhere, so an
-        // unverified article falls back to a search scoped to the official
-        // agriculture portals instead of a fabricated link.
         const searchUrl = article.url
           ? null
           : `https://www.google.com/search?q=${encodeURIComponent(
@@ -753,7 +738,6 @@ const ArticlesSection: React.FC<{
   </motion.div>
 );
 
-// Government Resources Section
 const GovernmentSection: React.FC<{
   resources: ComprehensiveSessionReport["governmentResources"];
 }> = ({ resources }) => (

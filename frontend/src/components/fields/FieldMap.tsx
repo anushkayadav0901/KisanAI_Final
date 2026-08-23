@@ -1,19 +1,3 @@
-/**
- * FieldMap — draw a plot boundary on a real map
- *
- * Leaflet with OpenStreetMap tiles: free, no API key, no Google Maps billing.
- * Esri's world imagery layer is offered alongside, because a farmer identifies
- * their plot from what it looks like from above, not from a road map.
- *
- * Drawing is deliberately plain — tap corners, tap Finish. No drag handles, no
- * modifier keys, no right-click menus. This has to work with one thumb on a
- * cheap Android phone in a field, which rules out most drawing UX.
- *
- * Leaflet is driven imperatively here rather than through react-leaflet: the
- * interaction is a small state machine over click events, and a wrapper would
- * add a dependency and an abstraction without removing any of that logic.
- */
-
 import React from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -22,11 +6,9 @@ import { simpleRing, isSimple } from "../../utils/ring";
 export type LngLat = [number, number];
 
 interface Props {
-  /** Points captured so far, as [lng, lat] to match GeoJSON ordering. */
   ring: LngLat[];
   onRingChange: (ring: LngLat[]) => void;
   drawing: boolean;
-  /** Existing saved fields, drawn underneath in a muted style. */
   saved?: Array<{ id: string; name: string; geometry: { coordinates: number[][][] } }>;
   highlightId?: string | null;
   center?: LngLat;
@@ -53,7 +35,7 @@ export const FieldMap: React.FC<Props> = ({
   drawing,
   saved = [],
   highlightId = null,
-  center = [75.857, 30.901], // Ludhiana, Punjab
+  center = [75.857, 30.901],
 }) => {
   const hostRef = React.useRef<HTMLDivElement>(null);
   const mapRef = React.useRef<L.Map | null>(null);
@@ -63,14 +45,11 @@ export const FieldMap: React.FC<Props> = ({
 
   const [basemap, setBasemap] = React.useState<keyof typeof TILE_LAYERS>("satellite");
 
-  // Keep the latest values reachable from the click handler without
-  // re-registering it on every render.
   const stateRef = React.useRef({ ring, drawing, onRingChange });
   React.useEffect(() => {
     stateRef.current = { ring, drawing, onRingChange };
   }, [ring, drawing, onRingChange]);
 
-  // ── Init ────────────────────────────────────────────────────────────────
   React.useEffect(() => {
     if (!hostRef.current || mapRef.current) return;
 
@@ -102,11 +81,9 @@ export const FieldMap: React.FC<Props> = ({
       map.remove();
       mapRef.current = null;
     };
-    // Mount once; centre changes are handled by the caller re-centring.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Basemap switch ──────────────────────────────────────────────────────
   React.useEffect(() => {
     const map = mapRef.current;
     if (!map || !tileRef.current) return;
@@ -118,21 +95,17 @@ export const FieldMap: React.FC<Props> = ({
     }).addTo(map);
   }, [basemap]);
 
-  // ── Cursor reflects mode ────────────────────────────────────────────────
   React.useEffect(() => {
     const el = mapRef.current?.getContainer();
     if (el) el.style.cursor = drawing ? "crosshair" : "";
   }, [drawing]);
 
-  // ── Render the in-progress ring ─────────────────────────────────────────
   React.useEffect(() => {
     const layer = drawLayerRef.current;
     if (!layer) return;
     layer.clearLayers();
     if (ring.length === 0) return;
 
-    // Show the shape the farmer intends: if click order self-crosses,
-    // preview the corrected corner order instead of a bow-tie.
     const shown = simpleRing(ring);
     const latlngs = shown.map(([lng, lat]) => L.latLng(lat, lng));
 
@@ -147,8 +120,6 @@ export const FieldMap: React.FC<Props> = ({
       L.polyline(latlngs, { color: "#63A361", weight: 3, dashArray: "6 6" }).addTo(layer);
     }
 
-    // Corner markers, with the first one distinguished so it is obvious where
-    // the boundary began.
     latlngs.forEach((ll, i) =>
       L.circleMarker(ll, {
         radius: i === 0 ? 7 : 5,
@@ -160,7 +131,6 @@ export const FieldMap: React.FC<Props> = ({
     );
   }, [ring]);
 
-  // ── Render saved fields ─────────────────────────────────────────────────
   React.useEffect(() => {
     const layer = savedLayerRef.current;
     if (!layer) return;
@@ -183,7 +153,6 @@ export const FieldMap: React.FC<Props> = ({
     });
   }, [saved, highlightId]);
 
-  // ── Fit to the highlighted field ────────────────────────────────────────
   React.useEffect(() => {
     const map = mapRef.current;
     if (!map || !highlightId) return;
@@ -203,7 +172,7 @@ export const FieldMap: React.FC<Props> = ({
         className="w-full h-[420px] rounded-2xl overflow-hidden border border-[#5B532C]/12 z-0"
       />
 
-      {/* Basemap toggle */}
+      {                    }
       <div className="absolute top-3 right-3 z-[500] flex items-center gap-1 p-1 bg-white/95 backdrop-blur rounded-full shadow-lg border border-[#5B532C]/10">
         {(Object.keys(TILE_LAYERS) as Array<keyof typeof TILE_LAYERS>).map((k) => (
           <button

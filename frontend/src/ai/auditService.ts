@@ -54,7 +54,7 @@ interface MarketData {
 
 interface CropWeatherImpact {
   [crop: string]: {
-    temperatureEffect: string; // Descriptive effect
+    temperatureEffect: string;
     humidityEffect: string;
     precipitationEffect: string;
     windEffect?: string;
@@ -94,7 +94,6 @@ const CROP_WEATHER_IMPACTS: CropWeatherImpact = {
   }
 };
 
-// Interface for crop analysis
 export interface CropAnalysis {
   crop: string;
   impact: string;
@@ -108,23 +107,16 @@ export interface CropAnalysis {
   };
 }
 
-/**
- * Audit service that provides crop analysis based on weather conditions
- */
 export const auditMarketWithWeather = async (
   marketData: MarketData,
   city: string
 ): Promise<{ cropAnalyses: CropAnalysis[]; weatherData: WeatherData; overallAnalysis: string }> => {
-  // Fetch current weather data for the city
   const weatherData = await fetchWeatherData(city);
 
-  // Get top 3 crops from the market data
   const topCrops = getTopCrops(marketData);
 
-  // Analyze weather impact on the top 3 crops
   const cropAnalyses = topCrops.map(crop => analyzeCropImpact(weatherData, crop));
 
-  // Create overall analysis
   const overallAnalysis = createOverallAnalysis(weatherData, cropAnalyses);
 
   return {
@@ -134,9 +126,6 @@ export const auditMarketWithWeather = async (
   };
 };
 
-/**
- * Get top 3 crops from market data
- */
 const getTopCrops = (marketData: MarketData): string[] => {
   const cropCount: { [crop: string]: number } = {};
 
@@ -146,7 +135,6 @@ const getTopCrops = (marketData: MarketData): string[] => {
     });
   });
 
-  // Sort crops by frequency and return top 3
   const sortedCrops = Object.entries(cropCount)
     .sort((a, b) => b[1] - a[1])
     .map(([crop]) => crop);
@@ -154,21 +142,16 @@ const getTopCrops = (marketData: MarketData): string[] => {
   return sortedCrops.slice(0, 3);
 };
 
-/**
- * Analyze the impact of weather on a specific crop
- */
 const analyzeCropImpact = (weatherData: WeatherData, crop: string): CropAnalysis => {
   const { temp, humidity } = weatherData.main;
   const weatherDesc = weatherData.weather[0].description.toLowerCase();
 
-  // Get crop-specific weather impacts
   const impact = CROP_WEATHER_IMPACTS[crop] || {
     temperatureEffect: "Weather impact not specified for this crop",
     humidityEffect: "Weather impact not specified for this crop",
     precipitationEffect: "Weather impact not specified for this crop"
   };
 
-  // Determine risk level based on current weather
   let riskLevel: 'Low' | 'Medium' | 'High';
   if ((temp > 35 || temp < 10) && humidity > 80) {
     riskLevel = 'High';
@@ -178,7 +161,6 @@ const analyzeCropImpact = (weatherData: WeatherData, crop: string): CropAnalysis
     riskLevel = 'Low';
   }
 
-  // Generate specific impact based on weather conditions
   let impactText = `Current weather conditions are ${riskLevel.toLowerCase()} risk for ${crop}. `;
 
   if (temp > 35) {
@@ -199,7 +181,6 @@ const analyzeCropImpact = (weatherData: WeatherData, crop: string): CropAnalysis
     impactText += `Precipitation may affect crop quality and harvesting. `;
   }
 
-  // Generate personalized, one-line recommendations based on crop and risk level
   let recommendation: string;
   if (riskLevel === 'High') {
     switch (crop) {
@@ -286,9 +267,6 @@ const analyzeCropImpact = (weatherData: WeatherData, crop: string): CropAnalysis
   };
 };
 
-/**
- * Create overall analysis of weather impact
- */
 const createOverallAnalysis = (weatherData: WeatherData, cropAnalyses: CropAnalysis[]): string => {
   const { temp, humidity } = weatherData.main;
   const weatherDesc = weatherData.weather[0].description;
@@ -301,8 +279,6 @@ const createOverallAnalysis = (weatherData: WeatherData, cropAnalyses: CropAnaly
   analysis += `Wind: ${windSpeed} m/s\n\n`;
 
   analysis += `Top 3 Crops Analysis:\n`;
-  // Fixed: renamed forEach param from 'analysis' to 'cropItem' to avoid
-  // shadowing the outer 'analysis' string variable
   cropAnalyses.forEach((cropItem, index) => {
     analysis += `${index + 1}. ${cropItem.crop}: ${cropItem.riskLevel} Risk\n`;
   });
@@ -313,4 +289,3 @@ const createOverallAnalysis = (weatherData: WeatherData, cropAnalyses: CropAnaly
 
   return analysis;
 };
-

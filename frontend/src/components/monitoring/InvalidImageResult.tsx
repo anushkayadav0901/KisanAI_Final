@@ -19,7 +19,7 @@ export const InvalidImageResult: React.FC<InvalidImageResultProps> = ({
       className="max-w-2xl mx-auto mt-8"
     >
       <div className="bg-white rounded-2xl shadow-xl border border-red-100 overflow-hidden">
-        {/* Header */}
+        {            }
         <div className="bg-red-50 p-6 border-b border-red-100">
           <div className="flex items-center justify-center gap-3">
             <div className="p-3 bg-red-100 rounded-full">
@@ -32,7 +32,7 @@ export const InvalidImageResult: React.FC<InvalidImageResultProps> = ({
           </div>
         </div>
 
-        {/* Content */}
+        {             }
         <div className="p-8">
           <div className="text-center space-y-4">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-50 rounded-full border border-red-200">
@@ -68,7 +68,7 @@ export const InvalidImageResult: React.FC<InvalidImageResultProps> = ({
               </ul>
             </div>
 
-            {/* Retry Button */}
+            {                  }
             <motion.button
               onClick={onRetry}
               className="mt-6 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full flex items-center gap-2 mx-auto transition-all shadow-lg"

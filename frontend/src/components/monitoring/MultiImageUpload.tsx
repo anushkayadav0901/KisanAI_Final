@@ -20,7 +20,7 @@ interface Props {
   disabled?: boolean;
 }
 
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ACCEPTED_TYPES = {
   "image/*": [".jpeg", ".jpg", ".png", ".webp"],
 };
@@ -56,7 +56,6 @@ export const MultiImageUpload: React.FC<Props> = ({
     async (acceptedFiles: File[], rejectedFiles: any[]) => {
       if (disabled) return;
 
-      // Handle rejected files
       if (rejectedFiles.length > 0) {
         rejectedFiles.forEach(({ file, errors }) => {
           const error = errors[0];
@@ -69,7 +68,6 @@ export const MultiImageUpload: React.FC<Props> = ({
         return;
       }
 
-      // Check if adding these would exceed max
       const remainingSlots = maxImages - images.length;
       if (acceptedFiles.length > remainingSlots) {
         toast(
@@ -91,7 +89,11 @@ export const MultiImageUpload: React.FC<Props> = ({
         });
         toast.success(`${newImages.length} image(s) added`);
       } catch (error) {
-        toast.error("Failed to process images");
+        toast.error(
+          error instanceof Error
+            ? `Could not read image: ${error.message}`
+            : "Could not read image",
+        );
       } finally {
         setIsProcessing(false);
       }
@@ -104,7 +106,7 @@ export const MultiImageUpload: React.FC<Props> = ({
     maxSize: MAX_FILE_SIZE,
     disabled: disabled || images.length >= maxImages || isProcessing,
     onDrop,
-    noClick: images.length > 0, // Only click to add when empty
+    noClick: images.length > 0,
     noKeyboard: images.length > 0,
   });
 
@@ -120,7 +122,7 @@ export const MultiImageUpload: React.FC<Props> = ({
 
   return (
     <div className="space-y-4">
-      {/* Image Grid */}
+      {                }
       <AnimatePresence mode="popLayout">
         {images.length > 0 && (
           <motion.div
@@ -145,10 +147,10 @@ export const MultiImageUpload: React.FC<Props> = ({
                     className="w-full h-full object-cover"
                   />
 
-                  {/* Overlay on hover */}
+                  {                      }
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
 
-                  {/* Remove button */}
+                  {                   }
                   <button
                     onClick={() => removeImage(image.id)}
                     disabled={disabled}
@@ -157,12 +159,12 @@ export const MultiImageUpload: React.FC<Props> = ({
                     <X className="w-4 h-4" />
                   </button>
 
-                  {/* Image number badge */}
+                  {                        }
                   <div className="absolute top-2 left-2 px-2 py-1 bg-[#63A361] text-white text-xs font-bold rounded-lg">
                     #{index + 1}
                   </div>
 
-                  {/* Success indicator */}
+                  {                       }
                   <div className="absolute bottom-2 right-2 w-6 h-6 bg-[#63A361] text-white rounded-full flex items-center justify-center">
                     <CheckCircle2 className="w-4 h-4" />
                   </div>
@@ -173,7 +175,7 @@ export const MultiImageUpload: React.FC<Props> = ({
               </motion.div>
             ))}
 
-            {/* Add more placeholder */}
+            {                          }
             {canAddMore && (
               <motion.button
                 layout
@@ -197,7 +199,7 @@ export const MultiImageUpload: React.FC<Props> = ({
         )}
       </AnimatePresence>
 
-      {/* Dropzone - Show when no images or as additional drop area */}
+      {                                                               }
       {images.length === 0 && (
         <div
           {...getRootProps()}
@@ -242,7 +244,7 @@ export const MultiImageUpload: React.FC<Props> = ({
               Drag & drop up to {maxImages} images, or click to browse
             </p>
 
-            {/* Features */}
+            {              }
             <div className="flex flex-wrap justify-center gap-2">
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-[#63A361]/10 text-[#63A361]">
                 <ScanSearch className="w-3 h-3 inline mr-1" />
@@ -260,7 +262,7 @@ export const MultiImageUpload: React.FC<Props> = ({
         </div>
       )}
 
-      {/* Info bar when images are present */}
+      {                                      }
       {images.length > 0 && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -294,7 +296,7 @@ export const MultiImageUpload: React.FC<Props> = ({
         </motion.div>
       )}
 
-      {/* Warning for max images */}
+      {                            }
       {images.length >= maxImages && (
         <motion.div
           initial={{ opacity: 0 }}

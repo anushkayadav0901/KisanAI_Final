@@ -98,7 +98,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
 
   return (
     <div className="space-y-8 pb-10">
-      {/* Premium Header Status */}
+      {                           }
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -108,7 +108,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-60 h-60 bg-yellow-400/10 rounded-full blur-2xl opacity-50" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
-          {/* Analysis Badge & Image */}
+          {                            }
           <div className="relative">
             <div className="w-40 h-40 rounded-[2rem] overflow-hidden border-4 border-white/20 shadow-2xl bg-white/10 backdrop-blur-md">
               <img
@@ -150,7 +150,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
-          {/* Anomalies Row */}
+          {                   }
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.div
               className="p-8 bg-white rounded-2xl border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group"
@@ -193,10 +193,10 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
             </motion.div>
           </div>
 
-          {/* Charts Card */}
+          {                 }
           <div className="p-10 bg-white rounded-[3rem] border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              {/* Temp Bar */}
+              {              }
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-lg font-bold text-[#5B532C]">Heat Distribution</h3>
@@ -226,7 +226,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
                 </div>
               </div>
 
-              {/* Radar Radar */}
+              {                 }
               <div>
                 <div className="flex items-center justify-between mb-8">
                   <h3 className="text-lg font-bold text-[#5B532C]">Stress Footprint</h3>
@@ -263,7 +263,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           </div>
         </div>
 
-        {/* Right Sidebar */}
+        {                   }
         <div className="space-y-8">
           <div className="p-8 bg-[#5B532C] rounded-[3rem] text-white shadow-2xl">
             <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
@@ -282,7 +282,7 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
             </div>
           </div>
 
-          {/* CRAWL AREA */}
+          {                }
           <div className="p-8 bg-white rounded-[3rem] border border-[#5B532C]/10 shadow-xl shadow-gray-100 flex flex-col">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-lg font-bold text-[#5B532C]">Crawl Insights</h3>

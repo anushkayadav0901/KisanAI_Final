@@ -1,15 +1,3 @@
-/**
- * ModelExchange — the cross-state advisory model registry.
- *
- * This is the part that makes the platform a network instead of an app. A
- * state publishes what it has learned — thresholds, spray windows, staged
- * response ladders — as a versioned, licensed JSON artefact. Any other state
- * subscribes to it or forks it and adapts the local parameters.
- *
- * The advisory logic travels between states as data. No integration project,
- * no code sharing, no vendor in between.
- */
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { GitFork, BadgeCheck, Share2, Code2, Check, Copy, ArrowRight } from "lucide-react";
@@ -87,7 +75,7 @@ const ModelRow: React.FC<{
           </div>
         </div>
 
-        {/* Provenance chain: who published it, who runs it now */}
+        {                                                         }
         <div className="mt-4 flex items-center gap-2.5 flex-wrap">
           <span className="px-3 py-1.5 text-xs font-bold text-[#5B532C] bg-[#FFC50F]/20 rounded-full">
             {model.originCode} published
@@ -219,7 +207,7 @@ export const ModelExchange: React.FC<Props> = ({
 
   return (
     <section>
-      {/* Section header — matches the site's eyebrow + headline pattern */}
+      {                                                                    }
       <div className="grid lg:grid-cols-2 gap-8 items-end mb-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -246,7 +234,7 @@ export const ModelExchange: React.FC<Props> = ({
         </motion.p>
       </div>
 
-      {/* Registry stats — horizontal rule row, same as the About section */}
+      {                                                                     }
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

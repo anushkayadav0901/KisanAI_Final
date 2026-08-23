@@ -1,9 +1,3 @@
-/**
- * Kisan AI — Live Monitoring (Redesigned)
- * Fixed layout: Static camera preview, dynamic stats below, sidebar on right
- * Design: Kisan AI brand system (#63A361 green, #FFC50F yellow, #5B532C brown, #FDE7B3 cream)
- */
-
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -33,15 +27,13 @@ import {
   Video,
   Zap,
 } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import useGeminiLive from "../../hooks/useGeminiLive";
 import {
   generateComprehensiveReport,
   ComprehensiveSessionReport,
 } from "../../ai/sessionReportService";
 import { ComprehensiveReport } from "./ComprehensiveReport";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface LogEntry {
   id: string;
@@ -88,21 +80,35 @@ interface LocationInfo {
   lon: number;
 }
 
-// ─── Config ───────────────────────────────────────────────────────────────────
-
 const YOLO_BASE = "/yolo";
 const API_BASE = "/api";
+interface GeminiMsg {
+  serverContent?: { modelTurn?: { parts?: Array<{ text?: string }> } };
+}
+
+function parseAnalysis(data: GeminiMsg): Analysis | null {
+  const text = data.serverContent?.modelTurn?.parts?.[0]?.text;
+  const match = text?.match(/\{[\s\S]*\}/);
+  if (!match) return null;
+
+  let parsed: Analysis;
+  try {
+    parsed = JSON.parse(match[0]) as Analysis;
+  } catch {
+    return null;
+  }
+  if (parsed.disease?.name === null) parsed.disease = undefined;
+  return parsed;
+}
+
+const CAMERA_READY_TIMEOUT_MS = 8000;
 const FRAME_MS = 1000;
 const MAX_LOG = 100;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 const healthColor = (s: number) =>
   s >= 80 ? "#63A361" : s >= 60 ? "#FFC50F" : "#ef4444";
 const healthLabel = (s: number) =>
   s >= 80 ? "Excellent" : s >= 60 ? "Good" : s >= 40 ? "Fair" : "Poor";
-
-// ─── Scanning Line ────────────────────────────────────────────────────────────
 
 const ScanLine: React.FC = () => (
   <motion.div
@@ -116,8 +122,6 @@ const ScanLine: React.FC = () => (
     transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
   />
 );
-
-// ─── Stat Card ────────────────────────────────────────────────────────────────
 
 const StatCard: React.FC<{
   label: string;
@@ -148,8 +152,6 @@ const StatCard: React.FC<{
   </div>
 );
 
-// ─── Compact Stat ─────────────────────────────────────────────────────────────
-
 const CompactStat: React.FC<{
   label: string;
   value: string | number;
@@ -163,8 +165,6 @@ const CompactStat: React.FC<{
     </div>
   </div>
 );
-
-// ─── Main Component ───────────────────────────────────────────────────────────
 
 const LiveMonitoring: React.FC = () => {
   type Mode =
@@ -210,19 +210,24 @@ const LiveMonitoring: React.FC = () => {
   const analysisRef = useRef<Analysis | null>(null);
   const healthScoresRef = useRef<number[]>([]);
   const sessionStartRef = useRef<string>("");
-  const logEndRef = useRef<HTMLDivElement>(null);
+  const logScrollRef = useRef<HTMLDivElement>(null);
   const glowFrameRef = useRef<number | null>(null);
   const glowPhaseRef = useRef(0);
   const isMountedRef = useRef(true);
   const aiConnectedRef = useRef(false);
   const lastFrameSentRef = useRef<number>(0);
   const prevYoloOnlineRef = useRef<boolean | null>(null);
+  const durationRef = useRef(0);
   const llavaOnlineRef = useRef(false);
   const llavaBusyRef = useRef(false);
 
   useEffect(() => {
     llavaOnlineRef.current = llavaOnline;
   }, [llavaOnline]);
+
+  useEffect(() => {
+    durationRef.current = duration;
+  }, [duration]);
 
   useEffect(() => {
     isMountedRef.current = true;
@@ -241,10 +246,10 @@ const LiveMonitoring: React.FC = () => {
     analysisRef.current = analysis;
   }, [analysis]);
   useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const pane = logScrollRef.current;
+    if (pane) pane.scrollTop = pane.scrollHeight;
   }, [log]);
 
-  // Toast on YOLO status change (only on change, not initial)
   useEffect(() => {
     if (yoloOnline === null) return;
     if (prevYoloOnlineRef.current === null) {
@@ -263,7 +268,11 @@ const LiveMonitoring: React.FC = () => {
     }
   }, [yoloOnline]);
 
-  // Keyboard shortcut: Space to start/stop
+  const shortcutRef = useRef({ mode, start: () => {}, stop: () => {} } as {
+    mode: Mode;
+    start: () => void;
+    stop: () => void;
+  });
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.code !== "Space") return;
@@ -273,18 +282,17 @@ const LiveMonitoring: React.FC = () => {
       )
         return;
       e.preventDefault();
-      if (mode === "idle") start();
-      else if (mode === "live") stop();
+      const current = shortcutRef.current;
+      if (current.mode === "idle") current.start();
+      else if (current.mode === "live") current.stop();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [mode]);
-
-  // ─── Location + Weather ────────────────────────────────────────────────────
+  }, []);
 
   const getLocationAndWeather = async (): Promise<{
     location: LocationInfo;
-    weather: WeatherData;
+    weather: WeatherData | null;
   } | null> => {
     try {
       const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
@@ -298,136 +306,19 @@ const LiveMonitoring: React.FC = () => {
       const weatherRes = await fetch(
         `${API_BASE}/weather/coords?lat=${lat}&lon=${lon}`,
       );
-      let cityName = "Unknown Location";
-      let weatherData: WeatherData | null = null;
-      if (weatherRes.ok) {
-        weatherData = await weatherRes.json();
-        cityName = weatherData?.name || "Unknown Location";
-      } else {
-        const fallbackRes = await fetch(`${API_BASE}/weather/${lat},${lon}`);
-        if (fallbackRes.ok) {
-          weatherData = await fallbackRes.json();
-          cityName =
-            weatherData?.name || `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
-        }
+      const coords = `${lat.toFixed(2)}, ${lon.toFixed(2)}`;
+      if (!weatherRes.ok) {
+        return { location: { city: coords, lat, lon }, weather: null };
       }
-      const locationInfo: LocationInfo = { city: cityName, lat, lon };
-      if (weatherData) return { location: locationInfo, weather: weatherData };
+
+      const weather: WeatherData = await weatherRes.json();
       return {
-        location: locationInfo,
-        weather: null as unknown as WeatherData,
+        location: { city: weather.name || coords, lat, lon },
+        weather,
       };
     } catch {
       return null;
     }
-  };
-
-  // ─── Gemini Live ────────────────────────────────────────────────────────────
-
-  const onAnalysis = useCallback((data: unknown) => {
-    try {
-      const a = parseAnalysis(data as Parameters<typeof parseAnalysis>[0]);
-
-      // Enforce >90% confidence — discard low-confidence disease detections
-      if (a.disease?.name && (a.disease.confidence ?? 0) < 90) {
-        a.disease = undefined;
-      }
-
-      setAnalysis(a);
-      analysisRef.current = a;
-      setAnalysisCount((c) => c + 1);
-      if (lastFrameSentRef.current > 0)
-        setLastAnalysisMs(Date.now() - lastFrameSentRef.current);
-      if (a.health_score > 0) {
-        healthScoresRef.current.push(a.health_score);
-        setHealthHistory((prev) => [...prev, a.health_score].slice(-50));
-      }
-      const hasIssue =
-        (a.disease?.name && a.disease.severity > 0) ||
-        a.pests?.length ||
-        a.health_score < 60;
-      if (hasIssue) {
-        const isAlert = (a.disease?.severity ?? 0) > 5 || a.health_score < 50;
-        addLog({
-          message: buildMessage(a),
-          type: isAlert ? "alert" : "observation",
-          detections: detectionsRef.current.filter((d) => d.confidence >= 0.9),
-        });
-
-        // Notifications removed — logs are sufficient
-      }
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  const onError = useCallback((err: string) => {
-    addLog({ message: `AI: ${err}`, type: "error" });
-  }, []);
-
-  const onConnect = useCallback(() => {
-    if (isMountedRef.current)
-      toast.success("AI analysis connected", { duration: 2000, icon: "🤖" });
-  }, []);
-
-  const onDisconnect = useCallback(() => {
-    /* silent */
-  }, []);
-
-  const {
-    isConnected: aiConnected,
-    isAnalyzing: aiAnalyzing,
-    connect: connectAI,
-    disconnect: disconnectAI,
-    sendFrame,
-  } = useGeminiLive({ onAnalysis, onError, onConnect, onDisconnect });
-
-  useEffect(() => {
-    aiConnectedRef.current = aiConnected;
-  }, [aiConnected]);
-
-  // ─── Helpers ────────────────────────────────────────────────────────────────
-
-  interface GeminiMsg {
-    serverContent?: { modelTurn?: { parts?: Array<{ text?: string }> } };
-  }
-
-  const parseAnalysis = (data: GeminiMsg): Analysis => {
-    const text = data.serverContent?.modelTurn?.parts?.[0]?.text || "";
-    try {
-      const m = text.match(/\{[\s\S]*\}/);
-      if (m) {
-        const p = JSON.parse(m[0]) as Analysis;
-        if (p.disease?.name === null) p.disease = undefined;
-        return p;
-      }
-    } catch {
-      /* fall through */
-    }
-    return { health_score: 75, recommendations: ["Continue monitoring"] };
-  };
-
-  const buildMessage = (a: Analysis): string => {
-    const parts: string[] = [];
-
-    if (a.crop_type && a.crop_type !== "unknown") parts.push(a.crop_type);
-
-    if (a.disease?.name) {
-      parts.push(`${a.disease.name} ${a.disease.severity}/10`);
-    }
-
-    if (a.pests?.length) {
-      parts.push(`${a.pests[0].count} ${a.pests[0].type}`);
-    }
-
-    // Use AI summary as the concise description
-    if (a.summary) {
-      parts.push(`— ${a.summary}`);
-    } else if (!a.disease?.name && !a.pests?.length) {
-      parts.push(`Health ${a.health_score}/100`);
-    }
-
-    return parts.join(" ");
   };
 
   const addLog = useCallback(
@@ -447,10 +338,92 @@ const LiveMonitoring: React.FC = () => {
     [],
   );
 
+  const onAnalysis = useCallback(
+    (data: unknown) => {
+      const a = parseAnalysis(data as GeminiMsg);
+      if (!a) return;
+
+      if (a.disease?.name && (a.disease.confidence ?? 0) < 90) {
+        a.disease = undefined;
+      }
+
+      setAnalysis(a);
+      analysisRef.current = a;
+      setAnalysisCount((c) => c + 1);
+      if (lastFrameSentRef.current > 0) {
+        setLastAnalysisMs(Date.now() - lastFrameSentRef.current);
+      }
+      if (a.health_score > 0) {
+        healthScoresRef.current.push(a.health_score);
+        setHealthHistory((prev) => [...prev, a.health_score].slice(-50));
+      }
+
+      const hasIssue =
+        (a.disease?.name && a.disease.severity > 0) ||
+        a.pests?.length ||
+        a.health_score < 60;
+      if (!hasIssue) return;
+
+      addLog({
+        message: buildMessage(a),
+        type: (a.disease?.severity ?? 0) > 5 || a.health_score < 50 ? "alert" : "observation",
+        detections: detectionsRef.current.filter((d) => d.confidence >= 0.9),
+      });
+    },
+    [addLog],
+  );
+
+  const onError = useCallback(
+    (err: string) => {
+      addLog({ message: `AI: ${err}`, type: "error" });
+    },
+    [addLog],
+  );
+
+  const onConnect = useCallback(() => {
+    if (isMountedRef.current)
+      toast.success("AI analysis connected", { duration: 2000, icon: "🤖" });
+  }, []);
+
+  const onDisconnect = useCallback(() => {
+  }, []);
+
+  const {
+    isConnected: aiConnected,
+    isAnalyzing: aiAnalyzing,
+    connect: connectAI,
+    disconnect: disconnectAI,
+    sendFrame,
+  } = useGeminiLive({ onAnalysis, onError, onConnect, onDisconnect });
+
+  useEffect(() => {
+    aiConnectedRef.current = aiConnected;
+  }, [aiConnected]);
+
+  const buildMessage = (a: Analysis): string => {
+    const parts: string[] = [];
+
+    if (a.crop_type && a.crop_type !== "unknown") parts.push(a.crop_type);
+
+    if (a.disease?.name) {
+      parts.push(`${a.disease.name} ${a.disease.severity}/10`);
+    }
+
+    if (a.pests?.length) {
+      parts.push(`${a.pests[0].count} ${a.pests[0].type}`);
+    }
+
+    if (a.summary) {
+      parts.push(`— ${a.summary}`);
+    } else if (!a.disease?.name && !a.pests?.length) {
+      parts.push(`Health ${a.health_score}/100`);
+    }
+
+    return parts.join(" ");
+  };
+
   const filteredLog =
     logFilter === "all" ? log : log.filter((e) => e.type === logFilter);
-
-  // ─── Local vision (Ollama / LLaVA) ──────────────────────────────────────────
 
   const checkLocalVision = useCallback(async () => {
     try {
@@ -467,7 +440,6 @@ const LiveMonitoring: React.FC = () => {
     }
   }, []);
 
-  // Fire-and-forget: describe the current frame on the local model and log it.
   const describeLocal = useCallback(
     async (b64: string) => {
       if (llavaBusyRef.current || !llavaOnlineRef.current) return;
@@ -496,8 +468,6 @@ const LiveMonitoring: React.FC = () => {
     },
     [addLog],
   );
-
-  // ─── Canvas / YOLO ──────────────────────────────────────────────────────────
 
   const drawBoxes = useCallback(
     (dets: YOLODetection[], canvas: HTMLCanvasElement, phase: number) => {
@@ -604,8 +574,6 @@ const LiveMonitoring: React.FC = () => {
     };
   }, [mode, animateGlow]);
 
-  // ─── Frame processing ───────────────────────────────────────────────────────
-
   const processFrame = useCallback(async () => {
     if (processingRef.current || !videoRef.current) return;
     const video = videoRef.current;
@@ -653,14 +621,15 @@ const LiveMonitoring: React.FC = () => {
       if (frameCountRef.current % 10 === 0) {
         describeLocal(b64);
       }
-    } catch {
-      /* ignore */
+    } catch (e) {
+      addLog({
+        message: `Frame capture failed: ${e instanceof Error ? e.message : e}`,
+        type: "error",
+      });
     } finally {
       processingRef.current = false;
     }
-  }, [sendFrame, yoloOnline, describeLocal]);
-
-  // ─── Duration timer ─────────────────────────────────────────────────────────
+  }, [sendFrame, yoloOnline, describeLocal, addLog]);
 
   useEffect(() => {
     if (mode === "live") {
@@ -678,11 +647,10 @@ const LiveMonitoring: React.FC = () => {
     };
   }, [mode]);
 
-  // ─── Camera ─────────────────────────────────────────────────────────────────
-
   const startCamera = async () => {
+    let stream: MediaStream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
+      stream = await navigator.mediaDevices.getUserMedia({
         video: {
           width: { ideal: 1280 },
           height: { ideal: 720 },
@@ -690,20 +658,6 @@ const LiveMonitoring: React.FC = () => {
         },
         audio: false,
       });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await new Promise<void>((res) => {
-          const v = videoRef.current!;
-          if (v.readyState >= 2) {
-            res();
-            return;
-          }
-          v.onloadeddata = () => res();
-        });
-      }
-      setCameraError(null);
-      return true;
     } catch {
       setCameraError(
         "Camera access denied. Please allow camera permissions and try again.",
@@ -711,19 +665,50 @@ const LiveMonitoring: React.FC = () => {
       toast.error("Camera access denied");
       return false;
     }
+
+    streamRef.current = stream;
+    const video = videoRef.current;
+    if (video) {
+      video.srcObject = stream;
+      const gotFrames = await new Promise<boolean>((resolve) => {
+        if (video.readyState >= 2) {
+          resolve(true);
+          return;
+        }
+        const timer = setTimeout(() => finish(false), CAMERA_READY_TIMEOUT_MS);
+        const finish = (ok: boolean) => {
+          clearTimeout(timer);
+          video.onloadeddata = null;
+          resolve(ok);
+        };
+        video.onloadeddata = () => finish(true);
+      });
+
+      if (!gotFrames) {
+        stopCamera();
+        setCameraError(
+          "Camera opened but sent no video. Close other apps using the camera and try again.",
+        );
+        toast.error("Camera sent no video");
+        return false;
+      }
+    }
+
+    setCameraError(null);
+    return true;
   };
 
   const stopCamera = () => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
-    if (videoRef.current) videoRef.current.srcObject = null;
+    if (videoRef.current) {
+      videoRef.current.onloadeddata = null;
+      videoRef.current.srcObject = null;
+    }
     overlayCanvasRef.current?.getContext("2d")?.clearRect(0, 0, 9999, 9999);
   };
 
-  // ─── Start / Stop ────────────────────────────────────────────────────────────
-
   const start = async () => {
-    // Reset state
     setLog([]);
     setDetections([]);
     setAnalysis(null);
@@ -756,7 +741,10 @@ const LiveMonitoring: React.FC = () => {
     }
     setMode("connecting");
     const ok = await startCamera();
-    if (!isMountedRef.current) return;
+    if (!isMountedRef.current) {
+      stopCamera();
+      return;
+    }
     if (!ok) {
       setMode("error");
       return;
@@ -774,7 +762,7 @@ const LiveMonitoring: React.FC = () => {
       clearInterval(frameIntervalRef.current);
       frameIntervalRef.current = null;
     }
-    const finalDuration = duration;
+    const finalDuration = durationRef.current;
     const finalLog = [...logRef.current];
     const finalWeather = weather;
     const finalLocation = location;
@@ -799,7 +787,11 @@ const LiveMonitoring: React.FC = () => {
       toast.error("Could not generate report");
     }
     processingRef.current = false;
-  }, [disconnectAI, duration, weather, location]);
+  }, [disconnectAI, weather, location]);
+
+  useEffect(() => {
+    shortcutRef.current = { mode, start, stop };
+  });
 
   const newSession = () => {
     setMode("idle");
@@ -856,7 +848,6 @@ const LiveMonitoring: React.FC = () => {
     );
   };
 
-  // AI status config
   const aiStatus =
     aiConnected && aiAnalyzing
       ? {
@@ -876,12 +867,9 @@ const LiveMonitoring: React.FC = () => {
             wrapClass: "bg-[#5B532C]/60 text-white",
           };
 
-  // ─── Render ──────────────────────────────────────────────────────────────────
-
   if (mode === "report" && comprehensiveReport) {
     return (
       <div className="pb-12">
-        <Toaster position="top-right" />
         <ComprehensiveReport
           report={comprehensiveReport}
           onNewSession={newSession}
@@ -893,7 +881,6 @@ const LiveMonitoring: React.FC = () => {
   if (mode === "generating-report") {
     return (
       <div className="pb-12 flex items-center justify-center min-h-100">
-        <Toaster position="top-right" />
         <div className="text-center p-10 bg-[#FDE7B3]/10 rounded-2xl border border-[#5B532C]/20">
           <div className="w-16 h-16 mx-auto mb-4 bg-[#63A361]/10 rounded-2xl flex items-center justify-center">
             <Loader className="w-8 h-8 text-[#63A361] animate-spin" />
@@ -908,16 +895,15 @@ const LiveMonitoring: React.FC = () => {
 
   return (
     <div className="pb-12">
-      <Toaster position="top-right" />
       <canvas ref={captureCanvasRef} className="hidden" />
 
-      {/* Main Grid Layout */}
+      {                      }
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* ── Left Column: Camera & Stats (8 cols) ── */}
+        {                                                }
         <div className="lg:col-span-8 space-y-5">
-          {/* Camera Card - Fixed Height */}
+          {                                }
           <div className="bg-white rounded-2xl border border-[#5B532C]/20 shadow-lg overflow-hidden">
-            {/* Header */}
+            {            }
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#5B532C]/10 bg-[#FDE7B3]/10">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 bg-[#63A361]/10 rounded-xl flex items-center justify-center">
@@ -958,7 +944,7 @@ const LiveMonitoring: React.FC = () => {
               </div>
             </div>
 
-            {/* Video area - Fixed aspect ratio */}
+            {                                     }
             <div className="relative bg-[#FDFCF8] aspect-video overflow-hidden">
               {mode === "idle" && (
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#FDE7B3]/5">
@@ -1023,7 +1009,7 @@ const LiveMonitoring: React.FC = () => {
                     className="absolute inset-0 w-full h-full pointer-events-none"
                   />
 
-                  {/* AI status pill — top right */}
+                  {                                }
                   <div
                     className={`absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${aiStatus.wrapClass}`}
                   >
@@ -1033,7 +1019,7 @@ const LiveMonitoring: React.FC = () => {
                     {aiStatus.label}
                   </div>
 
-                  {/* YOLO + local vision status — top left */}
+                  {                                           }
                   <div className="absolute top-3 left-3 flex items-center gap-2">
                     <div
                       className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium ${
@@ -1061,7 +1047,7 @@ const LiveMonitoring: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Analysis overlay — bottom */}
+                  {                               }
                   {analysis && (
                     <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/70 via-black/30 to-transparent">
                       <motion.div
@@ -1108,7 +1094,7 @@ const LiveMonitoring: React.FC = () => {
               )}
             </div>
 
-            {/* Controls */}
+            {              }
             <div className="px-5 py-4 border-t border-[#5B532C]/10 bg-[#FDE7B3]/5">
               {mode === "idle" && (
                 <motion.button
@@ -1164,7 +1150,7 @@ const LiveMonitoring: React.FC = () => {
             </div>
           </div>
 
-          {/* Stats Grid - Below Camera */}
+          {                               }
           {mode === "live" && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <StatCard
@@ -1201,7 +1187,7 @@ const LiveMonitoring: React.FC = () => {
             </div>
           )}
 
-          {/* Weather Card */}
+          {                  }
           {weather && location && (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
@@ -1256,10 +1242,10 @@ const LiveMonitoring: React.FC = () => {
           )}
         </div>
 
-        {/* ── Right Column: Log & Analysis (4 cols) ── */}
+        {                                                 }
         <div className="lg:col-span-4">
           <div className="bg-white rounded-2xl border border-[#5B532C]/20 shadow-lg overflow-hidden lg:sticky lg:top-4">
-            {/* Log header */}
+            {                }
             <div
               className="flex items-center justify-between px-5 py-4 border-b border-[#5B532C]/10 bg-[#FDE7B3]/10 cursor-pointer hover:bg-[#FDE7B3]/20 transition-colors"
               onClick={() => setShowLog((p) => !p)}
@@ -1299,7 +1285,7 @@ const LiveMonitoring: React.FC = () => {
               </div>
             </div>
 
-            {/* Filter tabs */}
+            {                 }
             {showLog && log.length > 0 && (
               <div className="flex items-center gap-1 px-4 py-2.5 border-b border-[#5B532C]/10 bg-[#FDFCF8]">
                 <Filter className="w-3 h-3 text-[#5B532C]/35 mr-1" />
@@ -1331,7 +1317,10 @@ const LiveMonitoring: React.FC = () => {
                   exit={{ height: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="max-h-125 overflow-y-auto">
+                  <div
+                    ref={logScrollRef}
+                    className="max-h-125 overflow-y-auto"
+                  >
                     {filteredLog.length === 0 ? (
                       <div className="p-8 text-center">
                         <div className="w-12 h-12 mx-auto mb-3 bg-[#FDE7B3]/40 rounded-2xl flex items-center justify-center border border-[#5B532C]/10">
@@ -1391,7 +1380,6 @@ const LiveMonitoring: React.FC = () => {
                               )}
                           </motion.div>
                         ))}
-                        <div ref={logEndRef} />
                       </div>
                     )}
                   </div>
@@ -1399,7 +1387,7 @@ const LiveMonitoring: React.FC = () => {
               )}
             </AnimatePresence>
 
-            {/* Feature preview (idle state) */}
+            {                                  }
             {mode === "idle" && log.length === 0 && (
               <div className="p-4 border-t border-[#5B532C]/10 bg-[#FDE7B3]/5">
                 <p className="text-xs font-semibold text-[#5B532C]/40 mb-2.5 uppercase tracking-wider">

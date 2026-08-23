@@ -1,16 +1,7 @@
-/**
- * useLiveAPI — Gemini Live API voice hook
- *
- * Follows the documented Gemini Live API protocol:
- *   1. Open WebSocket to backend proxy (/voice-live)
- *   2. Send `setup` message with model, generation_config, system_instruction
- *   3. Wait for `setupComplete` before streaming audio
- *   4. Stream audio as `realtime_input` with `audio/pcm;rate=16000`
- *   5. Receive audio/text in `serverContent.modelTurn.parts`
- */
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const VOICE_WS_PATH = "/voice-live";
+const CONNECT_TIMEOUT_MS = 15000;
 const GEMINI_LIVE_MODEL =
   import.meta.env.VITE_GEMINI_LIVE_MODEL ||
   "models/gemini-2.5-flash-native-audio-preview-12-2025";
@@ -39,14 +30,22 @@ interface UseLiveAPI {
 interface UseLiveAPIProps {
   onAudioData: (base64: string) => void;
   onTextData?: (text: string) => void;
-  onError?: (err: any) => void;
+  onSessionLost?: (reason: string) => void;
   language?: string;
+}
+
+function describeClose(event: CloseEvent): string {
+  if (event.reason) return event.reason;
+  if (event.code === 1006)
+    return "Voice service unreachable — is it running on port 8001?";
+  if (event.code === 1011) return "Voice service error (check GEMINI_API_KEY)";
+  return `Voice connection closed (code ${event.code})`;
 }
 
 export const useLiveAPI = ({
   onAudioData,
   onTextData,
-  onError,
+  onSessionLost,
   language = "en",
 }: UseLiveAPIProps): UseLiveAPI => {
   const [status, setStatus] = useState<LiveStatus>("disconnected");
@@ -55,84 +54,90 @@ export const useLiveAPI = ({
   const [errorState, setErrorState] = useState<string | null>(null);
   const ws = useRef<WebSocket | null>(null);
   const intentionalDisconnectRef = useRef(false);
-  // Gate: only allow audio after Gemini confirms setupComplete
   const readyForAudioRef = useRef(false);
 
+  const handlersRef = useRef({ onAudioData, onTextData, onSessionLost });
+  useEffect(() => {
+    handlersRef.current = { onAudioData, onTextData, onSessionLost };
+  }, [onAudioData, onTextData, onSessionLost]);
+
+  const languageRef = useRef(language);
+  useEffect(() => {
+    languageRef.current = language;
+  }, [language]);
+
   const getVoiceWsUrl = () => {
-    // Always connect via current origin so the Vite dev-server proxy
-    // (or production reverse-proxy) routes /voice-live to the voice service.
     const origin = window.location.origin;
     const protocol = origin.startsWith("https") ? "wss:" : "ws:";
     const host = origin.replace(/^https?:\/\//, "");
     return `${protocol}//${host}${VOICE_WS_PATH}`;
   };
 
-  const handleMessage = useCallback(
-    (data: any) => {
-      if (data.serverContent) {
-        const { modelTurn, turnComplete } = data.serverContent;
+  const handleMessage = useCallback((data: any) => {
+    if (!data.serverContent) return;
+    const { modelTurn, turnComplete } = data.serverContent;
 
-        if (modelTurn && modelTurn.parts) {
-          setAgentState("speaking");
+    if (modelTurn && modelTurn.parts) {
+      setAgentState("speaking");
 
-          const textParts = modelTurn.parts.filter((p: any) => p.text);
-          if (textParts.length > 0) {
-            const combinedText = textParts.map((p: any) => p.text).join("");
-            setMessages((prev) => {
-              const newMessages = [...prev];
-              const last =
-                newMessages.length > 0
-                  ? newMessages[newMessages.length - 1]
-                  : null;
-
-              if (last && last.role === "model" && !last.isFinal) {
-                newMessages[newMessages.length - 1] = {
-                  ...last,
-                  text: last.text + combinedText,
-                };
-              } else {
-                newMessages.push({
-                  id: Math.random().toString(),
-                  role: "model",
-                  text: combinedText,
-                  isFinal: false,
-                });
-              }
-              return newMessages;
-            });
+      const textParts = modelTurn.parts.filter((p: any) => p.text);
+      if (textParts.length > 0) {
+        const combinedText = textParts.map((p: any) => p.text).join("");
+        setMessages((prev) => {
+          const last = prev.length > 0 ? prev[prev.length - 1] : null;
+          if (last && last.role === "model" && !last.isFinal) {
+            return [
+              ...prev.slice(0, -1),
+              { ...last, text: last.text + combinedText },
+            ];
           }
+          return [
+            ...prev,
+            {
+              id: `model-${Date.now()}-${prev.length}`,
+              role: "model" as const,
+              text: combinedText,
+              isFinal: false,
+            },
+          ];
+        });
+      }
 
-          for (const part of modelTurn.parts) {
-            if (part.text && onTextData) {
-              onTextData(part.text);
-            }
-            if (
-              part.inlineData &&
-              part.inlineData.mimeType?.startsWith("audio/pcm")
-            ) {
-              onAudioData(part.inlineData.data);
-            }
-          }
-        }
-
-        if (turnComplete) {
-          setAgentState("listening");
-          setMessages((prev) => {
-            const newMessages = [...prev];
-            const last =
-              newMessages.length > 0
-                ? newMessages[newMessages.length - 1]
-                : null;
-            if (last && last.role === "model") {
-              newMessages[newMessages.length - 1] = { ...last, isFinal: true };
-            }
-            return newMessages;
-          });
+      for (const part of modelTurn.parts) {
+        if (part.text) handlersRef.current.onTextData?.(part.text);
+        if (part.inlineData?.mimeType?.startsWith("audio/pcm")) {
+          handlersRef.current.onAudioData(part.inlineData.data);
         }
       }
-    },
-    [onAudioData, onTextData],
-  );
+    }
+
+    if (turnComplete) {
+      setAgentState("listening");
+      setMessages((prev) => {
+        const last = prev.length > 0 ? prev[prev.length - 1] : null;
+        if (last && last.role === "model") {
+          return [...prev.slice(0, -1), { ...last, isFinal: true }];
+        }
+        return prev;
+      });
+    }
+  }, []);
+
+  const teardown = useCallback(() => {
+    intentionalDisconnectRef.current = true;
+    readyForAudioRef.current = false;
+    const socket = ws.current;
+    ws.current = null;
+    if (socket) {
+      socket.onopen = socket.onmessage = socket.onerror = socket.onclose = null;
+      if (
+        socket.readyState === WebSocket.OPEN ||
+        socket.readyState === WebSocket.CONNECTING
+      ) {
+        socket.close();
+      }
+    }
+  }, []);
 
   const connect = useCallback(async () => {
     if (
@@ -142,184 +147,165 @@ export const useLiveAPI = ({
       return;
     }
 
-    try {
-      setStatus("connecting");
-      setErrorState(null);
-      readyForAudioRef.current = false;
-      intentionalDisconnectRef.current = false;
+    setStatus("connecting");
+    setErrorState(null);
+    readyForAudioRef.current = false;
+    intentionalDisconnectRef.current = false;
 
+    try {
       await new Promise<void>((resolve, reject) => {
         const socket = new WebSocket(getVoiceWsUrl());
+        ws.current = socket;
         let isSettled = false;
 
-        const settleResolve = () => {
+        const timer = setTimeout(() => {
+          fail(`Voice service did not respond within ${CONNECT_TIMEOUT_MS / 1000}s`);
+        }, CONNECT_TIMEOUT_MS);
+
+        const succeed = () => {
           if (isSettled) return;
           isSettled = true;
+          clearTimeout(timer);
           resolve();
         };
 
-        const settleReject = (err: unknown) => {
+        const fail = (reason: string) => {
           if (isSettled) return;
           isSettled = true;
-          reject(err);
+          clearTimeout(timer);
+          teardown();
+          setStatus("error");
+          setAgentState("idle");
+          setErrorState(reason);
+          reject(new Error(reason));
         };
 
         socket.onopen = () => {
-          ws.current = socket;
-
-          // Send setup message per Gemini Live API spec.
-          // The backend proxy forwards this to Gemini verbatim.
-          const setupMessage = {
-            setup: {
-              model: GEMINI_LIVE_MODEL,
-              generation_config: {
-                response_modalities: ["AUDIO"],
-                speech_config: {
-                  voice_config: {
-                    prebuilt_voice_config: {
-                      voice_name: "Aoede",
+          socket.send(
+            JSON.stringify({
+              setup: {
+                model: GEMINI_LIVE_MODEL,
+                generation_config: {
+                  response_modalities: ["AUDIO"],
+                  speech_config: {
+                    voice_config: {
+                      prebuilt_voice_config: { voice_name: "Aoede" },
                     },
                   },
                 },
+                system_instruction: {
+                  parts: [
+                    {
+                      text: [
+                        "You are an expert agricultural consultant for Kisan-Saathi, an app that helps Indian farmers.",
+                        "You help with crop diseases, market prices, weather impact, soil health, and farming advice.",
+                        "Keep answers concise, practical, and helpful.",
+                        "CRITICAL INSTRUCTION: NEVER output your internal thoughts, internal process, or step-by-step reasoning.",
+                        "CRITICAL INSTRUCTION: NEVER output any text wrapped in asterisks like **Initiating** or **Clarifying**.",
+                        "ONLY output the exact, direct spoken response you want the user to hear.",
+                        "Respond in the language the user speaks — Hindi, Marathi, Tamil, Telugu, Kannada, Punjabi, or any Indian language.",
+                        `Default to ${languageRef.current} if you cannot detect the language.`,
+                      ].join(" "),
+                    },
+                  ],
+                },
               },
-              system_instruction: {
-                parts: [
-                  {
-                    text: [
-                      "You are an expert agricultural consultant for Kisan-Saathi, an app that helps Indian farmers.",
-                      "You help with crop diseases, market prices, weather impact, soil health, and farming advice.",
-                      "Keep answers concise, practical, and helpful.",
-                      "CRITICAL INSTRUCTION: NEVER output your internal thoughts, internal process, or step-by-step reasoning.",
-                      "CRITICAL INSTRUCTION: NEVER output any text wrapped in asterisks like **Initiating** or **Clarifying**.",
-                      "ONLY output the exact, direct spoken response you want the user to hear.",
-                      "Respond in the language the user speaks — Hindi, Marathi, Tamil, Telugu, Kannada, Punjabi, or any Indian language.",
-                      `Default to ${language} if you cannot detect the language.`,
-                    ].join(" "),
-                  },
-                ],
-              },
-            },
-          };
-          socket.send(JSON.stringify(setupMessage));
-          // Do NOT resolve yet — wait for setupComplete
+            }),
+          );
         };
 
         socket.onmessage = async (event) => {
+          let data;
           try {
-            let data;
-            if (event.data instanceof Blob) {
-              const text = await event.data.text();
-              data = JSON.parse(text);
-            } else {
-              data = JSON.parse(event.data as string);
-            }
-
-            // Gemini confirms setup is complete — now safe to stream audio
-            if (data.setupComplete !== undefined) {
-              readyForAudioRef.current = true;
-              setStatus("connected");
-              setAgentState("listening");
-              settleResolve();
-              return;
-            }
-
-            // Error from backend proxy or Gemini
-            if (data?.error?.message) {
-              const err = data.error.message as string;
-              setStatus("error");
-              setErrorState(err);
-              if (onError) onError(err);
-              settleReject(new Error(err));
-              return;
-            }
-
-            handleMessage(data);
-          } catch (e) {
-            console.error("Error parsing message", e);
+            const raw =
+              event.data instanceof Blob
+                ? await event.data.text()
+                : (event.data as string);
+            data = JSON.parse(raw);
+          } catch {
+            return;
           }
-        };
 
-        socket.onerror = (e) => {
-          console.error("WebSocket error", e);
-          setStatus("error");
-          setErrorState("Connection error");
-          if (onError) onError(e);
-          settleReject(e);
+          if (data?.error?.message) {
+            const message = data.error.message as string;
+            if (isSettled) {
+              setStatus("error");
+              setErrorState(message);
+              handlersRef.current.onSessionLost?.(message);
+            } else {
+              fail(message);
+            }
+            return;
+          }
+
+          if (data.setupComplete !== undefined) {
+            readyForAudioRef.current = true;
+            setStatus("connected");
+            setAgentState("listening");
+            succeed();
+            return;
+          }
+
+          handleMessage(data);
         };
 
         socket.onclose = (event) => {
-          ws.current = null;
           readyForAudioRef.current = false;
-          setStatus("disconnected");
-          setAgentState("idle");
+          if (ws.current === socket) ws.current = null;
 
-          if (!intentionalDisconnectRef.current) {
-            const reason = event.reason ? ` (${event.reason})` : "";
-            const err = `Live voice connection closed${reason}`;
-            setErrorState(err);
-            if (onError) onError(err);
-            settleReject(new Error(err));
+          if (!isSettled) {
+            fail(describeClose(event));
+            return;
           }
+          if (intentionalDisconnectRef.current) return;
+
+          const reason = describeClose(event);
+          setStatus("error");
+          setAgentState("idle");
+          setErrorState(reason);
+          handlersRef.current.onSessionLost?.(reason);
         };
       });
     } catch (e) {
-      setStatus("error");
-      setErrorState("Failed to connect");
-      if (onError) onError(e);
+      throw e instanceof Error ? e : new Error(String(e));
     }
-  }, [handleMessage, onError, language]);
+  }, [handleMessage, teardown]);
 
   const disconnect = useCallback(() => {
-    intentionalDisconnectRef.current = true;
-    readyForAudioRef.current = false;
-    if (ws.current) {
-      ws.current.close();
-      ws.current = null;
-    }
+    teardown();
     setStatus("disconnected");
     setAgentState("idle");
-    setErrorState(null);
-  }, []);
+  }, [teardown]);
+
+  useEffect(() => teardown, [teardown]);
 
   const sendAudioChunk = useCallback((base64Audio: string) => {
-    if (
-      ws.current &&
-      ws.current.readyState === WebSocket.OPEN &&
-      readyForAudioRef.current
-    ) {
-      const msg = {
+    if (ws.current?.readyState !== WebSocket.OPEN || !readyForAudioRef.current) {
+      return;
+    }
+    ws.current.send(
+      JSON.stringify({
         realtime_input: {
           media_chunks: [
-            {
-              mime_type: "audio/pcm;rate=16000",
-              data: base64Audio,
-            },
+            { mime_type: "audio/pcm;rate=16000", data: base64Audio },
           ],
         },
-      };
-      ws.current.send(JSON.stringify(msg));
-    }
+      }),
+    );
   }, []);
 
   const sendText = useCallback((text: string) => {
-    if (
-      ws.current &&
-      ws.current.readyState === WebSocket.OPEN &&
-      readyForAudioRef.current
-    ) {
-      const msg = {
+    if (ws.current?.readyState !== WebSocket.OPEN || !readyForAudioRef.current) {
+      return;
+    }
+    ws.current.send(
+      JSON.stringify({
         clientContent: {
-          turns: [
-            {
-              role: "user",
-              parts: [{ text }],
-            },
-          ],
+          turns: [{ role: "user", parts: [{ text }] }],
           turnComplete: true,
         },
-      };
-      ws.current.send(JSON.stringify(msg));
-    }
+      }),
+    );
   }, []);
 
   return {

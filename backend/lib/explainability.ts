@@ -1,28 +1,7 @@
-/**
- * lib/explainability.js — why an advisory fired
- *
- * "AI recommends irrigating within 48 hours" is an instruction a farmer has to
- * take on trust. "Soil moisture 18%, no rain forecast for 4 days, wheat at
- * tillering — the stage where missing water costs the most" is a case they can
- * check against what they can see in their own field, and disagree with if the
- * inputs are wrong.
- *
- * So an advisory is built as a chain: observed inputs, the rule that combined
- * them, the conclusion, and the confidence. The rules are ordinary agronomic
- * thresholds evaluated in code, not model output — which is the point. The
- * model narrates; the rule decides.
- */
-
 export const EXPLAIN_SCHEMA = "agri-explain/v1";
-
-// ── Domain types ──────────────────────────────────────────────────────────────
 
 export type Urgency = "high" | "medium" | "low";
 
-/**
- * Observations for a field. Known keys are typed; anything else a caller adds
- * flows through untouched and is echoed back in `observations`.
- */
 export interface AdvisoryFacts {
   soilMoisturePct?: number;
   rainForecastMm3d?: number;
@@ -103,14 +82,6 @@ export interface RuleCatalogue {
   rules: RuleCatalogueEntry[];
 }
 
-// ── Rules ─────────────────────────────────────────────────────────────────────
-
-/**
- * Each rule declares the inputs it needs, a predicate over them, and how to
- * render its reasoning. Keeping `when` separate from `explain` means the
- * decision and its justification cannot drift apart — the same values that
- * satisfied the predicate are the ones shown.
- */
 const RULES: Rule[] = [
   {
     id: "irrigate.critical-stage-deficit",
@@ -210,18 +181,8 @@ const RULES: Rule[] = [
   },
 ];
 
-// ── Evaluation ────────────────────────────────────────────────────────────────
-
 const URGENCY_ORDER: Record<Urgency, number> = { high: 0, medium: 1, low: 2 };
 
-/**
- * Runs the rule set against a set of observations.
- *
- * Rules whose inputs are missing are reported separately rather than silently
- * skipped: "we could not check for rust risk because we have no humidity
- * reading for your field" is useful information, and hiding it would overstate
- * how much the system actually looked at.
- */
 export function explainAdvisories(facts: AdvisoryFacts = {}): ExplanationReport {
   const fired: FiredAdvisory[] = [];
   const notEvaluated: SkippedRule[] = [];
@@ -255,8 +216,6 @@ export function explainAdvisories(facts: AdvisoryFacts = {}): ExplanationReport 
       title: rule.title,
       urgency: rule.urgency,
       ...detail,
-      // Every advisory names the decision path that produced it, so a reader can
-      // trace the conclusion back to the values that caused it.
       chain: detail.inputs.map((i) => `${i.label} ${i.value} (${i.threshold})`),
     });
   }
@@ -278,7 +237,6 @@ export function explainAdvisories(facts: AdvisoryFacts = {}): ExplanationReport 
   };
 }
 
-/** The rule set as documentation — what the system is able to conclude at all. */
 export function ruleCatalogue(): RuleCatalogue {
   return {
     schema: EXPLAIN_SCHEMA,

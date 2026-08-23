@@ -1,10 +1,3 @@
-/**
- * AlertFeed — the escalation queue an officer actually works from.
- *
- * Every row carries the rule that fired it. An alert with no stated trigger is
- * an alert nobody trusts, so the rule text is part of the row, not a tooltip.
- */
-
 import React from "react";
 import { motion } from "framer-motion";
 import { AlertTriangle, Send } from "lucide-react";
@@ -117,9 +110,6 @@ export const AlertFeed: React.FC<Props> = ({
 }) => {
   const [revealed, setRevealed] = React.useState(5);
 
-  // Restart the reveal whenever the officer changes scope, so the queue is
-  // rebuilt from scratch rather than reconciled against the previous state's
-  // rows — mixing two states in one queue would be worse than a slow feed.
   React.useEffect(() => {
     setRevealed(5);
   }, [filterState]);
@@ -130,8 +120,6 @@ export const AlertFeed: React.FC<Props> = ({
     return () => clearTimeout(t);
   }, [revealed]);
 
-  // The API already scopes the queue to the requested state; the client only
-  // paces how many rows appear, so a national feed reads as live.
   const visible = React.useMemo(
     () => alerts.slice(0, filterState ? 10 : revealed),
     [alerts, filterState, revealed],

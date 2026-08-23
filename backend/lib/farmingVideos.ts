@@ -1,15 +1,3 @@
-/**
- * farmingVideos.ts — YouTube success story video fetcher
- *
- * Approach: Directly scrapes YouTube search results page via HTTP fetch.
- * Parses the embedded ytInitialData JSON to extract real video IDs, titles,
- * channels, and view counts. Then uses Groq llama (NOT compound-beta) to
- * generate a farmer-friendly summary.
- *
- * No external packages needed — just native fetch + regex.
- * Fallback: static curated data from farmingData.json
- */
-
 import { readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 import path from "path";
@@ -21,15 +9,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const DATA_PATH = path.join(__dirname, "..", "data", "farmingData.json");
 
-// Cache TTL: 12 hours for video data
 const VIDEO_CACHE_TTL = 12 * 60 * 60;
 
-// YouTube search URL
 const YT_SEARCH_URL = "https://www.youtube.com/results";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-/** A video scraped directly from YouTube search results. */
 export interface ScrapedVideo {
     id: string;
     title: string;
@@ -128,9 +111,6 @@ interface YtInitialData {
     };
 }
 
-/**
- * Map a technique ID to the data key (for static fallback).
- */
 function resolveKey(technique: string): string {
     const t = technique?.toLowerCase().replace(/\s+/g, "_") || "";
     if (t.includes("organic")) return "organic_farming";
@@ -140,9 +120,6 @@ function resolveKey(technique: string): string {
     return "default";
 }
 
-/**
- * Load video data from static JSON (fallback).
- */
 async function loadStaticVideos(key: string): Promise<SuccessVideosResult | null> {
     try {
         const raw = await readFile(DATA_PATH, "utf-8");
@@ -178,10 +155,6 @@ async function loadStaticVideos(key: string): Promise<SuccessVideosResult | null
     }
 }
 
-/**
- * Scrape YouTube search results directly via HTTP fetch.
- * Extracts video data from the ytInitialData JSON embedded in the page.
- */
 async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
     try {
         const searchUrl = `${YT_SEARCH_URL}?search_query=${encodeURIComponent(query)}`;
@@ -202,7 +175,6 @@ async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
 
         const html = await response.text();
 
-        // Extract ytInitialData JSON from the page
         const dataMatch = html.match(
             /var\s+ytInitialData\s*=\s*({.+?});\s*<\/script>/s
         );
@@ -214,7 +186,6 @@ async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
 
         const ytData = JSON.parse(dataMatch[1]) as YtInitialData;
 
-        // Navigate to the video results
         const contents =
             ytData?.contents?.twoColumnSearchResultsRenderer?.primaryContents
                 ?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer?.contents ||
@@ -224,7 +195,7 @@ async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
 
         for (const item of contents) {
             const renderer = item.videoRenderer;
-            if (!renderer) continue; // Skip ads, playlists, channels, etc.
+            if (!renderer) continue;
 
             const videoId = renderer.videoId;
             if (!videoId) continue;
@@ -242,7 +213,6 @@ async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
                 renderer.lengthText?.accessibility?.accessibilityData?.label ||
                 "";
 
-            // Parse view count for sorting
             let viewCount = 0;
             const viewMatch = viewsText.match(/([\d,.]+)\s*(K|M|lakh|crore)?/i);
             if (viewMatch?.[1]) {
@@ -264,7 +234,6 @@ async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
             });
         }
 
-        // Sort by view count (most popular first) and take top results
         videos.sort((a, b) => b.viewCount - a.viewCount);
 
         console.log(
@@ -277,10 +246,6 @@ async function scrapeYouTubeSearch(query: string): Promise<ScrapedVideo[]> {
     }
 }
 
-/**
- * Generate a farmer-friendly summary for a video using Groq llama
- * (NOT compound-beta, to avoid rate limits).
- */
 async function generateVideoSummary(title: string, technique: string): Promise<VideoSummary | null> {
     if (!GROQ_API_KEY) {
         return {
@@ -349,21 +314,9 @@ Write a JSON response (no markdown):
     }
 }
 
-// ── Public API ────────────────────────────────────────────────────────────────
-
-/**
- * Get success story videos for a farming technique.
- *
- * Flow:
- *   1. Check cache
- *   2. Scrape YouTube search for real videos
- *   3. Generate AI summary for the top video
- *   4. Fallback to static curated data
- */
 export async function getSuccessVideos(technique: string): Promise<SuccessVideosResult> {
     const cacheKey = `videos:${technique}`;
 
-    // 1. Check cache
     const cached = cacheGet<SuccessVideosResult>(cacheKey);
     if (cached) {
         console.log(`[farmingVideos] Cache hit for "${cacheKey}"`);
@@ -372,8 +325,6 @@ export async function getSuccessVideos(technique: string): Promise<SuccessVideos
 
     const techniqueName = technique.replace(/_/g, " ");
 
-    // Map technique IDs to specific, focused search terms
-    // This ensures we search for the exact farming type the user selected
     const searchTermMap: Record<string, string> = {
         integrated_farming: "fish farming",
         organic_farming: "organic farming",
@@ -394,7 +345,6 @@ export async function getSuccessVideos(technique: string): Promise<SuccessVideos
     const searchTerm =
         searchTermMap[technique] || techniqueName;
 
-    // 2. Scrape YouTube search
     const searchQueries = [
         `${searchTerm} success story farmer India`,
         `${searchTerm} profit India farmer`,
@@ -404,10 +354,9 @@ export async function getSuccessVideos(technique: string): Promise<SuccessVideos
     for (const query of searchQueries) {
         const videos = await scrapeYouTubeSearch(query);
         allVideos.push(...videos);
-        if (allVideos.length >= 5) break; // Enough results
+        if (allVideos.length >= 5) break;
     }
 
-    // Deduplicate by video ID
     const seen = new Set<string>();
     allVideos = allVideos.filter((v) => {
         if (seen.has(v.id)) return false;
@@ -421,7 +370,6 @@ export async function getSuccessVideos(technique: string): Promise<SuccessVideos
 
         const related = allVideos.slice(1, 3);
 
-        // 3. Generate summary for the featured video
         const summaryData = await generateVideoSummary(featured.title, technique);
 
         const result: SuccessVideosResult = {
@@ -456,12 +404,10 @@ export async function getSuccessVideos(technique: string): Promise<SuccessVideos
             `[farmingVideos] Serving "${featured.title}" for "${techniqueName}"`
         );
 
-        // 4. Cache
         cacheSet(cacheKey, result, VIDEO_CACHE_TTL);
         return result;
     }
 
-    // 5. Fallback to static curated data
     const key = resolveKey(technique);
     const staticResult = await loadStaticVideos(key);
     console.log(`[farmingVideos] Using curated fallback for "${key}"`);

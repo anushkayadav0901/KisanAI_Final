@@ -1,13 +1,3 @@
-/**
- * routes/farming.ts — /api/farming/* REST endpoints
- *
- * Endpoints:
- *   POST /api/farming/subsidies  — Government subsidy data (scraped + curated)
- *   POST /api/farming/videos     — Success story videos with summaries
- *   POST /api/farming/insights   — AI-generated detailed farming guide
- *   POST /api/farming/scrape     — Manual re-scrape trigger
- */
-
 import type { Request, Response } from "express";
 import { Router } from "express";
 import {
@@ -18,8 +8,6 @@ import {
 import { getSuccessVideos } from "../lib/farmingVideos.js";
 import { generateFarmingInsights } from "../lib/farmingAi.js";
 import { cacheGet, cacheSet } from "../lib/farmingCache.js";
-
-// ── Request body shapes ──────────────────────────────────────────────────────
 
 interface SubsidiesBody {
   technique?: string;
@@ -47,8 +35,6 @@ interface ScrapeBody {
   technique?: string;
 }
 
-// ── Error helpers ────────────────────────────────────────────────────────────
-
 function errStatus(err: unknown): number {
   if (typeof err === "object" && err !== null && "status" in err) {
     const status = (err as { status?: unknown }).status;
@@ -66,8 +52,6 @@ function errMessage(err: unknown): string | undefined {
 }
 
 const router = Router();
-
-// ── Subsidies ─────────────────────────────────────────────────────────────────
 
 router.post(
   "/subsidies",
@@ -88,8 +72,6 @@ router.post(
   },
 );
 
-// ── Success Story Videos ──────────────────────────────────────────────────────
-
 router.post("/videos", async (req: Request, res: Response): Promise<void> => {
   try {
     const { technique } = req.body as VideosBody;
@@ -106,8 +88,6 @@ router.post("/videos", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// ── Detailed Farming Insights ─────────────────────────────────────────────────
-
 router.post(
   "/insights",
   async (req: Request, res: Response): Promise<void> => {
@@ -118,7 +98,6 @@ router.post(
         return;
       }
 
-      // Cache key based on all parameters
       const cacheKey = `insights:${technique}:${farmSize || "5"}:${budget || "medium"}`;
       const cached = cacheGet(cacheKey);
       if (cached) {
@@ -132,7 +111,6 @@ router.post(
         budget: budget || "medium",
       });
 
-      // Cache for 30 minutes
       cacheSet(cacheKey, guide, 1800);
 
       res.json({ guide, cacheHit: false });
@@ -142,8 +120,6 @@ router.post(
     }
   },
 );
-
-// ── Government Schemes (for monitoring) ──────────────────────────────────────
 
 router.post(
   "/govt-schemes",
@@ -158,8 +134,6 @@ router.post(
     }
   },
 );
-
-// ── Manual Re-Scrape ──────────────────────────────────────────────────────────
 
 router.post("/scrape", async (req: Request, res: Response): Promise<void> => {
   try {

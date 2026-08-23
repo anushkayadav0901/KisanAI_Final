@@ -41,7 +41,7 @@ export const About = () => {
   return (
     <section className="py-24 bg-[#FDFCF8]">
       <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-        {/* Header */}
+        {            }
         <div className="grid lg:grid-cols-2 gap-12 items-end mb-16">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -65,7 +65,7 @@ export const About = () => {
           </motion.p>
         </div>
 
-        {/* Stats - Horizontal Line */}
+        {                             }
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -81,7 +81,7 @@ export const About = () => {
           ))}
         </motion.div>
 
-        {/* Features Grid */}
+        {                   }
         <div className="grid sm:grid-cols-2 gap-6">
           {values.map((value, index) => (
             <motion.div

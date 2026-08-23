@@ -1,6 +1,3 @@
-// Translation types removed - using direct text instead
-
-// Monitoring Types
 export type MonitoringType = 'crop' | 'soil' | 'thermal' | 'field';
 
 export interface EnvironmentalFactor {
@@ -8,7 +5,6 @@ export interface EnvironmentalFactor {
   status: 'optimal' | 'warning' | 'critical';
 }
 
-// Crop Monitoring Result
 export interface CropMonitoringResult {
   cropType: string;
   diseaseDetected: string;
@@ -30,7 +26,6 @@ export interface CropMonitoringResult {
   analysisSummary: string;
 }
 
-// Soil Monitoring Result
 export interface SoilMonitoringResult {
   soilType: string;
   texture: 'fine' | 'medium' | 'coarse';
@@ -52,7 +47,6 @@ export interface SoilMonitoringResult {
   analysisSummary: string;
 }
 
-// Thermal Monitoring Result
 export interface ThermalMonitoringResult {
   temperatureRange: string;
   hotSpots: number;
@@ -74,7 +68,6 @@ export interface ThermalMonitoringResult {
   analysisSummary: string;
 }
 
-// Field Monitoring Result
 export interface FieldMonitoringResult {
   cropGrowthStage: string;
   weedDensity: 'low' | 'medium' | 'high';
@@ -94,7 +87,6 @@ export interface FieldMonitoringResult {
   analysisSummary: string;
 }
 
-// Union type for all monitoring results
 export type MonitoringResult = 
   | CropMonitoringResult 
   | SoilMonitoringResult 

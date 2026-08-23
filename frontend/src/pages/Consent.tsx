@@ -1,17 +1,3 @@
-/**
- * Consent — the farmer's data wallet
- *
- * Shows who holds access to this farmer's data, on what basis, for how long,
- * and every time it has actually been read. Revocation is one tap and takes
- * effect on the next request, not at some later sync.
- *
- * The design principle: a consent screen that is easier to grant on than to
- * revoke on is not a consent screen. Revoke is a first-class action here, and
- * the denial entries in the trail are shown as prominently as the successful
- * reads, because "someone tried to read my data after I said no" is the thing
- * a farmer most needs to be able to see.
- */
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -28,10 +14,8 @@ import {
   X,
   Fingerprint,
 } from "lucide-react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import Footer from "../components/Footer";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 interface Consent {
   id: string;
@@ -65,8 +49,6 @@ interface DataTypeInfo {
   sensitivity: "low" | "medium" | "high";
   detail: string;
 }
-
-// ── Presentation helpers ──────────────────────────────────────────────────────
 
 const CONSUMER_ICON: Record<string, React.ElementType> = {
   government: Landmark,
@@ -106,8 +88,6 @@ function daysLeft(to: string) {
   const d = Math.ceil((new Date(to).getTime() - Date.now()) / 86400000);
   return d > 0 ? d : 0;
 }
-
-// ── Consent card ──────────────────────────────────────────────────────────────
 
 const ConsentCard: React.FC<{
   consent: Consent;
@@ -173,7 +153,7 @@ const ConsentCard: React.FC<{
           </div>
         </div>
 
-        {/* Data types with sensitivity */}
+        {                                 }
         <div className="flex flex-wrap gap-2 mt-4">
           {consent.dataTypes.map((code) => {
             const info = types[code];
@@ -282,8 +262,6 @@ const ConsentCard: React.FC<{
   );
 };
 
-// ── Page ──────────────────────────────────────────────────────────────────────
-
 const Consent: React.FC = () => {
   const [consents, setConsents] = React.useState<Consent[]>([]);
   const [audit, setAudit] = React.useState<AuditEntry[]>([]);
@@ -293,10 +271,6 @@ const Consent: React.FC = () => {
 
   const load = React.useCallback(async () => {
     try {
-      // cache: "no-store" alongside the server's no-store header. Belt and
-      // braces is warranted here: a stale consent list tells a farmer something
-      // false about their own rights, and an entry cached before the header was
-      // corrected would otherwise survive its full TTL.
       const opts: RequestInit = { cache: "no-store" };
       const [cRes, aRes, vRes] = await Promise.all([
         fetch("/v1/consent", opts),
@@ -351,22 +325,8 @@ const Consent: React.FC = () => {
 
   return (
     <div className="relative bg-white">
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            background: "#FFFFFF",
-            color: "#5B532C",
-            border: "1px solid rgba(91,83,44,0.12)",
-            borderRadius: "16px",
-            fontSize: "13px",
-            fontWeight: 500,
-          },
-          success: { iconTheme: { primary: "#63A361", secondary: "#FFFFFF" } },
-        }}
-      />
 
-      {/* ── Hero ──────────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="relative pt-32 pb-14">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
@@ -416,7 +376,7 @@ const Consent: React.FC = () => {
         </div>
       )}
 
-      {/* ── Stats ─────────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="bg-[#FDFCF8] border-y border-[#5B532C]/10">
         <div className="px-4 mx-auto max-w-5xl sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10">
@@ -436,7 +396,7 @@ const Consent: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Grants ────────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-16">
         <div className="px-4 mx-auto max-w-5xl sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold text-[#5B532C] mb-6">
@@ -480,7 +440,7 @@ const Consent: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Audit trail ───────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-16 bg-[#FDFCF8] border-t border-[#5B532C]/10">
         <div className="px-4 mx-auto max-w-5xl sm:px-6 lg:px-8">
           <div className="mb-6">
@@ -546,7 +506,7 @@ const Consent: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Note ──────────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-12 bg-white">
         <div className="px-4 mx-auto max-w-5xl sm:px-6 lg:px-8">
           <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#FDE7B3]/25 border border-[#5B532C]/10">

@@ -24,12 +24,6 @@ const ScrollIndicator = () => {
   );
 };
 
-/**
- * Live network scale, read from the same public API a state department would
- * call. Hardcoded numbers on a landing page are marketing; these move when the
- * network moves, and fall back to dashes rather than to invented figures if the
- * API cannot be reached.
- */
 function useNetworkScale() {
   const [totals, setTotals] = React.useState<{
     states: number;
@@ -75,12 +69,8 @@ export const Home: React.FC = () => {
   return (
     <div className="relative bg-white">
       <ScrollIndicator />
-
-      {/* Hero Section - Centered Layout */}
       <section className="relative min-h-screen pt-32 pb-20">
-        {/* Background - Dot Pattern */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Dot Grid Pattern */}
           <div
             className="absolute inset-0 opacity-[0.18]"
             style={{
@@ -88,20 +78,17 @@ export const Home: React.FC = () => {
               backgroundSize: '22px 22px'
             }}
           />
-          {/* Subtle Gradient Orbs */}
           <div className="absolute top-20 left-1/4 w-96 h-96 bg-[#63A361]/5 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-[#FDE7B3]/10 rounded-full blur-3xl" />
         </div>
 
         <div className="relative px-4 mx-auto max-w-7xl">
-          {/* Top Section - Centered Text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto mb-16"
           >
-            {/* Headline with Generative AI */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#5B532C] leading-[1.1] mb-6">
               Smart Farming Made Simple with{" "}
               <span className="relative inline-block">
@@ -110,14 +97,7 @@ export const Home: React.FC = () => {
                 </span>
                 <span className="absolute inset-0 bg-[#FDE7B3]/50 rounded-lg -rotate-1"></span>
               </span>
-            </h1>
-
-            {/* Voice first.
-
-                Low literacy is the norm among the farmers this is built for, and
-                a page of English buttons excludes them by default. So the primary
-                action is a large microphone that starts a spoken conversation in
-                the farmer's own language, and the typed paths sit underneath it. */}
+            </h1>                                              
             <div className="flex flex-col items-center gap-4 mb-10">
               <Link
                 to="/consult"
@@ -164,8 +144,6 @@ export const Home: React.FC = () => {
                 </Link>
               </div>
             </div>
-
-            {/* Network scale, read live from /v1/surveillance/states */}
             <div className="flex items-center justify-center gap-8 sm:gap-12">
               {[
                 { icon: TrendingUp, value: scale ? String(scale.states) : "—", label: "States live" },
@@ -190,17 +168,13 @@ export const Home: React.FC = () => {
               ))}
             </div>
           </motion.div>
-
-          {/* Bottom Section - Hero Image with Feature Cards */}
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left - Feature Cards */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="space-y-4 order-2 lg:order-1"
             >
-              {/* Feature Card 1 */}
               <div className="flex items-start gap-4 p-5 rounded-2xl bg-white shadow-lg border border-[#5B532C]/10">
                 <div className="w-12 h-12 rounded-xl bg-[#63A361]/10 flex items-center justify-center flex-shrink-0">
                   <Shield className="w-6 h-6 text-[#63A361]" />
@@ -210,8 +184,6 @@ export const Home: React.FC = () => {
                   <p className="text-sm text-[#5B532C]/60">AI-powered crop monitoring identifies diseases 3 days before visible symptoms appear.</p>
                 </div>
               </div>
-
-              {/* Feature Card 2 */}
               <div className="flex items-start gap-4 p-5 rounded-2xl bg-white shadow-lg border border-[#5B532C]/10">
                 <div className="w-12 h-12 rounded-xl bg-[#FFC50F]/10 flex items-center justify-center flex-shrink-0">
                   <TrendingUp className="w-6 h-6 text-[#FFC50F]" />
@@ -221,8 +193,6 @@ export const Home: React.FC = () => {
                   <p className="text-sm text-[#5B532C]/60">Get live mandi rates across 12 states. Never sell your crops below market price.</p>
                 </div>
               </div>
-
-              {/* Feature Card 3 */}
               <div className="flex items-start gap-4 p-5 rounded-2xl bg-white shadow-lg border border-[#5B532C]/10">
                 <div className="w-12 h-12 rounded-xl bg-[#63A361]/10 flex items-center justify-center flex-shrink-0">
                   <Leaf className="w-6 h-6 text-[#63A361]" />
@@ -233,8 +203,6 @@ export const Home: React.FC = () => {
                 </div>
               </div>
             </motion.div>
-
-            {/* Right - Hero Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -247,8 +215,6 @@ export const Home: React.FC = () => {
                   alt="Kisan AI Dashboard"
                   className="w-full max-w-lg mx-auto rounded-2xl shadow-2xl border-4 border-white"
                 />
-
-                {/* Floating Badge - Success Story */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -267,24 +233,15 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Market Section */}
       <section className="border-t border-b border-[#5B532C]/10 bg-[#FDFCF8]">
         <Market />
       </section>
-
-      {/* About Section */}
-      {/* About Section */}
       <div className="py-4 bg-white">
         <About />
       </div>
-
-      {/* CTA Section */}
       <div className="py-4 bg-white">
         <CTA />
       </div>
-
-      {/* Footer */}
       <Footer />
     </div>
   );

@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLiveAPI, type LiveMessage } from "../hooks/useLiveAPI";
+import toast from "react-hot-toast";
+import {
+  useLiveAPI,
+  type LiveMessage,
+  type LiveStatus,
+} from "../hooks/useLiveAPI";
 import {
   float32ToInt16,
   int16ToFloat32,
@@ -17,9 +22,37 @@ declare global {
   }
 }
 
-/**
- * Format model text — show raw output including thinking markers.
- */
+const SPEECH_LOCALE: Record<string, string> = {
+  Hindi: "hi-IN",
+  Marathi: "mr-IN",
+  Tamil: "ta-IN",
+  Telugu: "te-IN",
+  Kannada: "kn-IN",
+  Malayalam: "ml-IN",
+  Gujarati: "gu-IN",
+  Punjabi: "pa-IN",
+  Bengali: "bn-IN",
+  Urdu: "ur-IN",
+};
+
+const GREETING: Record<string, string> = {
+  Hindi: "नमस्ते! मैं आपका किसान-साथी विशेषज्ञ हूँ। मैं आज आपकी कैसे मदद कर सकता हूँ?",
+  Marathi: "नमस्कार! मी तुमचा किसान-साथी तज्ञ आहे. मी आज तुम्हाला कशी मदत करू शकेन?",
+  Tamil: "வணக்கம்! நான் உங்கள் கிசான்-சாத்தி நிபுணர். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?",
+};
+
+const AUDIO_RESUME_TIMEOUT_MS = 2000;
+
+const STATUS_HEADING: Record<LiveStatus, string> = {
+  disconnected: "Ready to Connect",
+  connecting: "Connecting...",
+  connected: "AI Connected",
+  error: "Call ended",
+};
+
+const DEFAULT_GREETING =
+  "Hello! I am your Kisan-Saathi expert. How can I help you today?";
+
 const formatText = (text: string) => {
   if (!text.trim()) return null;
   return <span>{text}</span>;
@@ -28,8 +61,10 @@ const formatText = (text: string) => {
 const Consult: React.FC = () => {
   const { selected: language } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageScrollRef = useRef<HTMLDivElement>(null);
   const [localMessages, setLocalMessages] = useState<LiveMessage[]>([]);
   const [interimText, setInterimText] = useState("");
+  const [starting, setStarting] = useState(false);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
@@ -39,18 +74,46 @@ const Consult: React.FC = () => {
   const isConnectedRef = useRef(false);
 
   const handleAudioData = useCallback((base64Audio: string) => {
-    try {
-      const arrayBuffer = base64ToArrayBuffer(base64Audio);
-      const int16Array = new Int16Array(arrayBuffer);
-      const float32Array = int16ToFloat32(int16Array);
-
-      if (playerNodeRef.current) {
-        playerNodeRef.current.port.postMessage(float32Array);
-      }
-    } catch (e) {
-      console.error("Error processing audio data", e);
-    }
+    const arrayBuffer = base64ToArrayBuffer(base64Audio);
+    const float32Array = int16ToFloat32(new Int16Array(arrayBuffer));
+    playerNodeRef.current?.port.postMessage(float32Array);
   }, []);
+
+  const cleanupAudio = useCallback(() => {
+    recorderNodeRef.current?.disconnect();
+    recorderNodeRef.current = null;
+
+    playerNodeRef.current?.disconnect();
+    playerNodeRef.current = null;
+
+    audioStreamRef.current?.getTracks().forEach((track) => track.stop());
+    audioStreamRef.current = null;
+
+    if (audioContextRef.current) {
+      const ctx = audioContextRef.current;
+      audioContextRef.current = null;
+      if (ctx.state !== "closed") ctx.close();
+    }
+
+    if (recognitionRef.current) {
+      const recognition = recognitionRef.current;
+      recognitionRef.current = null;
+      recognition.onend = null;
+      recognition.onresult = null;
+      recognition.onerror = null;
+      recognition.stop();
+    }
+
+    setInterimText("");
+  }, []);
+
+  const handleSessionLost = useCallback(
+    (reason: string) => {
+      cleanupAudio();
+      toast.error(reason);
+    },
+    [cleanupAudio],
+  );
 
   const {
     status,
@@ -63,224 +126,161 @@ const Consult: React.FC = () => {
     error,
   } = useLiveAPI({
     onAudioData: handleAudioData,
-    onError: (err) => console.error("LiveAPI Error:", err),
+    onSessionLost: handleSessionLost,
     language: language.name,
   });
 
-  // Keep ref in sync with status so closures can read live value
   useEffect(() => {
     isConnectedRef.current = status === "connected";
   }, [status]);
 
-  const initializeAudio = async () => {
-    try {
-      const ctx = new (
-        window.AudioContext || (window as any).webkitAudioContext
-      )();
-      audioContextRef.current = ctx;
+  const startCapture = async () => {
+    const ctx = new (window.AudioContext ||
+      (window as any).webkitAudioContext)();
+    audioContextRef.current = ctx;
 
-      await ctx.audioWorklet.addModule("/worklets/audio-recorder-worklet.js");
-      await ctx.audioWorklet.addModule("/worklets/audio-player-worklet.js");
+    await ctx.audioWorklet.addModule("/worklets/audio-recorder-worklet.js");
+    await ctx.audioWorklet.addModule("/worklets/audio-player-worklet.js");
 
-      const playerNode = new AudioWorkletNode(ctx, "audio-player-worklet");
-      playerNode.connect(ctx.destination);
-      playerNodeRef.current = playerNode;
+    const playerNode = new AudioWorkletNode(ctx, "audio-player-worklet");
+    playerNode.connect(ctx.destination);
+    playerNodeRef.current = playerNode;
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-        },
-      });
-      audioStreamRef.current = stream;
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        channelCount: 1,
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+      },
+    });
+    audioStreamRef.current = stream;
 
-      const source = ctx.createMediaStreamSource(stream);
-      const recorderNode = new AudioWorkletNode(ctx, "audio-recorder-worklet");
+    const recorderNode = new AudioWorkletNode(ctx, "audio-recorder-worklet");
+    recorderNode.port.onmessage = (event) => {
+      if (!event.data) return;
+      const int16 = float32ToInt16(event.data);
+      sendAudioChunk(arrayBufferToBase64(int16.buffer as ArrayBuffer));
+    };
+    ctx.createMediaStreamSource(stream).connect(recorderNode);
+    recorderNodeRef.current = recorderNode;
 
-      recorderNode.port.onmessage = (event) => {
-        if (event.data) {
-          const int16 = float32ToInt16(event.data);
-          const base64 = arrayBufferToBase64(int16.buffer as ArrayBuffer);
-          sendAudioChunk(base64);
-        }
-      };
-
-      source.connect(recorderNode);
-      recorderNodeRef.current = recorderNode;
-
-      // Seed initial connection message in appropriate language
-      let welcomeMsg =
-        "Hello! I am your Kisan-Saathi expert. How can I help you today?";
-      if (language.name === "Hindi")
-        welcomeMsg =
-          "नमस्ते! मैं आपका किसान-साथी विशेषज्ञ हूँ। मैं आज आपकी कैसे मदद कर सकता हूँ?";
-      if (language.name === "Marathi")
-        welcomeMsg =
-          "नमस्कार! मी तुमचा किसान-साथी तज्ञ आहे. मी आज तुम्हाला कशी मदत करू शकेन?";
-      if (language.name === "Tamil")
-        welcomeMsg =
-          "வணக்கம்! நான் உங்கள் கிசான்-சாத்தி நிபுணர். இன்று நான் உங்களுக்கு எப்படி உதவ முடியும்?";
-
-      await connect();
-      // Send a text prompt to Gemini to initiate an audio greeting
-      sendText(`Start by greeting me with this exact phrase: "${welcomeMsg}"`);
-
-      // Initialize SpeechRecognition for user transcription
-      const SpeechRec =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SpeechRec) {
-        const recognition = new SpeechRec();
-        recognition.continuous = true;
-        recognition.interimResults = true; // CHANGED to see live transcriptions
-
-        if (language.name === "Hindi") recognition.lang = "hi-IN";
-        else if (language.name === "Marathi") recognition.lang = "mr-IN";
-        else if (language.name === "Tamil") recognition.lang = "ta-IN";
-        else recognition.lang = "en-US";
-
-        recognition.onresult = (event: any) => {
-          let interim = "";
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-              const transcript = event.results[i][0].transcript;
-              console.log("[SpeechRecognition] Final transcript:", transcript);
-              if (transcript.trim()) {
-                setLocalMessages((prev) => [
-                  ...prev,
-                  {
-                    id: "user-" + Date.now() + "-" + Math.random(),
-                    role: "user",
-                    text: transcript.trim(),
-                    isFinal: true,
-                  },
-                ]);
-              }
-            } else {
-              interim += event.results[i][0].transcript;
-            }
-          }
-          setInterimText(interim);
-        };
-        recognition.onend = () => {
-          console.log(
-            "[SpeechRecognition] ended, isConnected:",
-            isConnectedRef.current,
-          );
-          // Auto-reconnect if still connected (use ref to avoid stale closure)
-          if (isConnectedRef.current) {
-            try {
-              setTimeout(() => recognition.start(), 400);
-            } catch {
-              /* ignore */
-            }
-          }
-        };
-        recognition.onerror = (e: any) => {
-          console.warn("[SpeechRecognition] error:", e.error);
-        };
-        recognitionRef.current = recognition;
-        console.log(
-          "[SpeechRecognition] Starting with lang:",
-          recognition.lang,
-        );
-        try {
-          recognition.start();
-        } catch {
-          /* ignore */
-        }
-      }
-    } catch (e) {
-      console.error("Failed to initialize audio", e);
+    await Promise.race([
+      ctx.resume(),
+      new Promise((r) => setTimeout(r, AUDIO_RESUME_TIMEOUT_MS)),
+    ]);
+    if (ctx.state !== "running") {
+      toast("Your browser blocked audio playback — you may not hear replies");
     }
   };
 
-  const cleanupAudio = useCallback(() => {
-    if (recorderNodeRef.current) {
-      recorderNodeRef.current.disconnect();
-      recorderNodeRef.current = null;
-    }
-    if (playerNodeRef.current) {
-      playerNodeRef.current.disconnect();
-      playerNodeRef.current = null;
-    }
-    if (audioStreamRef.current) {
-      audioStreamRef.current.getTracks().forEach((track) => track.stop());
-      audioStreamRef.current = null;
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close();
-      audioContextRef.current = null;
-    }
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.onend = null;
-        recognitionRef.current.stop();
-      } catch {
-        /* ignore */
-      }
-      recognitionRef.current = null;
-    }
-  }, []);
+  const startTranscription = () => {
+    const SpeechRec =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRec) return;
 
-  useEffect(() => {
+    const recognition = new SpeechRec();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = SPEECH_LOCALE[language.name] ?? "en-US";
+
+    recognition.onresult = (event: any) => {
+      let interim = "";
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          if (transcript.trim()) {
+            setLocalMessages((prev) => [
+              ...prev,
+              {
+                id: `user-${Date.now()}-${prev.length}`,
+                role: "user",
+                text: transcript.trim(),
+                isFinal: true,
+              },
+            ]);
+          }
+        } else {
+          interim += transcript;
+        }
+      }
+      setInterimText(interim);
+    };
+
+    recognition.onend = () => {
+      if (isConnectedRef.current && recognitionRef.current === recognition) {
+        setTimeout(() => {
+          if (recognitionRef.current === recognition) recognition.start();
+        }, 400);
+      }
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
+
+  const handleStart = async () => {
+    if (starting) return;
+    setStarting(true);
+    try {
+      await connect();
+      await startCapture();
+      sendText(
+        `Start by greeting me with this exact phrase: "${
+          GREETING[language.name] ?? DEFAULT_GREETING
+        }"`,
+      );
+      startTranscription();
+    } catch (e) {
+      disconnect();
+      cleanupAudio();
+      toast.error(e instanceof Error ? e.message : "Could not start voice call");
+    } finally {
+      setStarting(false);
+    }
+  };
+
+  const handleStop = useCallback(() => {
     disconnect();
     cleanupAudio();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [disconnect, cleanupAudio]);
 
-  // Merge model messages from the hook while preserving user messages added locally
-  // Maintains chronological order: existing entries keep their position,
-  // model messages get updated in-place, new ones are appended.
+  useEffect(() => () => cleanupAudio(), [cleanupAudio]);
+
   useEffect(() => {
     setLocalMessages((prev) => {
       const modelById = new Map(messages.map((m) => [m.id, m]));
-      const seenModelIds = new Set<string>();
+      const seen = new Set<string>();
       const result: LiveMessage[] = [];
 
-      // Walk existing order — keep user msgs, update model msgs in-place
       for (const p of prev) {
         if (p.role === "user") {
           result.push(p);
-        } else if (p.role === "model" && modelById.has(p.id)) {
+        } else if (modelById.has(p.id)) {
           result.push(modelById.get(p.id)!);
-          seenModelIds.add(p.id);
+          seen.add(p.id);
         }
       }
-
-      // Append brand-new model messages that weren't in prev
       for (const m of messages) {
-        if (!seenModelIds.has(m.id)) {
-          result.push(m);
-        }
+        if (!seen.has(m.id)) result.push(m);
       }
-
       return result;
     });
   }, [messages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const pane = messageScrollRef.current;
+    if (pane) pane.scrollTop = pane.scrollHeight;
   }, [localMessages, interimText]);
-
-  const handleStart = () => {
-    initializeAudio();
-  };
-
-  const handleStop = () => {
-    disconnect();
-    cleanupAudio();
-  };
 
   const isModelSpeaking = status === "connected" && agentState === "speaking";
   const isListening = status === "connected" && agentState === "listening";
-  const isConnecting = status === "connecting";
+  const isConnecting = starting || status === "connecting";
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-12 px-4">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
+        {            }
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -299,14 +299,14 @@ const Consult: React.FC = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Panel - Status & Controls */}
+          {                                    }
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
             <div className="p-6 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg sticky top-28">
-              {/* Status Card */}
+              {                 }
               <div className="text-center mb-6">
                 <div
                   className={`w-20 h-20 mx-auto rounded-2xl flex items-center justify-center mb-4 transition-all duration-500 ${
@@ -328,11 +328,7 @@ const Consult: React.FC = () => {
                 </div>
 
                 <h2 className="text-xl font-bold text-[#5B532C] mb-1">
-                  {status === "disconnected"
-                    ? "Ready to Connect"
-                    : status === "connecting"
-                      ? "Connecting..."
-                      : "AI Connected"}
+                  {STATUS_HEADING[status]}
                 </h2>
                 <p className="text-sm text-[#5B532C]/60">
                   {status === "connected"
@@ -341,11 +337,13 @@ const Consult: React.FC = () => {
                       : isListening
                         ? "Listening to you..."
                         : "Waiting..."
-                    : "Start a voice conversation"}
+                    : status === "error"
+                      ? "The call ended — start again when you are ready"
+                      : "Start a voice conversation"}
                 </p>
               </div>
 
-              {/* Simple Status Indicator */}
+              {                             }
               {status === "connected" && (
                 <div className="flex items-center justify-center gap-3 mb-6 p-3 bg-[#FDE7B3]/20 rounded-xl">
                   <div className="flex gap-1">
@@ -385,14 +383,14 @@ const Consult: React.FC = () => {
                 </div>
               )}
 
-              {/* Error */}
+              {           }
               {error && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
                   <p className="text-sm text-red-600">{error}</p>
                 </div>
               )}
 
-              {/* Control Button */}
+              {                    }
               <button
                 onClick={
                   status === "disconnected" || status === "error"
@@ -424,7 +422,7 @@ const Consult: React.FC = () => {
                 )}
               </button>
 
-              {/* Tips */}
+              {          }
               <div className="mt-6 pt-6 border-t border-[#5B532C]/10">
                 <h3 className="text-sm font-semibold text-[#5B532C] mb-3">
                   Tips
@@ -447,14 +445,14 @@ const Consult: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Right Panel - Conversation */}
+          {                                }
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-2"
           >
             <div className="bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg overflow-hidden h-[600px] flex flex-col">
-              {/* Header */}
+              {            }
               <div className="p-4 border-b border-[#5B532C]/10 bg-[#FDE7B3]/10">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-[#63A361] rounded-xl flex items-center justify-center">
@@ -471,8 +469,9 @@ const Consult: React.FC = () => {
                 </div>
               </div>
 
-              {/* Messages */}
+              {              }
               <div
+                ref={messageScrollRef}
                 className="flex-1 overflow-y-auto p-6 notranslate"
                 translate="no"
               >
@@ -506,12 +505,12 @@ const Consult: React.FC = () => {
                             className="flex justify-start"
                           >
                             <div className="max-w-[80%] flex gap-3 flex-row">
-                              {/* Avatar */}
+                              {            }
                               <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[#63A361]/10">
                                 <Bot className="w-4 h-4 text-[#63A361]" />
                               </div>
 
-                              {/* Thinking Bubble */}
+                              {                     }
                               <div className="p-4 rounded-2xl text-sm leading-relaxed bg-white border border-[#5B532C]/10 text-[#5B532C] rounded-tl-sm">
                                 <span className="block text-xs font-semibold text-[#63A361] mb-1">
                                   Thinking
@@ -528,7 +527,7 @@ const Consult: React.FC = () => {
                 </AnimatePresence>
               </div>
 
-              {/* Input Area */}
+              {                }
               <div className="p-4 border-t border-[#5B532C]/10 bg-[#FDE7B3]/5">
                 <div className="flex items-center gap-3">
                   <div

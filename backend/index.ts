@@ -1,16 +1,3 @@
-/**
- * index.ts — Kisan AI Backend entry point
- *
- * Responsibilities:
- *  1. Bootstrap Express + middleware
- *  2. Mount route modules
- *  3. Create HTTP server
- *  4. Attach WebSocket handler
- *  5. Verify local vision (Ollama) availability at boot — loudly, never silently
- *
- * All business logic lives in routes/ and lib/.
- */
-
 import express from "express";
 import cors from "cors";
 import { createServer } from "http";
@@ -30,14 +17,10 @@ import v1Router from "./routes/v1.js";
 import { setupGeminiLive, setupGeminiVoiceLiveProxy } from "./routes/ws.js";
 import { isOllamaAvailable, ollamaStatus } from "./lib/ollama.js";
 
-// ── App ───────────────────────────────────────────────────────────────────────
-
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
-
-// ── Health check ──────────────────────────────────────────────────────────────
 
 const healthHandler = (_req: Request, res: Response): void => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
@@ -46,32 +29,22 @@ const healthHandler = (_req: Request, res: Response): void => {
 app.get("/health", healthHandler);
 app.get("/api/health", healthHandler);
 
-// ── REST routes ───────────────────────────────────────────────────────────────
-
 app.use("/api/ai", aiRouter);
 app.use("/api/weather", weatherRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/farming", farmingRouter);
 
-// ── Public open-data API ──────────────────────────────────────────────────────
-// Unauthenticated by design: this is published as a digital public good.
 app.use("/v1", v1Router);
-
-// ── 404 catch-all ─────────────────────────────────────────────────────────────
 
 app.use((_req: Request, res: Response) => {
   res.status(404).json({ error: "Not found" });
 });
-
-// ── HTTP + WebSocket server ───────────────────────────────────────────────────
 
 const httpServer = createServer(app);
 
 const geminiLiveWss = setupGeminiLive(httpServer);
 const voiceLiveWss = setupGeminiVoiceLiveProxy(httpServer);
 
-// Route WebSocket upgrades manually to avoid conflicts between multiple
-// WebSocketServer instances on the same httpServer (causes RSV1 frame errors).
 httpServer.on("upgrade", (request, socket, head) => {
   const { pathname } = new URL(request.url ?? "/", "ws://localhost");
 
@@ -97,8 +70,6 @@ httpServer.on("error", (err: NodeJS.ErrnoException) => {
   }
   throw err;
 });
-
-// ── Local vision check at boot — reported loudly, never silently skipped ─────
 
 async function reportLocalVisionStatus(): Promise<void> {
   if (!LOCAL_VISION_FIRST) {

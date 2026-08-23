@@ -1,10 +1,33 @@
 import { useState, useCallback, memo } from "react";
 import { Star, ShoppingCart } from "lucide-react";
+import toast from "react-hot-toast";
 
 declare global {
     interface Window {
         Razorpay: any;
     }
+}
+
+const RAZORPAY_SDK = "https://checkout.razorpay.com/v1/checkout.js";
+
+function loadRazorpay(): Promise<void> {
+    if (window.Razorpay) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        const existing = document.querySelector<HTMLScriptElement>(
+            `script[src="${RAZORPAY_SDK}"]`,
+        );
+        const script = existing ?? document.createElement("script");
+        script.addEventListener("load", () => resolve(), { once: true });
+        script.addEventListener(
+            "error",
+            () => reject(new Error("Could not load the payment provider")),
+            { once: true },
+        );
+        if (!existing) {
+            script.src = RAZORPAY_SDK;
+            document.head.appendChild(script);
+        }
+    });
 }
 
 interface Product {
@@ -98,8 +121,6 @@ const ProductCard = memo(({ product }: { product: Product }) => {
         setIsLoading(true);
 
         try {
-            // Real flow: server creates the order, Razorpay collects, server
-            // verifies the signature. No success is shown without verification.
             const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
 
             const orderRes = await fetch(`${API_BASE_URL}/payment/create-order`, {
@@ -107,19 +128,12 @@ const ProductCard = memo(({ product }: { product: Product }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: product.price, receipt: `${product.id}` })
             });
-            if (!orderRes.ok) throw new Error('Order failed');
             const order = await orderRes.json();
+            if (!orderRes.ok) {
+                throw new Error(order.error ?? `Order failed (${orderRes.status})`);
+            }
             const orderId = order.id as string;
             const amount = order.amount as number;
-
-            // Demo mode: server has no Razorpay keys, the order is a mock.
-            // Skip checkout and complete the flow so the demo still lands on
-            // a verified success.
-            if ((order as { mock?: boolean }).mock) {
-                await new Promise((r) => setTimeout(r, 600));
-                alert(`Payment successful (demo mode) — ₹${product.price} for ${product.name}`);
-                return;
-            }
 
             const keyRes = await fetch(`${API_BASE_URL}/payment/key`);
             if (!keyRes.ok) throw new Error('Payment unavailable');
@@ -144,25 +158,27 @@ const ProductCard = memo(({ product }: { product: Product }) => {
                     });
                     if (verifyRes.ok) {
                         const v = await verifyRes.json();
-                        alert(v.verified ? 'Payment verified' : 'Payment could not be verified');
+                        if (v.verified) toast.success('Payment verified');
+                        else toast.error('Payment could not be verified');
                     } else {
-                        alert('Payment verification failed');
+                        toast.error(`Payment verification failed (${verifyRes.status})`);
                     }
                 },
                 theme: { color: "#63A361" }
             };
 
+            await loadRazorpay();
             new window.Razorpay(options).open();
-        } catch {
-            alert('Payment unavailable. Try again later.');
+        } catch (e) {
+            toast.error(e instanceof Error ? e.message : 'Payment unavailable');
         } finally {
             setIsLoading(false);
         }
-    }, [product.name, isLoading]);
+    }, [product.name, product.id, product.price, isLoading]);
 
     return (
         <div className="group bg-white rounded-2xl overflow-hidden border border-[#5B532C]/10 transition-colors">
-            {/* Image Container */}
+            {                     }
             <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                 {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}
                 <img
@@ -172,7 +188,7 @@ const ProductCard = memo(({ product }: { product: Product }) => {
                     onLoad={() => setImageLoaded(true)}
                     className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-105 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                 />
-                {/* Overlay Badges */}
+                {                    }
                 <div className="absolute top-3 left-3 flex gap-2">
                     {product.featured && (
                         <span className="px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-[#63A361] text-white rounded-full">
@@ -185,20 +201,20 @@ const ProductCard = memo(({ product }: { product: Product }) => {
                         </span>
                     )}
                 </div>
-                {/* Rating */}
+                {            }
                 <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 bg-white/90 backdrop-blur-sm rounded-full">
                     <Star className="w-3 h-3 text-[#FFC50F] fill-[#FFC50F]" />
                     <span className="text-xs font-bold text-[#5B532C]">{product.rating}</span>
                 </div>
             </div>
 
-            {/* Content */}
+            {             }
             <div className="p-5">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-[#63A361]">{product.category}</span>
                 <h3 className="text-base font-bold text-[#5B532C] mt-1 mb-2">{product.name}</h3>
                 <p className="text-sm text-[#5B532C]/50 mb-4 line-clamp-2">{product.description}</p>
 
-                {/* Price Row */}
+                {               }
                 <div className="flex items-end justify-between pt-4 border-t border-[#5B532C]/10">
                     <div>
                         <div className="text-2xl font-bold text-[#5B532C]">₹{product.price.toLocaleString()}</div>
@@ -224,7 +240,7 @@ ProductCard.displayName = 'ProductCard';
 const Market = () => {
     return (
         <div className="px-4 py-24 mx-auto max-w-7xl sm:px-6 lg:px-8">
-            {/* Header */}
+            {            }
             <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-12">
                 <div>
                     <span className="text-xs font-semibold text-[#63A361] uppercase tracking-wider">Shop Now</span>
@@ -237,7 +253,7 @@ const Market = () => {
                 </p>
             </div>
 
-            {/* Products Grid */}
+            {                   }
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {products.map((product) => (
                     <ProductCard key={product.id} product={product} />

@@ -1,18 +1,3 @@
-/**
- * lib/retrieval.js — BM25 lexical retrieval over the advisory corpus
- *
- * Why BM25 rather than embeddings: it needs no API key, no network call and no
- * model download, it is deterministic, and — most importantly here — it is
- * explainable. When an advisory cites a passage we can show exactly which query
- * terms matched it. An embedding score of 0.81 tells a farmer nothing; "matched
- * on 'yellow rust', 'wheat', 'tillering'" tells them something.
- *
- * The scoring is standard Okapi BM25. An embedding reranker can be layered on
- * top later without changing the interface below.
- */
-
-// ── Domain types ──────────────────────────────────────────────────────────────
-
 export interface PassageMeta {
   heading?: string;
   docTitle: string;
@@ -63,13 +48,6 @@ export interface GateConfig {
   minTopScore: number;
 }
 
-// ── Tokenisation ──────────────────────────────────────────────────────────────
-
-/**
- * Stopwords kept deliberately small. Aggressive stopword lists hurt
- * agricultural queries, where words like "after", "before" and "between" carry
- * real meaning ("spray after flowering" is not "spray before flowering").
- */
 const STOPWORDS = new Set([
   "a", "an", "the", "is", "are", "was", "were", "be", "been", "being",
   "of", "to", "in", "on", "at", "by", "for", "with", "as", "and", "or",
@@ -86,11 +64,6 @@ export function tokenise(text: unknown): string[] {
     .filter((t) => t.length > 1 && !STOPWORDS.has(t));
 }
 
-/**
- * Very light suffix stripping. A full stemmer is overkill and misfires on
- * agricultural vocabulary ("blight"/"blights" matters, "rust"/"rusty" does
- * not), so this only handles plurals and common verb endings.
- */
 function stem(token: string): string {
   if (token.length <= 4) return token;
   return token
@@ -102,10 +75,8 @@ function stem(token: string): string {
 
 const normalise = (text: unknown): string[] => tokenise(text).map(stem);
 
-// ── Index ─────────────────────────────────────────────────────────────────────
-
-const K1 = 1.5; // term-frequency saturation
-const B = 0.75; // length normalisation
+const K1 = 1.5;
+const B = 0.75;
 
 export class BM25Index {
   passages: Passage[];
@@ -132,7 +103,6 @@ export class BM25Index {
     this.avgLength =
       this.lengths.reduce((a, b) => a + b, 0) / Math.max(this.lengths.length, 1);
 
-    // Document frequency per term.
     this.docFreq = new Map();
     for (const counts of this.termFreqs) {
       for (const term of counts.keys()) {
@@ -145,7 +115,6 @@ export class BM25Index {
 
   idf(term: string): number {
     const df = this.docFreq.get(term) ?? 0;
-    // BM25 probabilistic IDF, floored so very common terms cannot go negative.
     return Math.max(0.05, Math.log(1 + (this.N - df + 0.5) / (df + 0.5)));
   }
 
@@ -174,8 +143,6 @@ export class BM25Index {
         passage,
         score,
         matchedTerms,
-        // How much of what the farmer asked was actually found. A high score
-        // from one common word is not relevance, so callers gate on this too.
         coverage: matchedTerms.length / queryTerms.length,
       };
     });
@@ -186,30 +153,11 @@ export class BM25Index {
       .slice(0, limit);
   }
 
-  /** Query terms after normalisation — exposed so callers can report coverage. */
   queryTerms(query: string): string[] {
     return [...new Set(normalise(query))];
   }
 }
 
-// -- Relevance gate -----------------------------------------------------------
-
-/**
- * Decides whether a result set is strong enough to ground an answer on.
- *
- * A raw BM25 floor is not sufficient on its own. "which brand of tractor should
- * I buy" matches the single word "should" inside an irrigation passage and
- * scores above any sensible floor, yet the corpus plainly cannot answer it.
- * Three signals together separate real matches from incidental ones:
- *
- *   1. at least two distinct query terms matched, which kills single
- *      common-word hits outright
- *   2. a minimum share of the question actually found in the passage
- *   3. an absolute score floor, which filters weak multi-term coincidences
- *
- * Returns the decision plus its reasoning, so an API consumer can see why a
- * question was refused rather than being told only that it was.
- */
 export const GATE: GateConfig = {
   minMatchedTerms: 2,
   minCoverage: 0.4,
@@ -254,16 +202,6 @@ export function assessGrounding(hits: SearchHit[]): GroundingAssessment {
   };
 }
 
-// ── Chunking ──────────────────────────────────────────────────────────────────
-
-/**
- * Splits a document into retrievable passages on its section headings.
- *
- * Sections are the right unit for agricultural guidance: a farmer asking about
- * a spray window needs the whole window with its caveats, not a stray sentence
- * from the middle of it. Anything unusually long is split further on sentence
- * boundaries so a citation stays quotable.
- */
 export function chunkDocument(
   doc: AdvisoryDocument,
   { maxChars = 900 }: { maxChars?: number } = {},

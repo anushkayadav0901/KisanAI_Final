@@ -126,7 +126,6 @@ const Research: React.FC = () => {
   return (
     <div className="min-h-screen bg-white pt-24 pb-16">
       <div className="px-4 mx-auto max-w-7xl">
-        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -140,7 +139,6 @@ const Research: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* The Challenge Stats */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -165,7 +163,6 @@ const Research: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Challenges Grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -202,7 +199,6 @@ const Research: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Our Solutions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -226,7 +222,6 @@ const Research: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Tech Stack */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -250,7 +245,6 @@ const Research: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Diagrams Grid */}
         <div className="mb-16">
           <h2 className="text-2xl font-bold text-[#5B532C] mb-8 text-center">Implementation Details</h2>
           <div className="grid md:grid-cols-2 gap-8">
@@ -286,7 +280,6 @@ const Research: React.FC = () => {
           </div>
         </div>
 
-        {/* Core Highlights */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -307,7 +300,6 @@ const Research: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div

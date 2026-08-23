@@ -1,17 +1,3 @@
-/**
- * lib/groundedAdvisory.ts — retrieval-grounded advisory generation
- *
- * The contract this module enforces: the model may only use the passages it is
- * given, and every claim it makes must name the passage it came from. If
- * retrieval returns nothing above threshold, no model call is made at all and
- * the caller gets an explicit refusal.
- *
- * That refusal path is the whole point. A crop advisory system that invents a
- * plausible answer when it does not know is worse than one that says so — a
- * farmer can act on "I don't have a source for this, ask your KVK", but they
- * cannot recover from spraying the wrong chemical on a confident guess.
- */
-
 import {
   BM25Index,
   chunkDocument,
@@ -21,8 +7,6 @@ import {
 } from "./retrieval.js";
 import { CORPUS, type KnowledgeDoc } from "../data/knowledge/corpus.js";
 import { callGemini, parseGeminiJson } from "./gemini.js";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
 
 export interface RetrievedPassage {
   passageId: string;
@@ -87,10 +71,6 @@ interface RawModelAnswer {
   citations?: unknown;
 }
 
-// ── Index construction ────────────────────────────────────────────────────────
-// Built once at module load. The corpus is small enough that rebuilding costs
-// nothing; when real documents are ingested this becomes a startup step.
-
 const PASSAGES = CORPUS.flatMap((doc) => chunkDocument(doc));
 const INDEX = new BM25Index(PASSAGES);
 
@@ -99,7 +79,6 @@ export const CORPUS_STATS = {
   passages: PASSAGES.length,
   crops: [...new Set(CORPUS.map((d) => d.crop))],
   topics: [...new Set(CORPUS.map((d) => d.topic))],
-  /** Honest about what this corpus is. Surfaced through the API. */
   provenance:
     "Curated draft corpus written for this project. Not extracted from ICAR, " +
     "KVK or state agricultural university publications. Each document carries " +
@@ -110,12 +89,8 @@ const DOC_BY_ID: Record<string, KnowledgeDoc> = Object.fromEntries(
   CORPUS.map((d) => [d.id, d]),
 );
 
-// ── Retrieval ─────────────────────────────────────────────────────────────────
-
-/** Minimum BM25 score for a passage to be considered relevant at all. */
 const RELEVANCE_FLOOR = 2.0;
 
-/** Raw hits plus the gate decision, for callers that need both. */
 export function retrieveWithAssessment(
   query: string,
   { limit = 5 }: { limit?: number } = {},
@@ -148,8 +123,6 @@ export function retrieve(
     };
   }).filter((p): p is RetrievedPassage => p !== null);
 }
-
-// ── Grounded generation ───────────────────────────────────────────────────────
 
 const SYSTEM_RULES = `You are an agricultural advisor for Indian farmers. You are given numbered SOURCE passages and a farmer's question.
 
@@ -189,7 +162,6 @@ FARMER'S QUESTION
 ${question}`;
 }
 
-/** Returned when retrieval is too weak to ground an answer. No model call is made. */
 function refusal(question: string, assessment: GroundingAssessment): GroundedAdvisory {
   return {
     answerable: false,
@@ -203,8 +175,6 @@ function refusal(question: string, assessment: GroundingAssessment): GroundedAdv
     grounded: true,
     retrieved: 0,
     query: question,
-    // The gate is shown, not hidden: a refusal a consumer cannot inspect is
-    // indistinguishable from a failure.
     gate: { ...GATE, decision: "refused", ...assessment },
     suggestion:
       "Contact your district Krishi Vigyan Kendra, or rephrase the question " +
@@ -212,11 +182,6 @@ function refusal(question: string, assessment: GroundingAssessment): GroundedAdv
   };
 }
 
-/**
- * Answers a question strictly from the corpus.
- *
- * @throws if the Gemini call itself fails (network, key, API error).
- */
 export async function answerGrounded(
   question: string,
   opts: { limit?: number } = {},
@@ -224,8 +189,6 @@ export async function answerGrounded(
   const limit = opts.limit ?? 5;
   const { assessment } = retrieveWithAssessment(question, { limit });
 
-  // Insufficient grounding: refuse before spending a model call. This is the
-  // load-bearing branch of the whole module.
   if (!assessment.grounded) return refusal(question, assessment);
 
   const passages = retrieve(question, { limit });
@@ -240,8 +203,6 @@ export async function answerGrounded(
   try {
     parsed = parseGeminiJson<RawModelAnswer>(text);
   } catch {
-    // A malformed model response is treated as a failure to ground, not as an
-    // opportunity to pass raw text through as if it were an advisory.
     return {
       ...refusal(question, assessment),
       missing:
@@ -250,8 +211,6 @@ export async function answerGrounded(
     };
   }
 
-  // Attach the full passage behind each citation so the client can show the
-  // farmer exactly what the advisory was built from.
   interface RawCitation {
     n?: unknown;
     passageId?: unknown;
@@ -291,7 +250,6 @@ export async function answerGrounded(
     retrieved: passages.length,
     query: question,
     gate: { ...GATE, decision: "answered", ...assessment },
-    /** Everything retrieval considered, whether the model cited it or not. */
     consideredPassages: passages.map((p) => ({
       passageId: p.passageId,
       docTitle: p.docTitle,

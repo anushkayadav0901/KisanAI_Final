@@ -1,16 +1,3 @@
-/**
- * nationalGrid.js — national agricultural grid reference data
- *
- * States are placed on a hex tile cartogram of India: an approximate,
- * area-neutral layout rather than a geographic projection. A cartogram makes
- * no claim about boundaries, so the surveillance view stays focused on
- * agricultural signal.
- *
- * Agro-climatic zones follow the 15-zone NARP classification used by ICAR.
- * District names are real. Metrics layered on top are simulated — see
- * surveillance.js.
- */
-
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -183,7 +170,6 @@ export const STATE_BY_CODE: Record<string, StateNode> = Object.fromEntries(
   STATE_NODES.map((s) => [s.code, s]),
 );
 
-/** Crop to the pests and diseases that actually threaten it in Indian conditions. */
 export const CROP_THREATS: Record<string, string[]> = {
   Rice: ["Bacterial Leaf Blight", "Rice Blast", "Brown Planthopper", "Sheath Blight", "False Smut"],
   Wheat: ["Yellow Rust", "Karnal Bunt", "Powdery Mildew", "Loose Smut", "Wheat Aphid"],

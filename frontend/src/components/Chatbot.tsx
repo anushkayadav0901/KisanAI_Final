@@ -11,9 +11,12 @@ import {
   Leaf,
 } from "lucide-react";
 import aiService, { cancelActiveRequest } from "../ai/aiService";
-import { transcribeAudio, detectLanguage } from "../ai/voiceTranscribeService";
+import { transcribeAudio } from "../ai/voiceTranscribeService";
+import toast from "react-hot-toast";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+const MAX_RECORDING_SECONDS = 60;
 
 interface Message {
   text: string;
@@ -114,24 +117,21 @@ const AgriTechChatbot = () => {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const messageScrollRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioStreamRef = useRef<MediaStream | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const scrollToBottom = useCallback(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, []);
-
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, streamingText, scrollToBottom]);
+    const pane = messageScrollRef.current;
+    if (pane) pane.scrollTop = pane.scrollHeight;
+  }, [messages, streamingText, streamingThinking]);
 
-  const handleSend = useCallback(async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = useCallback(async (override?: string) => {
+    const userMessage = (override ?? input).trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = input.trim();
     setInput("");
     setIsLoading(true);
     setStreamingText("");
@@ -168,16 +168,15 @@ const AgriTechChatbot = () => {
         }
       );
 
-      const answer = finalText?.trim() || responseText || "Sorry, I couldn't generate a response.";
-
       setMessages((prev) => [
         ...prev,
-        { text: answer, sender: "ai", timestamp: Date.now(), thinking: thinkingText },
+        { text: finalText, sender: "ai", timestamp: Date.now(), thinking: thinkingText },
       ]);
-    } catch {
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : String(e);
       setMessages((prev) => [
         ...prev,
-        { text: "Sorry, I'm having trouble responding. Please try again.", sender: "ai", timestamp: Date.now() },
+        { text: `Could not answer: ${reason}`, sender: "ai", timestamp: Date.now() },
       ]);
     } finally {
       setIsLoading(false);
@@ -186,38 +185,97 @@ const AgriTechChatbot = () => {
     }
   }, [input, isLoading, messages]);
 
-  const startRecording = useCallback(async () => {
-    try {
-      if (!navigator.mediaDevices?.getUserMedia) {
-        return;
-      }
+  const handleSendRef = useRef(handleSend);
+  useEffect(() => {
+    handleSendRef.current = handleSend;
+  }, [handleSend]);
 
-      const stream = await navigator.mediaDevices.getUserMedia({
+  const releaseMic = useCallback(() => {
+    audioStreamRef.current?.getTracks().forEach((track) => track.stop());
+    audioStreamRef.current = null;
+    if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+  }, []);
+
+  const stopRecording = useCallback(() => {
+    const recorder = mediaRecorderRef.current;
+    mediaRecorderRef.current = null;
+    setIsRecording(false);
+    if (recorder && recorder.state !== "inactive") {
+      recorder.stop();
+    } else {
+      releaseMic();
+    }
+  }, [releaseMic]);
+
+  const stopRecordingRef = useRef(stopRecording);
+  useEffect(() => {
+    stopRecordingRef.current = stopRecording;
+  }, [stopRecording]);
+
+  const processAudio = useCallback(async (audioBlob: Blob) => {
+    setIsTranscribing(true);
+
+    try {
+      const text = (await transcribeAudio(audioBlob)).text.trim();
+      if (text) {
+        handleSendRef.current(text);
+      } else {
+        toast("Could not hear anything — try again");
+      }
+    } catch (e) {
+      toast.error(
+        e instanceof Error ? e.message : "Could not transcribe your recording",
+      );
+    } finally {
+      setIsTranscribing(false);
+      setRecordingDuration(0);
+    }
+  }, []);
+
+  const startRecording = useCallback(async () => {
+    if (!navigator.mediaDevices?.getUserMedia) {
+      toast.error("This browser cannot record audio");
+      return;
+    }
+
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
         audio: { echoCancellation: true, noiseSuppression: true },
       });
+    } catch {
+      toast.error("Microphone access denied");
+      return;
+    }
+    audioStreamRef.current = stream;
 
+    try {
       let mimeType = "audio/webm;codecs=opus";
       if (!MediaRecorder.isTypeSupported(mimeType)) {
         mimeType = "audio/webm";
-        if (!MediaRecorder.isTypeSupported(mimeType)) {
-          mimeType = "";
-        }
+        if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = "";
       }
 
-      const mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      const mediaRecorder = new MediaRecorder(
+        stream,
+        mimeType ? { mimeType } : undefined,
+      );
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
+        if (event.data.size > 0) audioChunksRef.current.push(event.data);
       };
 
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType || "audio/webm" });
-        await processAudio(audioBlob);
-        stream.getTracks().forEach((track) => track.stop());
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: mimeType || "audio/webm",
+        });
+        releaseMic();
+        if (audioBlob.size > 0) processAudio(audioBlob);
       };
 
       mediaRecorder.start(100);
@@ -226,64 +284,22 @@ const AgriTechChatbot = () => {
 
       recordingTimerRef.current = setInterval(() => {
         setRecordingDuration((prev) => {
-          if (prev >= 60) {
-            stopRecording();
-          }
-          return prev + 1;
+          const next = prev + 1;
+          if (next >= MAX_RECORDING_SECONDS) stopRecordingRef.current();
+          return next;
         });
       }, 1000);
-    } catch {
-      // Silently fail
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
+    } catch (e) {
+      releaseMic();
+      mediaRecorderRef.current = null;
       setIsRecording(false);
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current);
-        recordingTimerRef.current = null;
-      }
+      toast.error(
+        e instanceof Error ? e.message : "Could not start the recorder",
+      );
     }
-  }, [isRecording]);
+  }, [releaseMic, processAudio]);
 
-  const processAudio = useCallback(async (audioBlob: Blob) => {
-    setIsTranscribing(true);
-
-    try {
-      const detectedLanguage = await detectLanguage(audioBlob);
-      const transcription = await transcribeAudio(audioBlob, {
-        language: detectedLanguage,
-        response_format: "text",
-      });
-
-      if (transcription.text?.trim()) {
-        setInput(transcription.text.trim());
-        setTimeout(() => {
-          const event = new KeyboardEvent("keydown", { key: "Enter" });
-          inputRef.current?.dispatchEvent(event);
-        }, 100);
-      }
-    } catch {
-      // Silently fail
-    } finally {
-      setIsTranscribing(false);
-      setRecordingDuration(0);
-    }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current);
-      }
-      if (mediaRecorderRef.current && isRecording) {
-        mediaRecorderRef.current.stop();
-      }
-    };
-  }, [isRecording]);
+  useEffect(() => releaseMic, [releaseMic]);
 
   const quickActions = [
     { icon: Sprout, label: "Crop Advice", action: "What crops should I plant this season?" },
@@ -302,7 +318,7 @@ const AgriTechChatbot = () => {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="mb-4 w-[360px] sm:w-[400px] bg-white rounded-2xl shadow-2xl border border-[#5B532C]/10 overflow-hidden"
           >
-            {/* Header */}
+            {            }
             <div className="flex items-center justify-between px-4 py-3 bg-[#63A361]">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
@@ -331,8 +347,11 @@ const AgriTechChatbot = () => {
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="h-[400px] overflow-y-auto bg-[#FDFCF8] p-4 space-y-3">
+            {              }
+            <div
+              ref={messageScrollRef}
+              className="h-[400px] overflow-y-auto bg-[#FDFCF8] p-4 space-y-3"
+            >
               {messages.length === 0 && (
                 <div className="space-y-3">
                   <p className="text-xs text-[#5B532C]/50 text-center">Quick actions</p>
@@ -342,10 +361,7 @@ const AgriTechChatbot = () => {
                         key={label}
                         icon={icon}
                         label={label}
-                        onClick={() => {
-                          setInput(action);
-                          setTimeout(() => handleSend(), 100);
-                        }}
+                        onClick={() => handleSend(action)}
                       />
                     ))}
                   </div>
@@ -362,14 +378,12 @@ const AgriTechChatbot = () => {
 
               {isLoading && !streamingText && <TypingIndicator />}
 
-              <div ref={messagesEndRef} />
             </div>
 
-            {/* Input */}
+            {           }
             <div className="p-3 bg-white border-t border-[#5B532C]/10">
               <div className="flex items-center gap-2">
                 <input
-                  ref={inputRef}
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
@@ -389,7 +403,7 @@ const AgriTechChatbot = () => {
                   {isRecording ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                 </button>
                 <button
-                  onClick={handleSend}
+                  onClick={() => handleSend()}
                   disabled={!input.trim() || isLoading || isTranscribing}
                   className="p-2 bg-[#63A361] text-white rounded-xl hover:bg-[#4a8a4d] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
@@ -397,7 +411,7 @@ const AgriTechChatbot = () => {
                 </button>
               </div>
 
-              {/* Recording Indicator */}
+              {                         }
               <AnimatePresence>
                 {isRecording && (
                   <motion.div
@@ -420,7 +434,7 @@ const AgriTechChatbot = () => {
         )}
       </AnimatePresence>
 
-      {/* Toggle Button */}
+      {                   }
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         whileTap={{ scale: 0.95 }}

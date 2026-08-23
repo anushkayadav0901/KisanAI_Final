@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Upload,
@@ -38,7 +38,7 @@ import { MultiImageUpload } from "../components/monitoring/MultiImageUpload";
 import { MultiImageAnalysisResult as MultiImageResultComponent } from "../components/monitoring/MultiImageAnalysisResult";
 import { enqueue, countQueue } from "../utils/offlineQueue";
 import { budgetImage } from "../hooks/useConnection";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const MONITORING_TYPES = [
   {
@@ -93,13 +93,23 @@ const Monitoring: React.FC = () => {
   const [processingSteps, setProcessingSteps] = useState<string[]>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
 
-
   const handleImagesSelected = (selectedImages: string[]) => {
     setImages(selectedImages);
     setAnalysisResult(null);
     setMultiImageResult(null);
     setErrorMessage(null);
   };
+
+  const stepTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const clearStepTimer = () => {
+    if (stepTimerRef.current) {
+      clearInterval(stepTimerRef.current);
+      stepTimerRef.current = null;
+    }
+  };
+
+  useEffect(() => clearStepTimer, []);
 
   const handleAnalysis = async (type: MonitoringType) => {
     if (!type || images.length === 0) return;
@@ -116,18 +126,12 @@ const Monitoring: React.FC = () => {
     setProcessingSteps(steps);
     setCurrentStep(0);
 
-    const interval = setInterval(() => {
-      setCurrentStep((prev) => {
-        if (prev < steps.length - 1) return prev + 1;
-        return prev;
-      });
+    stepTimerRef.current = setInterval(() => {
+      setCurrentStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
     }, 2500);
 
-    // No network: the capture is far too valuable to discard. Store it on the
-    // device and replay it when signal returns, rather than failing in a field
-    // where the farmer cannot simply try again later.
     if (!navigator.onLine) {
-      clearInterval(interval);
+      clearStepTimer();
       setIsAnalyzing(false);
       try {
         const { image } = await budgetImage(images[0], { dataSaver: true });
@@ -192,9 +196,9 @@ const Monitoring: React.FC = () => {
           toast.success("Analysis complete!");
         }
       }
-      clearInterval(interval);
+      clearStepTimer();
     } catch (error: any) {
-      clearInterval(interval);
+      clearStepTimer();
       setErrorMessage(error instanceof Error ? error.message : "Analysis failed");
       toast.error("Analysis failed");
     } finally {
@@ -221,10 +225,9 @@ const Monitoring: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white pt-24 pb-12 px-4">
-      <Toaster position="top-right" />
 
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {            }
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -242,7 +245,7 @@ const Monitoring: React.FC = () => {
           </p>
         </motion.div>
 
-        {/* Mode Toggle Tabs */}
+        {                      }
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -296,7 +299,7 @@ const Monitoring: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Live Monitoring Mode */}
+        {                          }
         <AnimatePresence mode="wait">
           {activeMode === "live" && (
             <motion.div
@@ -310,7 +313,7 @@ const Monitoring: React.FC = () => {
           )}
         </AnimatePresence>
 
-        {/* Upload Section */}
+        {                    }
         <AnimatePresence mode="wait">
           {activeMode === "upload" &&
             images.length === 0 &&
@@ -323,7 +326,7 @@ const Monitoring: React.FC = () => {
                 exit={{ opacity: 0 }}
                 className="mb-8"
               >
-                {/* Upload Card */}
+                {                 }
                 <div className="p-8 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg">
                   <MultiImageUpload
                     onImagesSelected={handleImagesSelected}
@@ -331,7 +334,7 @@ const Monitoring: React.FC = () => {
                     disabled={isAnalyzing}
                   />
 
-                  {/* Monitoring Types Grid */}
+                  {                           }
                   <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
                     {MONITORING_TYPES.map((type, index) => (
                       <motion.div
@@ -363,7 +366,7 @@ const Monitoring: React.FC = () => {
               </motion.div>
             )}
 
-          {/* Type Selection */}
+          {                    }
           {activeMode === "upload" &&
             images.length > 0 &&
             !selectedType &&
@@ -377,7 +380,7 @@ const Monitoring: React.FC = () => {
                 exit={{ opacity: 0 }}
               >
                 <div className="p-8 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg">
-                  {/* Images Preview */}
+                  {                    }
                   <div className="flex flex-col md:flex-row gap-6 items-start mb-8 pb-8 border-b border-[#5B532C]/10">
                     <div className="flex gap-2">
                       {images.map((img, idx) => (
@@ -412,7 +415,7 @@ const Monitoring: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Type Grid */}
+                  {               }
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                     {MONITORING_TYPES.map((type) => (
                       <button
@@ -442,7 +445,7 @@ const Monitoring: React.FC = () => {
               </motion.div>
             )}
 
-          {/* Loading State */}
+          {                   }
           {activeMode === "upload" && isAnalyzing && selectedType && (
             <motion.div
               key="analyzing"
@@ -480,7 +483,7 @@ const Monitoring: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Processing Steps */}
+                {                      }
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {processingSteps.map((step, index) => (
                     <motion.div
@@ -537,7 +540,7 @@ const Monitoring: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Results - Single Image */}
+          {                            }
           {activeMode === "upload" && analysisResult && !isAnalyzing && (
             <motion.div
               key="results"
@@ -585,7 +588,7 @@ const Monitoring: React.FC = () => {
             </motion.div>
           )}
 
-          {/* Results - Multi Image */}
+          {                           }
           {activeMode === "upload" &&
             multiImageResult &&
             !isAnalyzing &&
@@ -606,7 +609,7 @@ const Monitoring: React.FC = () => {
             )}
         </AnimatePresence>
 
-        {/* Error Message */}
+        {                   }
         {errorMessage && (
           <motion.div
             initial={{ opacity: 0 }}

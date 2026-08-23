@@ -149,7 +149,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      {/* Image Gallery */}
+      {                   }
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -194,7 +194,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
         </div>
       </motion.div>
 
-      {/* Navigation Tabs */}
+      {                     }
       <div className="flex gap-2 p-1.5 bg-[#FDE7B3]/20 rounded-2xl">
         {[
           { id: "overview", label: "Overview", icon: Target },
@@ -216,7 +216,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
         ))}
       </div>
 
-      {/* Tab Content */}
+      {                 }
       <AnimatePresence mode="wait">
         {activeTab === "overview" && (
           <motion.div
@@ -226,7 +226,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Summary Card */}
+            {                  }
             <div className="p-6 bg-[#FDE7B3]/10 rounded-2xl border border-[#5B532C]/20">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 bg-[#63A361]/10 rounded-xl flex items-center justify-center shrink-0">
@@ -243,9 +243,9 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
               </div>
             </div>
 
-            {/* Key Metrics Grid */}
+            {                      }
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* Health Score */}
+              {                  }
               <MetricCard
                 icon={Shield}
                 label="Health Score"
@@ -266,7 +266,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
                 }
               />
 
-              {/* Confidence */}
+              {                }
               <MetricCard
                 icon={Target}
                 label="AI Confidence"
@@ -275,7 +275,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
                 subtext={consensus.label}
               />
 
-              {/* Severity */}
+              {              }
               <MetricCard
                 icon={SeverityIcon}
                 label="Severity"
@@ -284,7 +284,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
                 subtext={`${result.aggregatedMetrics.affectedAreaPercentage}% affected`}
               />
 
-              {/* Spread Pattern */}
+              {                    }
               <MetricCard
                 icon={MapPin}
                 label="Spread Pattern"
@@ -294,7 +294,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
               />
             </div>
 
-            {/* Primary & Secondary Issues */}
+            {                                }
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               <div className="p-5 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg">
                 <div className="flex items-center gap-3 mb-4">
@@ -314,6 +314,8 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
                 <div className="p-5 bg-white rounded-2xl border border-[#5B532C]/10 shadow-lg">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 bg-[#FFC50F]/20 rounded-xl flex items-center justify-center">
+                      {/* eslint-disable-next-line react-hooks/static-components --
+                          getTypeIcon returns a module-level lucide component. */}
                       <TypeIcon className="w-5 h-5 text-[#FFC50F]" />
                     </div>
                     <h3 className="text-lg font-semibold text-[#5B532C]">
@@ -335,7 +337,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
               )}
             </div>
 
-            {/* Progression Analysis */}
+            {                          }
             {trend && (
               <div
                 className={`p-5 rounded-2xl border ${trend.color === "#63A361" ? "bg-[#63A361]/5 border-[#63A361]/20" : trend.color === "#ef4444" ? "bg-red-50 border-red-200" : "bg-[#FFC50F]/10 border-[#FFC50F]/30"}`}
@@ -485,7 +487,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
             exit={{ opacity: 0, y: -10 }}
             className="space-y-6"
           >
-            {/* Immediate Actions */}
+            {                       }
             <ActionSection
               title="Immediate Actions"
               icon={Zap}
@@ -496,7 +498,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
               timeFrame="Do within 24-48 hours"
             />
 
-            {/* Short Term Plan */}
+            {                     }
             <ActionSection
               title="Short-Term Plan"
               icon={Clock}
@@ -507,7 +509,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
               timeFrame="Next 1-2 weeks"
             />
 
-            {/* Long Term Strategy */}
+            {                        }
             <ActionSection
               title="Long-Term Strategy"
               icon={Calendar}
@@ -521,7 +523,7 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
         )}
       </AnimatePresence>
 
-      {/* Action Buttons */}
+      {                    }
       <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <motion.button
           onClick={onRetry}
@@ -535,7 +537,6 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
   );
 };
 
-// Metric Card Component
 const MetricCard: React.FC<{
   icon: React.ElementType;
   label: string;
@@ -562,7 +563,6 @@ const MetricCard: React.FC<{
   </div>
 );
 
-// Action Section Component
 const ActionSection: React.FC<{
   title: string;
   icon: React.ElementType;

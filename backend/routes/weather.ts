@@ -1,14 +1,3 @@
-/**
- * routes/weather.ts — /api/weather/* endpoints
- *
- *   GET /api/weather/coords?lat=&lon=   — weather by GPS coordinates
- *   GET /api/weather/:city              — weather by city name
- *
- * Both routes share the same fetch + normalise logic via lib/weather.js.
- * Note: /coords must be registered before /:city so Express doesn't
- * treat "coords" as a city name parameter.
- */
-
 import type { Request, Response } from "express";
 import { Router } from "express";
 import { fetchWeather } from "../lib/weather.js";
@@ -31,7 +20,6 @@ function errMessage(err: unknown): string | undefined {
   return undefined;
 }
 
-// GET /api/weather/coords?lat=19.07&lon=72.87
 router.get("/coords", async (req: Request, res: Response): Promise<void> => {
   try {
     const { lat, lon } = req.query;
@@ -50,7 +38,6 @@ router.get("/coords", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// GET /api/weather/Mumbai
 router.get("/:city", async (req: Request, res: Response): Promise<void> => {
   try {
     const city = req.params.city;

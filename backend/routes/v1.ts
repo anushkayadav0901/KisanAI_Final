@@ -1,35 +1,3 @@
-/**
- * routes/v1.ts — the public Agricultural Signal API
- *
- * Open data, no authentication. Any state department, researcher or third-party
- * application can call these endpoints directly. The Command Centre dashboard
- * is simply one client among them — it has no privileged access path.
- *
- *   GET /v1/                            service discovery document
- *   GET /v1/openapi.json                OpenAPI 3.0 specification
- *   GET /v1/docs                        interactive console
- *   GET /v1/surveillance/states         national signal, one row per state
- *   GET /v1/surveillance/districts      district signal for one state
- *   GET /v1/surveillance/alerts         open escalations, national or by state
- *   GET /v1/models                      cross-state advisory model registry
- *   GET /v1/models/:id                  a single model card artefact
- *   GET /v1/knowledge                   corpus manifest and provenance
- *   GET /v1/knowledge/search            retrieval over the advisory corpus
- *   POST /v1/advisory                   retrieval-grounded advisory with citations
- *   GET  /v1/consent/vocabulary         purposes and data types with sensitivity
- *   GET  /v1/consent                    a farmer's consent artefacts
- *   POST /v1/consent                    grant a consent
- *   POST /v1/consent/:id/revoke         withdraw a consent
- *   GET  /v1/consent/:id/audit          access trail for one consent
- *   POST /v1/data/read                  consent-gated data read
- *   GET  /v1/fields                     field boundaries (JSON or GeoJSON)
- *   POST /v1/fields                     save a drawn boundary
- *   GET  /v1/fields/:id/vegetation      NDVI series for one field
- *   DELETE /v1/fields/:id               remove a field
- *   GET  /v1/explain/rules              the rule catalogue
- *   POST /v1/explain                    advisories with their reasoning chain
- */
-
 import type { NextFunction, Request, Response } from "express";
 import { Router } from "express";
 import {
@@ -76,8 +44,6 @@ import {
 import { renderDocs } from "../lib/apiDocs.js";
 import { OPENAPI_SPEC } from "../lib/openapi.js";
 
-// ── Request/response body shapes ─────────────────────────────────────────────
-
 interface AdvisoryBody {
   question?: unknown;
   limit?: number | string;
@@ -116,8 +82,6 @@ interface ExplainBody {
   observations?: Record<string, unknown>;
 }
 
-// ── Error helpers ────────────────────────────────────────────────────────────
-
 function errStatus(err: unknown, fallback = 500): number {
   if (typeof err === "object" && err !== null && "status" in err) {
     const status = (err as { status?: unknown }).status;
@@ -140,30 +104,18 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 const router = Router();
 
-// Open, non-personal data is cacheable and publicly readable.
 router.use((_req: Request, res: Response, next: NextFunction) => {
   res.set("Cache-Control", "public, max-age=300");
   res.set("X-Data-Licence", "CC-BY-4.0");
   next();
 });
 
-/**
- * Consent state must never be cached.
- *
- * The open-data cache header above is right for surveillance and model data,
- * and wrong for anything personal: a farmer who revokes access and then sees a
- * five-minute-old "still active" list has been told something false about their
- * own rights. "public" would also permit an intermediary cache to hold personal
- * consent records. Both are unacceptable here, so these routes opt out.
- */
 function noStore(_req: Request, res: Response, next: NextFunction): void {
   res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
   res.set("Pragma", "no-cache");
   res.set("Expires", "0");
   next();
 }
-
-// ── Discovery ─────────────────────────────────────────────────────────────────
 
 router.get("/", (req: Request, res: Response): void => {
   const base = `${req.protocol}://${req.get("host")}/v1`;
@@ -205,8 +157,6 @@ router.get("/docs", (req: Request, res: Response): void => {
   res.type("html").send(renderDocs(`${req.protocol}://${req.get("host")}`));
 });
 
-// ── Surveillance ──────────────────────────────────────────────────────────────
-
 router.get("/surveillance/states", (_req: Request, res: Response): void => {
   res.json(serialiseStates());
 });
@@ -240,8 +190,6 @@ router.get("/surveillance/alerts", (req: Request, res: Response): void => {
   res.json(serialiseAlerts(code));
 });
 
-// ── Model exchange ────────────────────────────────────────────────────────────
-
 router.get("/models", (_req: Request, res: Response): void => {
   res.json(serialiseRegistry());
 });
@@ -258,8 +206,6 @@ router.get("/models/:id", (req: Request, res: Response): void => {
   }
   res.json(serialiseModel(model));
 });
-
-// -- Knowledge corpus ---------------------------------------------------------
 
 router.get("/knowledge", (_req: Request, res: Response): void => {
   res.json({
@@ -295,13 +241,9 @@ router.get("/knowledge/search", (req: Request, res: Response): void => {
     schema: "agri-knowledge/v1",
     query: q,
     count: results.length,
-    // Surfacing the matched terms is the point: a consumer can see why a
-    // passage was retrieved rather than trusting an opaque similarity score.
     results,
   });
 });
-
-// -- Grounded advisory --------------------------------------------------------
 
 router.post(
   "/advisory",
@@ -331,9 +273,6 @@ router.post(
   },
 );
 
-// -- Consent and data rights --------------------------------------------------
-// Seeded on first use so the consent screen has a realistic history to show.
-
 seedDemo();
 
 router.get(
@@ -343,9 +282,6 @@ router.get(
     res.json({
       schema: CONSENT_SCHEMA,
       profile: "DEPA-aligned",
-      // Purposes are a closed list. Free-text purpose lets a consumer stay
-      // technically within a grant while doing something the farmer never agreed
-      // to, so the vocabulary is published and fixed.
       purposes: Object.entries(PURPOSES).map(([code, p]) => ({ code, ...p })),
       dataTypes: Object.entries(DATA_TYPES).map(([code, d]) => ({
         code,
@@ -430,13 +366,6 @@ router.get("/consent/audit", noStore, (_req: Request, res: Response): void => {
   res.json({ schema: CONSENT_SCHEMA, entries: auditTrail() });
 });
 
-// -- Consent-gated data read --------------------------------------------------
-
-/**
- * The endpoint that proves consent is enforced rather than merely recorded.
- * Revoke a consent, call this again with the same artefact, and it returns 403
- * with the reason. Nothing else in the system can bypass this check.
- */
 router.post("/data/read", noStore, (req: Request, res: Response): void => {
   const body = (isRecord(req.body) ? req.body : {}) as DataReadBody;
   const { consentId, consumerId, purposeCode, dataTypes } = body;
@@ -456,8 +385,6 @@ router.post("/data/read", noStore, (req: Request, res: Response): void => {
       error: "consent_denied",
       message: decision.reason,
       consentId,
-      // The farmer's decision is the authority here, and the consumer is told
-      // exactly that rather than being left to guess at a generic 403.
       authority: "data principal",
     });
     return;
@@ -466,7 +393,6 @@ router.post("/data/read", noStore, (req: Request, res: Response): void => {
   const artefact = decision.artefact;
   const granted = dataTypes ?? artefact.dataTypes;
 
-  // Representative payload shaped by what the artefact actually permits.
   const payload: Record<string, unknown> = {};
   if (granted.includes("identity.anonymous_id"))
     payload.anonymous_id = "anon-7f3c91";
@@ -504,13 +430,9 @@ router.post("/data/read", noStore, (req: Request, res: Response): void => {
   });
 });
 
-// -- Field boundaries ---------------------------------------------------------
-
 router.get("/fields", noStore, (req: Request, res: Response): void => {
   const owner = req.query.owner ? String(req.query.owner) : undefined;
 
-  // GeoJSON on request: every GIS tool, Earth Engine included, reads it
-  // directly, with no conversion step on the consumer's side.
   if (String(req.query.format).toLowerCase() === "geojson") {
     res.json(asFeatureCollection(owner));
     return;
@@ -575,8 +497,6 @@ router.delete("/fields/:id", noStore, (req: Request, res: Response): void => {
   deleteField(id);
   res.json({ deleted: id });
 });
-
-// -- Explainability -----------------------------------------------------------
 
 router.get("/explain/rules", (_req: Request, res: Response): void => {
   res.json(ruleCatalogue());

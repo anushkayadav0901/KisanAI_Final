@@ -1,22 +1,3 @@
-/**
- * sw.js -- Kisan AI service worker
- *
- * Written by hand rather than generated, because what gets cached and what
- * does not is a product decision here, not a build detail.
- *
- * The user is a farmer on a 2G connection in a village with intermittent
- * coverage. The app has to open when the network does not, advisories already
- * received have to stay readable, and a diagnosis captured with no signal must
- * not be lost.
- *
- * Strategy per request type:
- *   app shell (HTML/JS/CSS)  cache-first, refreshed in the background
- *   /v1 open-data API        stale-while-revalidate -- a day-old outbreak map
- *                            beats a spinner, and it is stamped with its age
- *   AI inference (/api/ai)   never cached; a stale diagnosis is worse than none
- *   images                   cache-first with a hard cap
- */
-
 const VERSION = "kisan-v1";
 const SHELL_CACHE = `${VERSION}-shell`;
 const DATA_CACHE = `${VERSION}-data`;
@@ -24,17 +5,12 @@ const IMAGE_CACHE = `${VERSION}-img`;
 
 const MAX_IMAGES = 60;
 
-/** The minimum needed to render something useful with no network at all. */
 const SHELL_ASSETS = ["/", "/index.html", "/offline.html"];
-
-// -- Install / activate --------------------------------------------------------
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(SHELL_CACHE)
-      // Individual failures must not abort the install, so each asset is
-      // requested on its own rather than through addAll.
       .then((cache) =>
         Promise.allSettled(SHELL_ASSETS.map((url) => cache.add(url))),
       )
@@ -57,8 +33,6 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// -- Helpers -------------------------------------------------------------------
-
 async function trimCache(cacheName, maxEntries) {
   const cache = await caches.open(cacheName);
   const keys = await cache.keys();
@@ -66,13 +40,6 @@ async function trimCache(cacheName, maxEntries) {
   await Promise.all(keys.slice(0, keys.length - maxEntries).map((k) => cache.delete(k)));
 }
 
-/**
- * Stale-while-revalidate for the open-data API.
- *
- * The cached copy is served immediately and stamped with the time it was
- * stored, so the UI can tell the officer "this is 3 hours old" instead of
- * silently presenting stale numbers as live.
- */
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(DATA_CACHE);
   const cached = await cache.match(request);
@@ -90,8 +57,6 @@ async function staleWhileRevalidate(request) {
     .catch(() => null);
 
   if (cached) {
-    // Deliberately not awaited: the refresh continues in the background while
-    // the user gets the cached copy immediately.
     void network;
     return cached;
   }
@@ -125,24 +90,16 @@ async function cacheFirst(request, cacheName, cap) {
   }
 }
 
-// -- Fetch routing -------------------------------------------------------------
-
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
 
-  // Only handle our own origin; third-party scripts are left alone.
   if (url.origin !== self.location.origin) return;
 
-  // AI inference is never served from cache -- a stale crop diagnosis could send
-  // a farmer to spray the wrong thing.
   if (url.pathname.startsWith("/api/ai")) return;
 
-  // Consent state is never cached either. Showing a farmer a stale copy of who
-  // can read their data, after they revoked it, would be worse than showing
-  // nothing at all.
   if (
     url.pathname.startsWith("/v1/consent") ||
     url.pathname.startsWith("/v1/data")
@@ -150,7 +107,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Open-data API: serve cached immediately, refresh behind it.
   if (url.pathname.startsWith("/v1/")) {
     event.respondWith(staleWhileRevalidate(request));
     return;
@@ -161,8 +117,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Navigations: network first so deploys land, falling back to the shell and
-  // then to a dedicated offline page.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request)
@@ -183,15 +137,10 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Hashed build assets are immutable, so cache-first is safe.
   if (url.pathname.startsWith("/assets/")) {
     event.respondWith(cacheFirst(request, SHELL_CACHE));
   }
 });
-
-// -- Sync trigger --------------------------------------------------------------
-// The page owns the queue (it needs IndexedDB and the API client); the worker
-// simply tells every open tab that connectivity is back.
 
 self.addEventListener("sync", (event) => {
   if (event.tag === "kisan-sync-diagnoses") {

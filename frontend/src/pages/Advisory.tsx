@@ -1,12 +1,3 @@
-/**
- * Advisory — the grounded question-answering page
- *
- * Every other AI surface in this app sends a prompt and renders whatever comes
- * back. This one retrieves first, answers only from what it retrieved, and
- * shows the farmer the passages behind the answer. When the corpus cannot
- * support an answer it declines to give one.
- */
-
 import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Search, FileText, Ban } from "lucide-react";
@@ -40,12 +31,6 @@ const HOW_IT_WORKS = [
   },
 ];
 
-/**
- * A worked example for the explainability section. Real observations will come
- * from the field record, weather feed and soil card; the panel does not care
- * where they originate, so the scenario is adjustable here to show what the
- * rules actually do.
- */
 const SCENARIOS: Record<string, Record<string, string | number>> = {
   "Dry spell, wheat at tillering": {
     crop: "Wheat",
@@ -101,7 +86,7 @@ const Advisory: React.FC = () => {
 
   return (
     <div className="relative bg-white">
-      {/* ── Hero + ask ────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="relative pt-32 pb-16">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
@@ -144,7 +129,7 @@ const Advisory: React.FC = () => {
         </div>
       </section>
 
-      {/* ── How it works ──────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-20 bg-[#FDFCF8] border-y border-[#5B532C]/10">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-8 items-end mb-12">
@@ -191,7 +176,7 @@ const Advisory: React.FC = () => {
             ))}
           </div>
 
-          {/* Corpus stats */}
+          {                  }
           {corpus && (
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-10 mt-12 border-y border-[#5B532C]/10">
               {[
@@ -211,7 +196,7 @@ const Advisory: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Explainability ────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-20">
         <div className="px-4 mx-auto max-w-4xl sm:px-6 lg:px-8">
           <div className="mb-8">
@@ -258,7 +243,7 @@ const Advisory: React.FC = () => {
         </div>
       </section>
 
-      {/* ── Provenance ────────────────────────────────────────────────────── */}
+      {                                                                          }
       <section className="py-12 bg-white">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="flex items-start gap-4 p-5 rounded-2xl bg-[#FDE7B3]/25 border border-[#5B532C]/10">

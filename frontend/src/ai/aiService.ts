@@ -1,9 +1,8 @@
 import getAIPrompt, { KisanAIContext } from "./aiPrompt";
 
-// Backend API URL - NO VITE_ PREFIX!
 const API_BASE_URL = import.meta.env.PROD
-  ? '/api'  // Production: use relative path (nginx proxy)
-  : 'http://localhost:3000/api';  // Development: direct to backend
+  ? '/api'
+  : 'http://localhost:3000/api';
 
 interface GroqMessage {
   role: "system" | "user" | "assistant";
@@ -52,7 +51,6 @@ export const getAIResponse = async (
     if (onStream) {
       activeCancelled = false;
 
-      // Streaming via backend proxy
       const response = await fetch(`${API_BASE_URL}/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -95,7 +93,6 @@ export const getAIResponse = async (
               const parsed = JSON.parse(data);
               const content = parsed.choices[0]?.delta?.content || "";
 
-              // Process thinking blocks
               let visible = "";
               let thinking = "";
               let remaining = content;
@@ -131,7 +128,7 @@ export const getAIResponse = async (
                 onStream({ text: visible, thinking, done: false });
               }
             } catch {
-              // Ignore parse errors in SSE chunks
+              continue;
             }
           }
         }
@@ -141,12 +138,11 @@ export const getAIResponse = async (
       activeCancelled = false;
 
       const finalText = postProcessResponse(accumulatedResponse);
-      if (!finalText || finalText.trim().length === 0) {
-        return "I've processed your request and provided my reasoning above. Please let me know if you need any clarification or have additional questions.";
+      if (!finalText.trim()) {
+        throw new Error("The model returned an empty response");
       }
       return finalText;
     } else {
-      // Non-streaming mode via backend proxy
       const response = await fetch(`${API_BASE_URL}/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

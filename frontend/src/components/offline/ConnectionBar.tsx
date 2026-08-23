@@ -1,14 +1,3 @@
-/**
- * ConnectionBar — the app's honesty about the network
- *
- * Sits under the navbar and only appears when there is something worth saying:
- * the connection is gone, the connection is too weak for uploads, or captures
- * are waiting to sync. On a good link it renders nothing at all.
- *
- * The queue drawer is deliberately reachable from here, because "where did my
- * photo go" is the first question a farmer asks after losing signal mid-capture.
- */
-
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -67,7 +56,6 @@ export const ConnectionBar: React.FC = () => {
     return onQueueChange(refresh);
   }, [refresh]);
 
-  // When connectivity returns, replay what was captured offline.
   React.useEffect(() => {
     if (!online || queue.length === 0 || syncing) return;
 
@@ -101,15 +89,12 @@ export const ConnectionBar: React.FC = () => {
     return () => {
       cancelled = true;
     };
-    // Intentionally keyed on connectivity and depth only — re-running on every
-    // queue mutation would restart a flush that is already in flight.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [online, queue.length]);
 
   const pending = queue.filter((q) => q.status !== "failed").length;
   const failed = queue.filter((q) => q.status === "failed").length;
 
-  // Nothing to report on a healthy connection with an empty queue.
   const visible = !online || slow || dataSaverForced || queue.length > 0;
   if (!visible) return null;
 
@@ -127,7 +112,7 @@ export const ConnectionBar: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           className="rounded-2xl shadow-lg shadow-[#5B532C]/10 overflow-hidden border border-[#5B532C]/10 bg-white"
         >
-          {/* Status strip */}
+          {                  }
           <div className={`flex items-center gap-3 px-4 py-2.5 ${tone.bg} ${tone.text}`}>
             {!online ? (
               <WifiOff className="w-4 h-4 shrink-0" />
@@ -175,7 +160,7 @@ export const ConnectionBar: React.FC = () => {
             </div>
           </div>
 
-          {/* Queue drawer */}
+          {                  }
           <AnimatePresence initial={false}>
             {open && queue.length > 0 && (
               <motion.div
@@ -252,7 +237,6 @@ export const ConnectionBar: React.FC = () => {
   );
 };
 
-/** Small inline confirmation used after a successful offline capture. */
 export const SavedOfflineBadge: React.FC<{ count: number }> = ({ count }) => (
   <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#63A361]/12 text-[#4A8A4D] text-xs font-bold">
     <Check className="w-3.5 h-3.5" />
