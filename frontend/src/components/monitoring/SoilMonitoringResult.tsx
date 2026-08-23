@@ -134,7 +134,6 @@ export const SoilMonitoringResult: React.FC<Props> = ({
           {/* Top Row Metrics */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <motion.div
-              whileHover={{ y: -5 }}
               className={`p-6 bg-white rounded-[2rem] border-2 ${getStatusColor(result.moistureLevel).border} shadow-xl shadow-gray-50 flex flex-col items-center text-center`}
             >
               <div className={`w-12 h-12 ${getStatusColor(result.moistureLevel).bg} rounded-2xl flex items-center justify-center mb-4`}>
@@ -146,7 +145,6 @@ export const SoilMonitoringResult: React.FC<Props> = ({
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -5 }}
               className={`p-6 bg-white rounded-[2rem] border-2 ${getStatusColor(result.fertilityEstimate).border} shadow-xl shadow-gray-50 flex flex-col items-center text-center`}
             >
               <div className={`w-12 h-12 ${getStatusColor(result.fertilityEstimate).bg} rounded-2xl flex items-center justify-center mb-4`}>
@@ -158,7 +156,6 @@ export const SoilMonitoringResult: React.FC<Props> = ({
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -5 }}
               className={`p-6 bg-white rounded-[2rem] border-2 border-purple-100 shadow-xl shadow-gray-50 flex flex-col items-center text-center`}
             >
               <div className={`w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mb-4`}>
@@ -233,7 +230,6 @@ export const SoilMonitoringResult: React.FC<Props> = ({
 
             <div className="space-y-4">
               <motion.a
-                whileHover={{ scale: 1.02, x: 5 }}
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent("Soil improvement for " + result.soilType + " India Krishi Vigyan")}`}
                 target="_blank"
                 className="p-4 bg-red-50 rounded-[1.5rem] border border-red-100 block group"
@@ -251,7 +247,6 @@ export const SoilMonitoringResult: React.FC<Props> = ({
               </motion.a>
 
               <motion.a
-                whileHover={{ scale: 1.02, x: 5 }}
                 href={`https://www.google.com/search?q=${encodeURIComponent("ICAR guide soil health card " + result.soilType)}`}
                 target="_blank"
                 className="p-4 bg-[#5B532C]/5 rounded-[1.5rem] border border-[#5B532C]/10 block group"
@@ -281,10 +276,8 @@ export const SoilMonitoringResult: React.FC<Props> = ({
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
             onClick={onRetry}
-            className="w-full py-5 bg-white border-2 border-[#5B532C]/10 text-[#5B532C] font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl transition-all uppercase tracking-widest text-xs"
+            className="w-full py-3.5 bg-white border border-[#5B532C]/15 text-[#5B532C] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#FDE7B3]/30 transition-colors text-sm"
           >
             <RefreshCw className="w-4 h-4 text-[#63A361]" />
             New Sample

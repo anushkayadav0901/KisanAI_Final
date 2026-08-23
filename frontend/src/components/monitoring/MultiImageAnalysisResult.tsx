@@ -524,8 +524,6 @@ export const MultiImageAnalysisResult: React.FC<Props> = ({
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 pt-4">
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
           onClick={onRetry}
           className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-[#63A361] text-white rounded-xl font-semibold hover:bg-[#4a8a4d] transition-colors shadow-md"
         >

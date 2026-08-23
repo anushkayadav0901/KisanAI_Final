@@ -177,7 +177,6 @@ export const CropMonitoringResult: React.FC<Props> = ({
           {/* Quick Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.div
-              whileHover={{ y: -8, scale: 1.02 }}
               className={`p-8 bg-white rounded-2xl border-2 ${getSeverityColor(result.diseaseSeverity).border} shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group transition-all`}
             >
               <div className={`absolute top-0 right-0 p-5 ${getSeverityColor(result.diseaseSeverity).bg} rounded-bl-[2.5rem] opacity-0 group-hover:opacity-100 transition-all duration-500`}>
@@ -196,7 +195,6 @@ export const CropMonitoringResult: React.FC<Props> = ({
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -8, scale: 1.02 }}
               className={`p-8 bg-white rounded-2xl border-2 ${getSeverityColor(result.pestSeverity).border} shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group transition-all`}
             >
               <div className={`absolute top-0 right-0 p-5 ${getSeverityColor(result.pestSeverity).bg} rounded-bl-[2.5rem] opacity-0 group-hover:opacity-100 transition-all duration-500`}>
@@ -350,7 +348,6 @@ export const CropMonitoringResult: React.FC<Props> = ({
             <div className="space-y-6 flex-1">
               {/* Simulated Web Crawl 1: YouTube */}
               <motion.a
-                whileHover={{ scale: 1.03, x: 5 }}
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent(result.diseaseDetected + " treatment for " + result.cropType + " ICAR KVK India")}`}
                 target="_blank"
                 className="p-5 bg-red-50 rounded-[2rem] border border-red-100 block group"
@@ -374,7 +371,6 @@ export const CropMonitoringResult: React.FC<Props> = ({
 
               {/* Simulated Web Crawl 2: ICAR / Articles */}
               <motion.a
-                whileHover={{ scale: 1.03, x: 5 }}
                 href={`https://www.google.com/search?q=${encodeURIComponent("ICAR guide for " + result.diseaseDetected + " " + result.cropType)}`}
                 target="_blank"
                 className="p-5 bg-[#63A361]/5 rounded-[2rem] border border-[#63A361]/10 block group"
@@ -412,10 +408,8 @@ export const CropMonitoringResult: React.FC<Props> = ({
 
           {/* New Session Button */}
           <motion.button
-            whileHover={{ scale: 1.02, y: -2 }}
-            whileTap={{ scale: 0.98 }}
             onClick={onRetry}
-            className="w-full py-6 bg-white border-2 border-[#5B532C]/10 text-[#5B532C] font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-gray-200 transition-all uppercase tracking-[0.2em] text-xs hover:bg-[#5B532C]/5"
+            className="w-full py-3.5 bg-white border border-[#5B532C]/15 text-[#5B532C] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#FDE7B3]/30 transition-colors text-sm"
           >
             <RefreshCw className="w-4 h-4 text-[#63A361]" />
             New Diagnosis

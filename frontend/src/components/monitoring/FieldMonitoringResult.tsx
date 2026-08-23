@@ -105,7 +105,7 @@ export const FieldMonitoringResult: React.FC<Props> = ({
               />
             </div>
             <div className="absolute -bottom-3 -right-3 w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg transform rotate-12">
-              <Map className="w-6 h-6 text-[#1b4332]" />
+              <Map className="w-6 h-6 text-[#FDE7B3]" />
             </div>
           </div>
 
@@ -144,7 +144,6 @@ export const FieldMonitoringResult: React.FC<Props> = ({
           {/* Top Row Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <motion.div
-              whileHover={{ y: -5 }}
               className="p-8 bg-white rounded-2xl border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10 flex flex-col items-center text-center"
             >
               <div className="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mb-4">
@@ -156,7 +155,6 @@ export const FieldMonitoringResult: React.FC<Props> = ({
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -5 }}
               className={`p-8 bg-white rounded-2xl border-2 ${getStatusColor(result.weedDensity).border} shadow-lg shadow-[#5B532C]/10 flex flex-col items-center text-center`}
             >
               <div className={`w-12 h-12 ${getStatusColor(result.weedDensity).bg} rounded-2xl flex items-center justify-center mb-4`}>
@@ -168,7 +166,6 @@ export const FieldMonitoringResult: React.FC<Props> = ({
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -5 }}
               className="p-8 bg-white rounded-2xl border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10 flex flex-col items-center text-center"
             >
               <div className="w-12 h-12 bg-[#5B532C]/10 rounded-2xl flex items-center justify-center mb-4">
@@ -227,7 +224,7 @@ export const FieldMonitoringResult: React.FC<Props> = ({
 
         {/* Right Sidebar */}
         <div className="space-y-8">
-          <div className="p-8 bg-[#1b4332] rounded-[3rem] text-white shadow-2xl">
+          <div className="p-8 bg-[#63A361] rounded-2xl text-white shadow-lg shadow-[#5B532C]/10">
             <h3 className="text-xl font-bold mb-8 flex items-center gap-3">
               <Shield className="w-6 h-6 text-green-300" />
               Intervention
@@ -253,7 +250,6 @@ export const FieldMonitoringResult: React.FC<Props> = ({
 
             <div className="space-y-4">
               <motion.a
-                whileHover={{ x: 5 }}
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent("precision agriculture drone field analysis management india")}`}
                 target="_blank"
                 className="p-4 bg-red-50 rounded-[1.5rem] border border-red-100 block group"
@@ -288,10 +284,8 @@ export const FieldMonitoringResult: React.FC<Props> = ({
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
             onClick={onRetry}
-            className="w-full py-6 bg-white border-2 border-[#5B532C]/10 text-[#5B532C] font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl uppercase tracking-widest text-xs"
+            className="w-full py-3.5 bg-white border border-[#5B532C]/15 text-[#5B532C] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#FDE7B3]/30 transition-colors text-sm"
           >
             <RefreshCw className="w-4 h-4 text-[#63A361]" />
             New Field Scan

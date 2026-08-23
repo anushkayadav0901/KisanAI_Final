@@ -153,7 +153,6 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           {/* Anomalies Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.div
-              whileHover={{ y: -5 }}
               className="p-8 bg-white rounded-2xl border border-[#5B532C]/5 shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group"
             >
               <div className="absolute -top-1 -right-1 w-24 h-24 bg-red-50 rounded-full -mr-12 -mt-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -177,7 +176,6 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
             </motion.div>
 
             <motion.div
-              whileHover={{ y: -5 }}
               className={`p-8 bg-white rounded-2xl border-2 ${getStatusColor(result.irrigationLeaks).border} shadow-lg shadow-[#5B532C]/10 relative overflow-hidden group`}
             >
               <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-6">Hydro-Thermal Integrity</h4>
@@ -295,7 +293,6 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
 
             <div className="space-y-4">
               <motion.a
-                whileHover={{ x: 5 }}
                 href={`https://www.youtube.com/results?search_query=${encodeURIComponent("thermal imaging agriculture precision irrigation india")}`}
                 target="_blank"
                 className="p-4 bg-red-50 rounded-[1.5rem] border border-red-100 block group"
@@ -325,10 +322,8 @@ export const ThermalMonitoringResult: React.FC<Props> = ({
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
             onClick={onRetry}
-            className="w-full py-6 bg-white border-2 border-[#5B532C]/10 text-[#5B532C] font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl uppercase tracking-wide text-xs"
+            className="w-full py-3.5 bg-white border border-[#5B532C]/15 text-[#5B532C] font-semibold rounded-xl flex items-center justify-center gap-2 hover:bg-[#FDE7B3]/30 transition-colors text-sm"
           >
             <RefreshCw className="w-4 h-4 text-red-500" />
             Recalibrate Scan

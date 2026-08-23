@@ -144,8 +144,6 @@ export const ComprehensiveReport: React.FC<Props> = ({
           </div>
         </div>
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
           onClick={onNewSession}
           className="flex items-center gap-2 px-5 py-2.5 bg-[#63A361] text-white rounded-xl font-semibold hover:bg-[#4a8a4d] transition-colors shadow-md shadow-[#63A361]/20"
         >
@@ -561,7 +559,7 @@ const PreventionMeasuresSection: React.FC<{
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.1 }}
-          className="p-5 bg-white rounded-2xl border border-[#5B532C]/20 shadow-sm hover:shadow-md transition-shadow"
+          className="p-5 bg-white rounded-2xl border border-[#5B532C]/20 shadow-sm transition-shadow"
         >
           <div className="flex flex-wrap items-start gap-3 mb-4">
             <span
@@ -660,7 +658,7 @@ const VideoSection: React.FC<{
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: i * 0.1 }}
-        className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-[#5B532C]/20 hover:border-[#63A361]/40 hover:shadow-md transition-all group"
+        className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-[#5B532C]/20 hover:border-[#63A361]/40 transition-all group"
       >
         <div className="w-16 h-16 bg-red-100 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-red-500 transition-colors">
           <Play className="w-6 h-6 text-red-500 group-hover:text-white transition-colors" />
@@ -716,7 +714,7 @@ const ArticlesSection: React.FC<{
           <Wrapper
             key={i}
             {...linkProps}
-            className={`block p-4 bg-[#FDE7B3]/10 rounded-xl ${href ? "hover:bg-[#FDE7B3]/25 hover:shadow-md transition-all cursor-pointer group" : ""}`}
+            className={`block p-4 bg-[#FDE7B3]/10 rounded-xl ${href ? "hover:bg-[#FDE7B3]/25 transition-all cursor-pointer group" : ""}`}
           >
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 bg-[#63A361]/10 rounded-lg flex items-center justify-center shrink-0">

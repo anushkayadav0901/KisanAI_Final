@@ -127,7 +127,7 @@ const StatCard: React.FC<{
   sub?: string;
   trend?: "up" | "down" | "stable";
 }> = ({ label, value, icon: Icon, color, sub, trend }) => (
-  <div className="p-4 bg-white rounded-xl border border-[#5B532C]/10 shadow-sm hover:shadow-md transition-shadow">
+  <div className="p-4 bg-white rounded-xl border border-[#5B532C]/10 shadow-sm transition-shadow">
     <div className="flex items-center justify-between mb-2">
       <div className="w-8 h-8 bg-[#FDE7B3]/30 rounded-lg flex items-center justify-center">
         <Icon className="w-4 h-4 text-[#63A361]" />
@@ -1112,8 +1112,6 @@ const LiveMonitoring: React.FC = () => {
             <div className="px-5 py-4 border-t border-[#5B532C]/10 bg-[#FDE7B3]/5">
               {mode === "idle" && (
                 <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
                   onClick={start}
                   className="w-full flex items-center justify-center gap-2 py-3.5 bg-[#63A361] text-white rounded-xl font-semibold hover:bg-[#4a8a4d] transition-colors shadow-md shadow-[#63A361]/25"
                 >
@@ -1130,8 +1128,6 @@ const LiveMonitoring: React.FC = () => {
               {mode === "live" && (
                 <div className="flex items-center justify-between">
                   <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={stop}
                     className="flex items-center gap-2 px-5 py-2.5 bg-red-500 text-white rounded-xl font-semibold hover:bg-red-600 transition-colors text-sm shadow-md shadow-red-500/20"
                   >
@@ -1159,8 +1155,6 @@ const LiveMonitoring: React.FC = () => {
               )}
               {mode === "error" && (
                 <motion.button
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
                   onClick={() => setMode("idle")}
                   className="w-full py-3 bg-[#5B532C] text-white rounded-xl font-semibold hover:bg-[#4a4220] transition-colors text-sm"
                 >

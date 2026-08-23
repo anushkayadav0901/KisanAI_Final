@@ -73,7 +73,7 @@ const MONITORING_TYPES = [
     title: "Field Map",
     icon: Map,
     description: "Assess crop coverage and growth stages",
-    color: "#1b4332",
+    color: "#3d6b40",
     bgColor: "bg-emerald-50",
     iconColor: "text-emerald-700",
   },

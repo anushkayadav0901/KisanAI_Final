@@ -70,8 +70,6 @@ export const InvalidImageResult: React.FC<InvalidImageResultProps> = ({
 
             {/* Retry Button */}
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
               onClick={onRetry}
               className="mt-6 px-8 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-full flex items-center gap-2 mx-auto transition-all shadow-lg"
             >
