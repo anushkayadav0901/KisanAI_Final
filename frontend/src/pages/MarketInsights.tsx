@@ -1467,7 +1467,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
               </div>
               <div className="space-y-4">
                 {displayData.markets.map((market: Market, index: number) => (
-                  <div key={index} className="p-5 rounded-xl border shadow-sm transition-all bg-[#FDE7B3]/10 border-[#63A361]/10 hover:bg-[#FDE7B3]/20 hover:shadow-md">
+                  <div key={index} className="p-5 rounded-xl border shadow-sm transition-all bg-[#FDE7B3]/10 border-[#63A361]/10 hover:bg-[#FDE7B3]/20">
                     <h3 className="mb-3 text-base font-semibold text-[#5B532C]">{market.name}</h3>
                     <div className="grid grid-cols-2 gap-3">
                       {Object.entries(market.cropPrices).map(([crop, price], idx) => (
@@ -1499,7 +1499,7 @@ export const MarketInsights: React.FC<MarketInsightsProps> = () => {
               </div>
               <div className="space-y-4">
                 {getSynchronizedPriceAlerts(displayData).map((alert: any, index: number) => (
-                  <div key={index} className="flex justify-between items-center p-5 rounded-xl shadow-sm transition-all bg-[#FDE7B3]/10 hover:bg-[#FDE7B3]/20 hover:shadow-md border border-[#63A361]/10">
+                  <div key={index} className="flex justify-between items-center p-5 rounded-xl shadow-sm transition-all bg-[#FDE7B3]/10 hover:bg-[#FDE7B3]/20 border border-[#63A361]/10">
                     <div className="flex items-center space-x-3">
                       <div className="p-2.5 bg-[#FDE7B3]/30 rounded-lg">
                         <TrendingUp className={`h-4 w-4 ${alert.change.startsWith('+') ? 'text-[#63A361]' : 'text-red-600'}`} />

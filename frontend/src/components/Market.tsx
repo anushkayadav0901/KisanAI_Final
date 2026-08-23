@@ -161,7 +161,7 @@ const ProductCard = memo(({ product }: { product: Product }) => {
     }, [product.name, isLoading]);
 
     return (
-        <div className="group bg-white rounded-2xl overflow-hidden border border-[#5B532C]/10 hover:shadow-xl hover:shadow-[#5B532C]/5 transition-all duration-300">
+        <div className="group bg-white rounded-2xl overflow-hidden border border-[#5B532C]/10 transition-colors">
             {/* Image Container */}
             <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
                 {!imageLoaded && <div className="absolute inset-0 bg-gray-200 animate-pulse" />}

@@ -423,7 +423,6 @@ const AgriTechChatbot = () => {
       {/* Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         className="p-4 bg-[#63A361] text-white rounded-full shadow-lg hover:bg-[#4a8a4d] transition-colors"
       >

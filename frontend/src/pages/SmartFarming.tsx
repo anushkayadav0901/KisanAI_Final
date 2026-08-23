@@ -832,7 +832,7 @@ const SmartFarming: React.FC = () => {
                         const IconComp = sectionIcons[section.icon] || Lightbulb
 
                         return (
-                          <div key={idx} className="flex flex-col p-5 rounded-2xl bg-white shadow-sm border border-[#5B532C]/10 hover:shadow-md transition-shadow relative overflow-hidden group">
+                          <div key={idx} className="flex flex-col p-5 rounded-2xl bg-white shadow-sm border border-[#5B532C]/10 relative overflow-hidden group">
                             {/* Decorative background element inspired by landing page */}
                             <div className="absolute top-0 right-0 w-24 h-24 bg-[#63A361]/5 rounded-bl-[100px] pointer-events-none transition-transform group-hover:scale-110" />
 

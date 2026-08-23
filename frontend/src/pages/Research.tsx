@@ -263,7 +263,7 @@ const Research: React.FC = () => {
                 className="group cursor-pointer"
                 onClick={() => openLightbox(diagram.image, index)}
               >
-                <div className="relative overflow-hidden rounded-2xl border border-[#5B532C]/10 bg-white shadow-sm hover:shadow-xl transition-shadow">
+                <div className="relative overflow-hidden rounded-2xl border border-[#5B532C]/10 bg-white shadow-sm">
                   <div className="aspect-[16/9] overflow-hidden bg-[#FDFCF8]">
                     <img
                       src={diagram.image}
