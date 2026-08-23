@@ -98,24 +98,47 @@ const ProductCard = memo(({ product }: { product: Product }) => {
         setIsLoading(true);
 
         try {
+            // Real flow: server creates the order, Razorpay collects, server
+            // verifies the signature. No success is shown without verification.
             const API_BASE_URL = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
-            const keyResponse = await fetch(`${API_BASE_URL}/payment/key`);
-            if (!keyResponse.ok) throw new Error('Payment unavailable');
-            const { key } = await keyResponse.json();
+
+            const orderRes = await fetch(`${API_BASE_URL}/payment/create-order`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: product.price * 100, receipt: `${product.id}` })
+            });
+            if (!orderRes.ok) throw new Error('Order failed');
+            const order = await orderRes.json();
+            const orderId = order.id as string;
+            const amount = order.amount as number;
+
+            const keyRes = await fetch(`${API_BASE_URL}/payment/key`);
+            if (!keyRes.ok) throw new Error('Payment unavailable');
+            const { key } = await keyRes.json();
 
             const options = {
                 key,
-                amount: 100,
+                amount,
                 currency: "INR",
-                name: "Kisaan Saathi",
+                name: "Kisan AI",
                 description: `Payment for: ${product.name}`,
-                handler: function () {
-                    alert('Payment Successful!');
-                },
-                prefill: {
-                    name: "Farmer",
-                    email: "farmer@example.com",
-                    contact: "9999999999"
+                order_id: orderId,
+                handler: async function (response: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) {
+                    const verifyRes = await fetch(`${API_BASE_URL}/payment/verify`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            order_id: response.razorpay_order_id,
+                            payment_id: response.razorpay_payment_id,
+                            signature: response.razorpay_signature
+                        })
+                    });
+                    if (verifyRes.ok) {
+                        const v = await verifyRes.json();
+                        alert(v.verified ? 'Payment verified' : 'Payment could not be verified');
+                    } else {
+                        alert('Payment verification failed');
+                    }
                 },
                 theme: { color: "#63A361" }
             };

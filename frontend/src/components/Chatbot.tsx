@@ -309,7 +309,7 @@ const AgriTechChatbot = () => {
                   <Bot className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-white">Kisaan Saathi</h3>
+                  <h3 className="text-sm font-semibold text-white">Kisan AI</h3>
                   <p className="text-xs text-white/70">Ask anything about farming</p>
                 </div>
               </div>

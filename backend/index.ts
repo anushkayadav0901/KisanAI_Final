@@ -1,5 +1,5 @@
 /**
- * index.ts — Kisaan Saathi Backend entry point
+ * index.ts — Kisan AI Backend entry point
  *
  * Responsibilities:
  *  1. Bootstrap Express + middleware
@@ -130,7 +130,7 @@ async function reportLocalVisionStatus(): Promise<void> {
 
 void reportLocalVisionStatus().finally(() => {
   httpServer.listen(PORT, () => {
-    console.log(`\n🌱 Kisaan Saathi Backend  →  http://localhost:${PORT}\n`);
+    console.log(`\n🌱 Kisan AI Backend  →  http://localhost:${PORT}\n`);
     console.log("  REST");
     console.log("    GET  /health");
     console.log("    POST /api/ai/chat               (Groq LLM, SSE streaming)");

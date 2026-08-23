@@ -245,7 +245,7 @@ export const Home: React.FC = () => {
               <div className="relative">
                 <img
                   src={heroImage}
-                  alt="Kisaan Saathi Dashboard"
+                  alt="Kisan AI Dashboard"
                   className="w-full max-w-lg mx-auto rounded-2xl shadow-2xl border-4 border-white"
                 />
 

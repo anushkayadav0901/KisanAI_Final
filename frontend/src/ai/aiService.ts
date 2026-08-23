@@ -1,4 +1,4 @@
-import getAIPrompt, { KisaanSaathiContext } from "./aiPrompt";
+import getAIPrompt, { KisanAIContext } from "./aiPrompt";
 
 // Backend API URL - NO VITE_ PREFIX!
 const API_BASE_URL = import.meta.env.PROD
@@ -24,10 +24,10 @@ export function cancelActiveRequest() {
 
 export const getAIResponse = async (
   userInput: string,
-  context: Partial<KisaanSaathiContext> = {},
+  context: Partial<KisanAIContext> = {},
   onStream?: (response: StreamingResponse) => void
 ): Promise<string> => {
-  const fullContext: KisaanSaathiContext = {
+  const fullContext: KisanAIContext = {
     userInput,
     userLanguage: context.userLanguage || "en",
     userLocation: context.userLocation,

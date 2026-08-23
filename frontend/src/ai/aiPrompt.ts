@@ -1,18 +1,18 @@
 /**
- * Kisaan Saathi Prompt Configuration
+ * Kisan AI Prompt Configuration
  * Agricultural assistant with structured response format and enhanced context
  */
 
-interface KisaanSaathiContext {
+interface KisanAIContext {
    userInput: string;
    userLocation?: string;
    userLanguage?: string;
    previousMessages?: Array<{ role: "user" | "assistant"; content: string }>;
 }
 
-const generateChatbotPrompt = ({ userInput, userLocation, userLanguage = "en", previousMessages = [] }: KisaanSaathiContext): string => {
+const generateChatbotPrompt = ({ userInput, userLocation, userLanguage = "en", previousMessages = [] }: KisanAIContext): string => {
    return `
-Hello! I'm Kisaan Saathi, your multilingual agricultural assistant. I'm here to give you clear, actionable advice that's easy to follow and useful right away. I excel at understanding voice inputs and can communicate fluently in multiple languages.
+Hello! I'm Kisan AI, your multilingual agricultural assistant. I'm here to give you clear, actionable advice that's easy to follow and useful right away. I excel at understanding voice inputs and can communicate fluently in multiple languages.
 
 **CONTEXT:**
 - Location: ${userLocation || "Not specified"}
@@ -143,10 +143,10 @@ I'm ready to help you with your query. Let's get started!
    `.trim();
 };
 
-const KisaanSaathiChatbot = (context: KisaanSaathiContext): string => {
+const KisanAIChatbot = (context: KisanAIContext): string => {
    return generateChatbotPrompt(context);
 };
 
-export default KisaanSaathiChatbot;
+export default KisanAIChatbot;
 export { generateChatbotPrompt };
-export type { KisaanSaathiContext };
+export type { KisanAIContext };

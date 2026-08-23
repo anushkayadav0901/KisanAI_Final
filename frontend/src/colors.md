@@ -1,7 +1,7 @@
-# Kisaan Saathi Color Palette Documentation
+# Kisan AI Color Palette Documentation
 
 ## Overview
-This document outlines the official matte color palette for Kisaan Saathi, designed with a modern, professional, and sophisticated look to enhance the user experience while maintaining agricultural themes.
+This document outlines the official matte color palette for Kisan AI, designed with a modern, professional, and sophisticated look to enhance the user experience while maintaining agricultural themes.
 
 ## Primary Colors
 

@@ -31,10 +31,10 @@ const values = [
 ];
 
 const stats = [
-  { value: "₹1.1L Cr", label: "Financial Loss", sublabel: "Annual loss to inefficiencies" },
-  { value: "33%", label: "Yield Wastage", sublabel: "Lost to diseases & pests" },
-  { value: "150+", label: "Detected Risks", sublabel: "Identifiable by our AI" },
-  { value: "1:1162", label: "Expert Shortage", sublabel: "Ratio of advisors to farmers" },
+  { value: "146M", label: "Farm Households", sublabel: "Small & marginal holders across India" },
+  { value: "33%", label: "Crop Loss", sublabel: "Attributed to pests & diseases" },
+  { value: "29", label: "States Covered", sublabel: "On the surveillance network day one" },
+  { value: "20", label: "Languages", sublabel: "Advisories in the farmer's own tongue" },
 ];
 
 export const About = () => {
@@ -61,7 +61,7 @@ export const About = () => {
             className="text-[#5B532C]/60 leading-relaxed lg:text-right"
           >
             Indian farmers fight a constant battle against biology, climate, and opaque markets.
-            We built Kisaan Saathi to solve these exact systemic problems at scale.
+            We built Kisan AI to solve these exact systemic problems at scale.
           </motion.p>
         </div>
 
